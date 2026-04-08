@@ -10,9 +10,9 @@
 
   @font-face {
     font-family: 'Druk Trial Cond';
-    src: url('./DrukXCond-SuperItalic-Trial.otf') format('opentype');
+    src: url('./DrukCond-Super-Trial.otf') format('opentype');
     font-weight: normal;
-    font-style: italic;
+    font-style: normal;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -50,12 +50,26 @@
   }
 
   .site-nav-brand {
-    font-family: 'Druk Trial Cond', sans-serif;
-    font-size: 20px;
-    font-style: italic;
-    color: var(--red);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
     text-decoration: none;
+  }
+
+  .site-nav-brand-name {
+    font-family: 'Druk Trial Cond', sans-serif;
+    font-size: 22px;
+    font-style: normal;
+    color: var(--white);
     letter-spacing: 0.02em;
+  }
+
+  .site-nav-brand-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--white);
+    letter-spacing: 0.08em;
+    opacity: 0.7;
   }
 
   .site-nav-links {
@@ -602,6 +616,28 @@
     min-width: 24px;
   }
 
+  .toc-link .toc-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--red);
+    min-width: 24px;
+  }
+
+  /* ── SUB-SECTION COLLAPSE (7.x style) ── */
+  .section-collapse.sub-section {
+    margin-left: 24px;
+    border-bottom: none;
+  }
+
+  .section-collapse.sub-section .section-label {
+    font-size: 18px;
+  }
+
+  .section-collapse.sub-section .section-label span[style*="color:var(--red)"] {
+    font-size: 14px;
+  }
+
   /* ── NESTED SUB-SECTIONS ── */
   .sub-section {
     margin-top: 8px;
@@ -967,11 +1003,47 @@
 </head>
 <body>
 
+<!-- ── PASSWORD GATE ── -->
+<div id="passwordGate" style="position:fixed;top:0;left:0;right:0;bottom:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:99999;">
+  <div style="text-align:center;padding:40px;">
+    <div style="font-family:'Druk Trial Cond',sans-serif;font-size:32px;color:var(--white);letter-spacing:0.02em;margin-bottom:8px;">PRNCPLS</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--gray-mid);letter-spacing:0.1em;margin-bottom:32px;">CONTENT HUB</div>
+    <input type="password" id="passwordInput" placeholder="Enter password" style="width:240px;padding:12px 16px;font-family:var(--sans);font-size:14px;border:1px solid var(--gray-dark);border-radius:4px;background:transparent;color:var(--white);text-align:center;margin-bottom:16px;" onkeypress="if(event.key==='Enter')checkPassword()">
+    <br>
+    <button onclick="checkPassword()" style="padding:10px 32px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;background:var(--red);border:none;color:var(--white);border-radius:4px;cursor:pointer;">Enter</button>
+    <div id="passwordError" style="font-family:var(--mono);font-size:10px;color:var(--red);margin-top:16px;opacity:0;">Incorrect password</div>
+  </div>
+</div>
+
+<script>
+const SITE_PASSWORD = 'PRNCPLSthankspoppy4044!';
+const AUTH_KEY = 'prncpls_auth';
+
+function checkPassword() {
+  const input = document.getElementById('passwordInput').value;
+  if (input === SITE_PASSWORD) {
+    localStorage.setItem(AUTH_KEY, 'true');
+    document.getElementById('passwordGate').style.display = 'none';
+  } else {
+    document.getElementById('passwordError').style.opacity = '1';
+    document.getElementById('passwordInput').value = '';
+  }
+}
+
+// Check if already authenticated
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+  document.getElementById('passwordGate').style.display = 'none';
+}
+</script>
+
 <!-- ── SHARED NAV ── -->
 <nav class="site-nav">
-  <a href="/prncpls/" class="site-nav-brand">PRNCPLS</a>
+  <a href="/prncpls/index.html" class="site-nav-brand">
+    <span class="site-nav-brand-name">PRNCPLS</span>
+    <span class="site-nav-brand-sub">content</span>
+  </a>
   <div class="site-nav-links">
-    <a href="/prncpls/" class="active">Playbook</a>
+    <a href="/prncpls/index.html" class="active">Hub</a>
     <a href="/prncpls/calendar.html">Calendar</a>
   </div>
 </nav>
@@ -996,14 +1068,16 @@
     <p style="font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-dark);margin-bottom:16px;">Contents</p>
 
     <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-mid);margin:12px 0 6px;">Foundations</p>
-    <a class="toc-link" onclick="jumpTo('foundations','s01')"><span class="toc-num">1</span> Where We Are</a>
+    <a class="toc-link" onclick="jumpTo('foundations','s01')"><span class="toc-num">1</span> Current Setup</a>
     <a class="toc-link" onclick="jumpTo('foundations','s02')"><span class="toc-num">2</span> Strategic Foundation</a>
-    <a class="toc-link" onclick="jumpTo('foundations','s03')"><span class="toc-num">3</span> The Principles</a>
-    <a class="toc-link" onclick="jumpTo('foundations','s04')"><span class="toc-num">4</span> Platform Strategy</a>
+    <a class="toc-link" onclick="jumpTo('foundations','s03')"><span class="toc-num">3</span> Platform Strategy</a>
 
     <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-mid);margin:16px 0 6px;">Content</p>
-    <a class="toc-link" onclick="jumpTo('content','s05')"><span class="toc-num">5</span> Content Pillars</a>
-    <a class="toc-link" onclick="jumpTo('content','s06')"><span class="toc-num">6</span> Content Formats</a>
+    <a class="toc-link" onclick="jumpTo('content','s04')"><span class="toc-num">4</span> Content Pillars</a>
+    <a class="toc-link" onclick="jumpTo('content','s05')"><span class="toc-num">5</span> Content Formats</a>
+
+    <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-mid);margin:16px 0 6px;">Principles</p>
+    <a class="toc-link" onclick="jumpTo('principles','s06')"><span class="toc-num">6</span> The Principles</a>
 
     <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-mid);margin:16px 0 6px;">Series</p>
     <a class="toc-link" onclick="jumpTo('series','s07')"><span class="toc-num">7</span> Series Overview</a>
@@ -1021,6 +1095,7 @@
   <nav class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('foundations')">Foundations</button>
     <button class="tab-btn" onclick="switchTab('content')">Content</button>
+    <button class="tab-btn" onclick="switchTab('principles')">Principles</button>
     <button class="tab-btn" onclick="switchTab('series')">Series</button>
     <button class="tab-btn" onclick="switchTab('logistics')">Logistics</button>
     <button class="tab-btn" onclick="switchTab('performance')">Performance</button>
@@ -1034,7 +1109,7 @@
 
   <div class="section section-collapse">
     <div class="section-header" onclick="toggleSection(this.parentElement)">
-      <p class="section-label" id="s01"><span style="color:var(--red);">1</span> &mdash; Where We Are</p>
+      <p class="section-label" id="s01"><span style="color:var(--red);">1</span> &mdash; Current Setup</p>
       <span class="section-arrow">&#9660;</span>
     </div>
     <div class="section-body"><div class="section-body-inner">
@@ -1050,20 +1125,26 @@
       </div>
     </div>
 
-    <p class="sub-label">The reality</p>
-    <div class="content-block">
-      <ul>
-        <li>No existing content calendar, no fully established series, no consistent posting rhythm</li>
-        <li>Inconsistency was the single most cited pain point in the internal survey</li>
-        <li>Multiple asset types have been tested and performed well: artist spotlight series, industry insights carousels, and "moment" pieces relating to the company and its activities. There is a bank of proven formats to build from</li>
-        <li>Lead content producer works 4 days/week full-time on content. Team assists with reviews and input. One additional video editor available but novice-level &mdash; requires managing</li>
-        <li>No videographer, no shoot days. All video is narrated voiceover with sourced footage</li>
-        <li>$300/month ad budget for boosting content on Instagram</li>
-      </ul>
-    </div>
-
-    <div class="callout-neutral">
-      <strong>What this means:</strong> The strategy must be built for a one-person operation. Complexity scales before frequency does. Every system, workflow, and series concept in this document is designed with that constraint front and centre.
+    <p class="sub-label">The team</p>
+    
+    <div style="margin:16px 0 32px;">
+      
+      <div style="display:flex;justify-content:space-between;margin-bottom:2px;">
+        <div style="border-left:3px solid var(--red);padding:12px 0 12px 18px;">
+          <div style="font-size:15px;font-weight:600;color:var(--black);">Matthias</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--gray-dark);letter-spacing:0.04em;margin-top:2px;">Lead Strategy · Lead Production · Execution</div>
+        </div>
+        <div style="border-right:3px solid var(--black);padding:12px 18px 12px 0;text-align:right;">
+          <div style="font-size:15px;font-weight:600;color:var(--black);">Jackie</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--gray-dark);letter-spacing:0.04em;margin-top:2px;">Social Media Management</div>
+        </div>
+      </div>
+      
+      <div style="border-left:3px solid var(--gray-mid);padding:12px 0 12px 18px;margin-left:20px;">
+        <div style="font-size:14px;font-weight:600;color:var(--black);">Leo</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--gray-dark);letter-spacing:0.04em;margin-top:2px;">Assistant Editor</div>
+      </div>
+      
     </div>
 
   </div></div></div>
@@ -1181,79 +1262,12 @@
 
 
   <!-- ═══════════════════════════════════════════════════ -->
-  <!-- 03 — THE PRINCIPLES                                 -->
+  <!-- 03 — PLATFORM STRATEGY                              -->
   <!-- ═══════════════════════════════════════════════════ -->
 
   <div class="section section-collapse">
     <div class="section-header" onclick="toggleSection(this.parentElement)">
-      <p class="section-label" id="s03"><span style="color:var(--red);">3</span> &mdash; The Principles</p>
-      <span class="section-arrow">&#9660;</span>
-    </div>
-    <div class="section-body"><div class="section-body-inner">
-
-    <div class="content-block">
-      <p>PRNCPLS is named after its principles. They need to be defined. The following three are consolidated from internal survey responses and need team sign-off on final phrasing.</p>
-    </div>
-
-    <!-- PRINCIPLE 1 -->
-    <div style="border-left:3px solid var(--red);padding:24px 22px;margin-top:32px;background:var(--off-white);">
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:6px;">
-        <span style="font-family:var(--mono);font-size:11px;font-weight:500;color:var(--red);">1</span>
-        <strong style="font-size:17px;font-weight:700;color:var(--black);">Artist-first</strong>
-      </div>
-      <p style="font-size:13px;color:var(--gray-dark);line-height:1.6;margin-bottom:14px;">The artist's vision and long-term career comes before marketing tactics or short-term wins.</p>
-      <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:8px;">Source words</p>
-      <p style="font-size:12px;color:var(--gray-dark);line-height:1.7;font-style:italic;">Artist-first &middot; The artist's vision comes before tactics &middot; Long-term career over short-term wins &middot; Protect the artist &middot; Their story, not ours</p>
-      <div style="margin-top:16px;border-top:1px dashed var(--gray-mid);padding-top:14px;">
-        <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px;">Final phrasing</p>
-        <p style="font-size:15px;font-weight:600;color:var(--gray-mid);min-height:24px;">TBD</p>
-      </div>
-    </div>
-
-    <!-- PRINCIPLE 2 -->
-    <div style="border-left:3px solid var(--red);padding:24px 22px;margin-top:24px;background:var(--off-white);">
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:6px;">
-        <span style="font-family:var(--mono);font-size:11px;font-weight:500;color:var(--red);">2</span>
-        <strong style="font-size:17px;font-weight:700;color:var(--black);">Culture over noise</strong>
-      </div>
-      <p style="font-size:13px;color:var(--gray-dark);line-height:1.6;margin-bottom:14px;">Rooted in genuine cultural understanding, not trends or tricks. Real work, not manufactured hype.</p>
-      <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:8px;">Source words</p>
-      <p style="font-size:12px;color:var(--gray-dark);line-height:1.7;font-style:italic;">Culture before algorithm &middot; Authenticity over hype &middot; Real connections not manufactured moments &middot; Never make noise for its own sake &middot; Only enter conversations where there is a legitimate point of view</p>
-      <div style="margin-top:16px;border-top:1px dashed var(--gray-mid);padding-top:14px;">
-        <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px;">Final phrasing</p>
-        <p style="font-size:15px;font-weight:600;color:var(--gray-mid);min-height:24px;">TBD</p>
-      </div>
-    </div>
-
-    <!-- PRINCIPLE 3 -->
-    <div style="border-left:3px solid var(--red);padding:24px 22px;margin-top:24px;background:var(--off-white);">
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:6px;">
-        <span style="font-family:var(--mono);font-size:11px;font-weight:500;color:var(--red);">3</span>
-        <strong style="font-size:17px;font-weight:700;color:var(--black);">Built to last <span style="font-weight:400;color:var(--gray-dark);font-size:14px;">/</span> Standards over shortcuts</strong>
-      </div>
-      <p style="font-size:13px;color:var(--gray-dark);line-height:1.6;margin-bottom:14px;">Strategic depth behind the taste. Long-term credibility over short-term reach. Integrity sets the standard.</p>
-      <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:8px;">Source words</p>
-      <p style="font-size:12px;color:var(--gray-dark);line-height:1.7;font-style:italic;">Taste backed by strategy &middot; Long-term thinking &middot; Moral compass &middot; Sustainable credibility over viral one-offs &middot; Cultural fluency is not just vibes &middot; Doing business with integrity &middot; Protecting the standard</p>
-      <div style="margin-top:16px;border-top:1px dashed var(--gray-mid);padding-top:14px;">
-        <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px;">Final phrasing</p>
-        <p style="font-size:15px;font-weight:600;color:var(--gray-mid);min-height:24px;">TBD</p>
-      </div>
-    </div>
-
-    <div class="callout-neutral" style="margin-top:24px;">
-      <strong>Next step:</strong> Team to agree final phrasing for each principle. Once locked, these become the foundation for the Principles Series content and the litmus test for all new content concepts.
-    </div>
-
-  </div></div></div>
-
-
-  <!-- ═══════════════════════════════════════════════════ -->
-  <!-- 05 — PLATFORM STRATEGY                              -->
-  <!-- ═══════════════════════════════════════════════════ -->
-
-  <div class="section section-collapse">
-    <div class="section-header" onclick="toggleSection(this.parentElement)">
-      <p class="section-label" id="s04"><span style="color:var(--red);">4</span> &mdash; Platform Strategy</p>
+      <p class="section-label" id="s03"><span style="color:var(--red);">3</span> &mdash; Platform Strategy</p>
       <span class="section-arrow">&#9660;</span>
     </div>
     <div class="section-body"><div class="section-body-inner">
@@ -1352,7 +1366,7 @@
 
   <div class="section section-collapse">
     <div class="section-header" onclick="toggleSection(this.parentElement)">
-      <p class="section-label" id="s05"><span style="color:var(--red);">5</span> &mdash; Content Pillars</p>
+      <p class="section-label" id="s04"><span style="color:var(--red);">4</span> &mdash; Content Pillars</p>
       <span class="section-arrow">&#9660;</span>
     </div>
     <div class="section-body"><div class="section-body-inner">
@@ -1436,12 +1450,12 @@
 
 
   <!-- ═══════════════════════════════════════════════════ -->
-  <!-- 06 — CONTENT FORMATS                                -->
+  <!-- 05 — CONTENT FORMATS                                -->
   <!-- ═══════════════════════════════════════════════════ -->
 
   <div class="section section-collapse">
     <div class="section-header" onclick="toggleSection(this.parentElement)">
-      <p class="section-label" id="s06"><span style="color:var(--red);">6</span> &mdash; Content Formats</p>
+      <p class="section-label" id="s05"><span style="color:var(--red);">5</span> &mdash; Content Formats</p>
       <span class="section-arrow">&#9660;</span>
     </div>
     <div class="section-body"><div class="section-body-inner">
@@ -1515,6 +1529,77 @@
         <p style="font-size:12px;color:var(--gray-dark);line-height:1.5;">Single image. Clean, typographic, ownable. Principles, statements, announcements.</p>
       </div>
 
+    </div>
+
+  </div></div></div>
+
+
+  </div>
+
+  <!-- TAB: PRINCIPLES -->
+  <div class="tab-panel" id="tab-principles">
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- 06 — THE PRINCIPLES                                 -->
+  <!-- ═══════════════════════════════════════════════════ -->
+
+  <div class="section section-collapse">
+    <div class="section-header" onclick="toggleSection(this.parentElement)">
+      <p class="section-label" id="s06"><span style="color:var(--red);">6</span> &mdash; The Principles</p>
+      <span class="section-arrow">&#9660;</span>
+    </div>
+    <div class="section-body"><div class="section-body-inner">
+
+    <div class="content-block">
+      <p>PRNCPLS is named after its principles. They need to be defined. The following three are consolidated from internal survey responses and need team sign-off on final phrasing.</p>
+    </div>
+
+    <!-- PRINCIPLE 1 -->
+    <div style="border-left:3px solid var(--red);padding:24px 22px;margin-top:32px;background:var(--off-white);">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:6px;">
+        <span style="font-family:var(--mono);font-size:11px;font-weight:500;color:var(--red);">1</span>
+        <strong style="font-size:17px;font-weight:700;color:var(--black);">Artist-first</strong>
+      </div>
+      <p style="font-size:13px;color:var(--gray-dark);line-height:1.6;margin-bottom:14px;">The artist's vision and long-term career comes before marketing tactics or short-term wins.</p>
+      <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:8px;">Source words</p>
+      <p style="font-size:12px;color:var(--gray-dark);line-height:1.7;font-style:italic;">Artist-first &middot; The artist's vision comes before tactics &middot; Long-term career over short-term wins &middot; Protect the artist &middot; Their story, not ours</p>
+      <div style="margin-top:16px;border-top:1px dashed var(--gray-mid);padding-top:14px;">
+        <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px;">Final phrasing</p>
+        <p style="font-size:15px;font-weight:600;color:var(--gray-mid);min-height:24px;">TBD</p>
+      </div>
+    </div>
+
+    <!-- PRINCIPLE 2 -->
+    <div style="border-left:3px solid var(--red);padding:24px 22px;margin-top:24px;background:var(--off-white);">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:6px;">
+        <span style="font-family:var(--mono);font-size:11px;font-weight:500;color:var(--red);">2</span>
+        <strong style="font-size:17px;font-weight:700;color:var(--black);">Culture over noise</strong>
+      </div>
+      <p style="font-size:13px;color:var(--gray-dark);line-height:1.6;margin-bottom:14px;">Rooted in genuine cultural understanding, not trends or tricks. Real work, not manufactured hype.</p>
+      <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:8px;">Source words</p>
+      <p style="font-size:12px;color:var(--gray-dark);line-height:1.7;font-style:italic;">Culture before algorithm &middot; Authenticity over hype &middot; Real connections not manufactured moments &middot; Never make noise for its own sake &middot; Only enter conversations where there is a legitimate point of view</p>
+      <div style="margin-top:16px;border-top:1px dashed var(--gray-mid);padding-top:14px;">
+        <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px;">Final phrasing</p>
+        <p style="font-size:15px;font-weight:600;color:var(--gray-mid);min-height:24px;">TBD</p>
+      </div>
+    </div>
+
+    <!-- PRINCIPLE 3 -->
+    <div style="border-left:3px solid var(--red);padding:24px 22px;margin-top:24px;background:var(--off-white);">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:6px;">
+        <span style="font-family:var(--mono);font-size:11px;font-weight:500;color:var(--red);">3</span>
+        <strong style="font-size:17px;font-weight:700;color:var(--black);">Built to last <span style="font-weight:400;color:var(--gray-dark);font-size:14px;">/</span> Standards over shortcuts</strong>
+      </div>
+      <p style="font-size:13px;color:var(--gray-dark);line-height:1.6;margin-bottom:14px;">Strategic depth behind the taste. Long-term credibility over short-term reach. Integrity sets the standard.</p>
+      <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:8px;">Source words</p>
+      <p style="font-size:12px;color:var(--gray-dark);line-height:1.7;font-style:italic;">Taste backed by strategy &middot; Long-term thinking &middot; Moral compass &middot; Sustainable credibility over viral one-offs &middot; Cultural fluency is not just vibes &middot; Doing business with integrity &middot; Protecting the standard</p>
+      <div style="margin-top:16px;border-top:1px dashed var(--gray-mid);padding-top:14px;">
+        <p style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px;">Final phrasing</p>
+        <p style="font-size:15px;font-weight:600;color:var(--gray-mid);min-height:24px;">TBD</p>
+      </div>
+    </div>
+
+    <div class="callout-neutral" style="margin-top:24px;">
+      <strong>Next step:</strong> Team to agree final phrasing for each principle. Once locked, these become the foundation for the Principles Series content and the litmus test for all new content concepts.
     </div>
 
   </div></div></div>
@@ -1641,7 +1726,7 @@
 
   </div></div></div>
 
-  <div class="section section-collapse">
+  <div class="section section-collapse sub-section">
     <div class="section-header" onclick="toggleSection(this.parentElement)">
       <p class="section-label" id="s7-1"><span style="color:var(--red);">7.1</span> &mdash; Featured Playlists <span style="font-family:var(--mono);font-size:9px;font-weight:500;color:var(--white);background:var(--red);padding:3px 10px;margin-left:12px;vertical-align:middle;">ACTIVE</span></p>
       <span class="section-arrow">&#9660;</span>
@@ -1780,7 +1865,7 @@
     </div></div>
   </div>
 
-  <div class="section section-collapse">
+  <div class="section section-collapse sub-section">
     <div class="section-header" onclick="toggleSection(this.parentElement)">
       <p class="section-label" id="s7-2"><span style="color:var(--red);">7.2</span> &mdash; Video Essays <span style="font-family:var(--mono);font-size:9px;font-weight:500;color:var(--white);background:var(--black);padding:3px 10px;margin-left:12px;vertical-align:middle;">TEMPLATE WIP</span></p>
       <span class="section-arrow">&#9660;</span>
@@ -1792,7 +1877,7 @@
     </div></div>
   </div>
 
-  <div class="section section-collapse">
+  <div class="section section-collapse sub-section">
     <div class="section-header" onclick="toggleSection(this.parentElement)">
       <p class="section-label" id="s7-3"><span style="color:var(--red);">7.3</span> &mdash; Artist Spotlights <span style="font-family:var(--mono);font-size:9px;font-weight:500;color:var(--white);background:var(--black);padding:3px 10px;margin-left:12px;vertical-align:middle;">TEMPLATE WIP</span></p>
       <span class="section-arrow">&#9660;</span>
@@ -1804,7 +1889,7 @@
     </div></div>
   </div>
 
-  <div class="section section-collapse">
+  <div class="section section-collapse sub-section">
     <div class="section-header" onclick="toggleSection(this.parentElement)">
       <p class="section-label" id="s7-4"><span style="color:var(--red);">7.4</span> &mdash; Campaign Breakdowns <span style="font-family:var(--mono);font-size:9px;font-weight:500;color:var(--white);background:var(--black);padding:3px 10px;margin-left:12px;vertical-align:middle;">TEMPLATE WIP</span></p>
       <span class="section-arrow">&#9660;</span>
@@ -1816,7 +1901,7 @@
     </div></div>
   </div>
 
-  <div class="section section-collapse">
+  <div class="section section-collapse sub-section">
     <div class="section-header" onclick="toggleSection(this.parentElement)">
       <p class="section-label" id="s7-5"><span style="color:var(--red);">7.5</span> &mdash; The Principles Series <span style="font-family:var(--mono);font-size:9px;font-weight:500;color:var(--black);background:var(--gray-light);padding:3px 10px;margin-left:12px;vertical-align:middle;">BLOCKED</span></p>
       <span class="section-arrow">&#9660;</span>
@@ -1828,7 +1913,7 @@
     </div></div>
   </div>
 
-  <div class="section section-collapse">
+  <div class="section section-collapse sub-section">
     <div class="section-header" onclick="toggleSection(this.parentElement)">
       <p class="section-label" id="s7-6"><span style="color:var(--red);">7.6</span> &mdash; Till My Tape Pop <span style="font-family:var(--mono);font-size:9px;font-weight:500;color:var(--gray-dark);background:var(--gray-light);padding:3px 10px;margin-left:12px;vertical-align:middle;">IN DEV</span></p>
       <span class="section-arrow">&#9660;</span>
@@ -1840,7 +1925,7 @@
     </div></div>
   </div>
 
-  <div class="section section-collapse">
+  <div class="section section-collapse sub-section">
     <div class="section-header" onclick="toggleSection(this.parentElement)">
       <p class="section-label" id="s7-7"><span style="color:var(--red);">7.7</span> &mdash; Vinyl is Plural <span style="font-family:var(--mono);font-size:9px;font-weight:500;color:var(--gray-dark);background:var(--gray-light);padding:3px 10px;margin-left:12px;vertical-align:middle;">OPEN</span></p>
       <span class="section-arrow">&#9660;</span>

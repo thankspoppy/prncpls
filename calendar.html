@@ -10,9 +10,9 @@
 
   @font-face {
     font-family: 'Druk Trial Cond';
-    src: url('./DrukXCond-SuperItalic-Trial.otf') format('opentype');
+    src: url('./DrukCond-Super-Trial.otf') format('opentype');
     font-weight: normal;
-    font-style: italic;
+    font-style: normal;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,6 +27,11 @@
     --gray-dark: #555553;
     --mono: "DM Mono", monospace;
     --sans: "DM Sans", sans-serif;
+    
+    /* Pipeline colors */
+    --pipeline-post: #FA0000;
+    --pipeline-draft: #7C4DFF;
+    --pipeline-idea: #00C853;
   }
 
   /* ── SHARED NAV ── */
@@ -46,12 +51,26 @@
   }
 
   .site-nav-brand {
-    font-family: 'Druk Trial Cond', sans-serif;
-    font-size: 20px;
-    font-style: italic;
-    color: var(--red);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
     text-decoration: none;
+  }
+
+  .site-nav-brand-name {
+    font-family: 'Druk Trial Cond', sans-serif;
+    font-size: 22px;
+    font-style: normal;
+    color: var(--white);
     letter-spacing: 0.02em;
+  }
+
+  .site-nav-brand-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--white);
+    letter-spacing: 0.08em;
+    opacity: 0.7;
   }
 
   .site-nav-links {
@@ -211,6 +230,26 @@
     color: var(--black);
     min-width: 140px;
     text-align: center;
+  }
+
+  .today-btn {
+    margin-left: 16px;
+    padding: 6px 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .today-btn:hover {
+    background: var(--red);
   }
 
   /* ── WEEK HEADER ── */
@@ -461,7 +500,9 @@
   }
 
   .form-label {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-family: var(--mono);
     font-size: 10px;
     font-weight: 500;
@@ -469,6 +510,16 @@
     text-transform: uppercase;
     color: var(--gray-dark);
     margin-bottom: 8px;
+  }
+
+  .form-label svg {
+    opacity: 0.6;
+  }
+
+  .form-divider {
+    height: 1px;
+    background: var(--gray-light);
+    margin: 24px 0;
   }
 
   .form-input,
@@ -485,6 +536,12 @@
     transition: border-color 0.15s;
   }
 
+  .form-input:hover,
+  .form-select:hover,
+  .form-textarea:hover {
+    border-color: var(--red);
+  }
+
   .form-input:focus,
   .form-select:focus,
   .form-textarea:focus {
@@ -496,6 +553,102 @@
     min-height: 80px;
     resize: vertical;
   }
+
+  /* Format Selector */
+  .format-selector {
+    display: flex;
+    gap: 8px;
+  }
+
+  .format-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    background: var(--off-white);
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--gray-dark);
+  }
+
+  .format-option:hover {
+    border-color: var(--red);
+    color: var(--black);
+  }
+
+  .format-option.active {
+    border-color: var(--red);
+    background: var(--white);
+    color: var(--red);
+  }
+
+  .format-option span {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Status Slider */
+  .status-slider {
+    display: flex;
+    gap: 4px;
+    background: var(--off-white);
+    padding: 4px;
+    border-radius: 6px;
+  }
+
+  .status-pill {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 4px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    transition: all 0.15s;
+  }
+
+  .status-pill:hover {
+    background: var(--white);
+  }
+
+  .status-pill.active {
+    background: var(--white);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .status-pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .status-pill.planning .status-pill-dot { background: #AAAAAA; }
+  .status-pill.production .status-pill-dot { background: #F5A623; }
+  .status-pill.ready .status-pill-dot { background: #2196F3; }
+  .status-pill.scheduled .status-pill-dot { background: #7C4DFF; }
+  .status-pill.published .status-pill-dot { background: #00C853; }
+
+  .status-pill.planning.active { color: #888888; }
+  .status-pill.production.active { color: #F5A623; }
+  .status-pill.ready.active { color: #2196F3; }
+  .status-pill.scheduled.active { color: #7C4DFF; }
+  .status-pill.published.active { color: #00C853; }
 
   .modal-footer {
     padding: 16px 24px;
@@ -591,15 +744,316 @@
     font-size: 14px;
   }
 
+  /* ── PIPELINE VIEW (Weekly) ── */
+  .pipeline-row {
+    display: grid;
+    grid-template-columns: 100px repeat(5, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .pipeline-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--off-white);
+  }
+
+  .pipeline-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .pipeline-label.pipeline-post { color: var(--pipeline-post); }
+  .pipeline-label.pipeline-draft { color: var(--pipeline-draft); }
+  .pipeline-label.pipeline-idea { color: var(--pipeline-idea); }
+
+  .pipeline-cell {
+    background: var(--off-white);
+    padding: 10px;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pipeline-cell.today {
+    background: var(--gray-light);
+  }
+
+  .pipeline-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gray-mid);
+    margin-bottom: 8px;
+  }
+
+  .pipeline-cell.today .pipeline-date {
+    color: var(--red);
+    font-weight: 500;
+  }
+
+  .pipeline-card {
+    flex: 1;
+    padding: 10px;
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .pipeline-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  .pipeline-card-post { border-left: 3px solid var(--pipeline-post); }
+  .pipeline-card-draft { border-left: 3px solid var(--pipeline-draft); }
+  .pipeline-card-idea { border-left: 3px solid var(--pipeline-idea); }
+
+  .pipeline-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .pipeline-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pipeline-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-mid);
+    transition: color 0.15s;
+  }
+
+  .pipeline-link:hover {
+    color: var(--red);
+  }
+
+  .pipeline-card-series {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+  }
+
+  .pipeline-status {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pipeline-status:hover {
+    transform: scale(1.2);
+  }
+
+  .pipeline-status.in-progress {
+    background: #F5A623;
+  }
+
+  .pipeline-status.done {
+    background: #00C853;
+  }
+
+  .pipeline-status.done::after {
+    content: '';
+    width: 6px;
+    height: 3px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: rotate(-45deg);
+    margin-bottom: 2px;
+  }
+
+  .pipeline-card-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--black);
+    line-height: 1.3;
+  }
+
+  .pipeline-add-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--gray-mid);
+    background: transparent;
+    color: var(--gray-mid);
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .pipeline-add-btn:hover {
+    border-style: solid;
+  }
+
+  .pipeline-add-post:hover { border-color: var(--pipeline-post); color: var(--pipeline-post); }
+  .pipeline-add-draft:hover { border-color: var(--pipeline-draft); color: var(--pipeline-draft); }
+  .pipeline-add-idea:hover { border-color: var(--pipeline-idea); color: var(--pipeline-idea); }
+
+  /* ── MONTHLY STATUS GRID ── */
+  .month-grid-header {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .month-grid-header-cell {
+    padding: 8px 4px;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    text-align: center;
+  }
+
+  .month-grid-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .month-cell {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--off-white);
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    padding: 4px;
+  }
+
+  .month-cell:hover {
+    background: var(--gray-light);
+  }
+
+  .month-cell.today {
+    box-shadow: inset 0 0 0 2px var(--red);
+  }
+
+  .month-cell-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--gray-dark);
+    margin-bottom: 4px;
+  }
+
+  .month-cell.today .month-cell-date {
+    color: var(--red);
+  }
+
+  .month-cell-status {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .month-cell.empty .month-cell-status {
+    border: 1px dashed var(--gray-mid);
+  }
+
+  .month-cell.in-progress .month-cell-status {
+    background: #F5A623;
+  }
+
+  .month-cell.in-progress .month-cell-dot {
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .month-cell.done .month-cell-status {
+    background: #00C853;
+    color: white;
+  }
+
+  .month-cell.done .month-cell-status svg {
+    width: 10px;
+    height: 10px;
+  }
+
 </style>
 </head>
 <body>
 
+<!-- ── PASSWORD GATE ── -->
+<div id="passwordGate" style="position:fixed;top:0;left:0;right:0;bottom:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:99999;">
+  <div style="text-align:center;padding:40px;">
+    <div style="font-family:'Druk Trial Cond',sans-serif;font-size:32px;color:var(--white);letter-spacing:0.02em;margin-bottom:8px;">PRNCPLS</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--gray-mid);letter-spacing:0.1em;margin-bottom:32px;">CONTENT CALENDAR</div>
+    <input type="password" id="passwordInput" placeholder="Enter password" style="width:240px;padding:12px 16px;font-family:var(--sans);font-size:14px;border:1px solid var(--gray-dark);border-radius:4px;background:transparent;color:var(--white);text-align:center;margin-bottom:16px;" onkeypress="if(event.key==='Enter')checkPassword()">
+    <br>
+    <button onclick="checkPassword()" style="padding:10px 32px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;background:var(--red);border:none;color:var(--white);border-radius:4px;cursor:pointer;">Enter</button>
+    <div id="passwordError" style="font-family:var(--mono);font-size:10px;color:var(--red);margin-top:16px;opacity:0;">Incorrect password</div>
+  </div>
+</div>
+
+<script>
+const SITE_PASSWORD = 'PRNCPLSthankspoppy4044!';
+const AUTH_KEY = 'prncpls_auth';
+
+function checkPassword() {
+  const input = document.getElementById('passwordInput').value;
+  if (input === SITE_PASSWORD) {
+    localStorage.setItem(AUTH_KEY, 'true');
+    document.getElementById('passwordGate').style.display = 'none';
+  } else {
+    document.getElementById('passwordError').style.opacity = '1';
+    document.getElementById('passwordInput').value = '';
+  }
+}
+
+// Check if already authenticated
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+  document.getElementById('passwordGate').style.display = 'none';
+}
+</script>
+
 <!-- ── SHARED NAV ── -->
 <nav class="site-nav">
-  <a href="/prncpls/" class="site-nav-brand">PRNCPLS</a>
+  <a href="/prncpls/index.html" class="site-nav-brand">
+    <span class="site-nav-brand-name">PRNCPLS</span>
+    <span class="site-nav-brand-sub">content</span>
+  </a>
   <div class="site-nav-links">
-    <a href="/prncpls/">Playbook</a>
+    <a href="/prncpls/index.html">Hub</a>
     <a href="/prncpls/calendar.html" class="active">Calendar</a>
   </div>
 </nav>
@@ -607,24 +1061,18 @@
 <!-- ── PAGE HEADER ── -->
 <header class="page-header">
   <h1 class="page-title"><strong>Content</strong> Calendar</h1>
-  <div class="header-controls">
-    <div class="view-toggle">
-      <button class="view-btn active" onclick="setView('weekly')">Weekly</button>
-      <button class="view-btn" onclick="setView('monthly')">Monthly</button>
-    </div>
-    <button class="add-btn" onclick="openModal()">+ Add Entry</button>
-  </div>
 </header>
 
-<!-- ── MONTH NAVIGATION ── -->
-<div class="month-nav" id="monthNav" style="display:none;">
-  <button class="month-nav-btn" onclick="changeMonth(-1)">
+<!-- ── WEEK NAVIGATION ── -->
+<div class="month-nav" id="weekNav" style="display:flex;">
+  <button class="month-nav-btn" onclick="changeWeek(-1)">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
   </button>
-  <span class="month-label" id="monthLabel"></span>
-  <button class="month-nav-btn" onclick="changeMonth(1)">
+  <span class="month-label" id="weekLabel"></span>
+  <button class="month-nav-btn" onclick="changeWeek(1)">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
   </button>
+  <button class="today-btn" onclick="goToThisWeek()">Today</button>
 </div>
 
 <!-- ── CALENDAR ── -->
@@ -634,7 +1082,7 @@
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
-      <h2 class="modal-title" id="modalTitle">Add Entry</h2>
+      <h2 class="modal-title" id="modalTitle">Add Asset</h2>
       <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
     <div class="modal-body">
@@ -642,12 +1090,18 @@
       <input type="hidden" id="entryDate">
       
       <div class="form-group">
-        <label class="form-label">Date</label>
+        <label class="form-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Date
+        </label>
         <input type="date" class="form-input" id="formDate">
       </div>
 
       <div class="form-group">
-        <label class="form-label">Series</label>
+        <label class="form-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          Series
+        </label>
         <select class="form-select" id="formSeries">
           <option value="">Select series...</option>
           <option value="Featured Playlists">Featured Playlists</option>
@@ -661,12 +1115,20 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Title</label>
+        <label class="form-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+          Title
+        </label>
         <input type="text" class="form-input" id="formTitle" placeholder="Enter title...">
       </div>
 
+      <div class="form-divider"></div>
+
       <div class="form-group">
-        <label class="form-label">Pillar</label>
+        <label class="form-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Primary Pillar
+        </label>
         <select class="form-select" id="formPillar">
           <option value="">Select pillar...</option>
           <option value="The Culture">The Culture</option>
@@ -677,35 +1139,76 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Format</label>
-        <select class="form-select" id="formFormat">
-          <option value="">Select format...</option>
-          <option value="Reel">Reel</option>
-          <option value="Carousel">Carousel</option>
-          <option value="Static">Static</option>
-        </select>
+        <label class="form-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+          Format
+        </label>
+        <div class="format-selector" id="formatSelector">
+          <button type="button" class="format-option" data-value="Carousel" onclick="selectFormat('Carousel')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="14" height="12" rx="2"/><rect x="8" y="4" width="14" height="12" rx="2" opacity="0.5"/></svg>
+            <span>Carousel</span>
+          </button>
+          <button type="button" class="format-option" data-value="Reel" onclick="selectFormat('Reel')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="18" r="1"/></svg>
+            <span>Reel</span>
+          </button>
+          <button type="button" class="format-option" data-value="Static" onclick="selectFormat('Static')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Static</span>
+          </button>
+        </div>
+        <input type="hidden" id="formFormat">
+      </div>
+
+      <div class="form-divider"></div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Status
+        </label>
+        <div class="status-slider" id="statusSlider">
+          <button type="button" class="status-pill planning active" data-value="planning" onclick="selectStatus('planning')">
+            <span class="status-pill-dot"></span>Planning
+          </button>
+          <button type="button" class="status-pill production" data-value="production" onclick="selectStatus('production')">
+            <span class="status-pill-dot"></span>Production
+          </button>
+          <button type="button" class="status-pill ready" data-value="ready" onclick="selectStatus('ready')">
+            <span class="status-pill-dot"></span>Ready
+          </button>
+          <button type="button" class="status-pill scheduled" data-value="scheduled" onclick="selectStatus('scheduled')">
+            <span class="status-pill-dot"></span>Scheduled
+          </button>
+          <button type="button" class="status-pill published" data-value="published" onclick="selectStatus('published')">
+            <span class="status-pill-dot"></span>Published
+          </button>
+        </div>
+        <input type="hidden" id="formStatus" value="planning">
+      </div>
+
+      <div class="form-divider"></div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Asset Link <span style="opacity:0.5;font-weight:400;">(optional)</span>
+        </label>
+        <input type="url" class="form-input" id="formLink" placeholder="https://...">
       </div>
 
       <div class="form-group">
-        <label class="form-label">Status</label>
-        <select class="form-select" id="formStatus">
-          <option value="planning">Planning</option>
-          <option value="production">In Production</option>
-          <option value="ready">Ready</option>
-          <option value="scheduled">Scheduled</option>
-          <option value="published">Published</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Notes (optional)</label>
+        <label class="form-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Notes <span style="opacity:0.5;font-weight:400;">(optional)</span>
+        </label>
         <textarea class="form-textarea" id="formNotes" placeholder="Add any notes..."></textarea>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn-delete" id="deleteBtn" onclick="deleteEntry()" style="display:none;">Delete</button>
       <div></div>
-      <button class="btn-save" onclick="saveEntry()">Save</button>
+      <button class="btn-save" onclick="saveEntry()">Save Asset</button>
     </div>
   </div>
 </div>
@@ -730,6 +1233,7 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let entries = [];
 let currentView = 'weekly';
 let currentMonth = new Date();
+let currentWeek = new Date(); // Track which week we're viewing
 
 const STATUS_ORDER = ['planning', 'production', 'ready', 'scheduled', 'published'];
 const STATUS_LABELS = {
@@ -842,107 +1346,166 @@ function getEntryForDate(dateStr) {
 
 function renderCalendar() {
   const container = document.getElementById('calendarContainer');
-  const monthNav = document.getElementById('monthNav');
-  
-  if (currentView === 'weekly') {
-    monthNav.style.display = 'none';
-    renderWeeklyView(container);
-  } else {
-    monthNav.style.display = 'flex';
-    document.getElementById('monthLabel').textContent = formatMonthYear(currentMonth);
-    renderMonthlyView(container);
-  }
+  updateWeekLabel();
+  renderWeeklyView(container);
 }
 
 function renderWeeklyView(container) {
-  const today = new Date();
-  const monday = getMonday(today);
+  const monday = getMonday(currentWeek);
   
+  const friday = new Date(monday);
+  friday.setDate(monday.getDate() + 4);
+
   let html = `
-    <div class="week-header">
-      <div class="week-header-cell">Week</div>
+    <div class="week-header" style="grid-template-columns:100px repeat(5,1fr);">
+      <div class="week-header-cell"></div>
+      <div class="week-header-cell">Monday</div>
       <div class="week-header-cell">Tuesday</div>
       <div class="week-header-cell">Wednesday</div>
       <div class="week-header-cell">Thursday</div>
+      <div class="week-header-cell">Friday</div>
     </div>
   `;
 
-  for (let w = 0; w < 4; w++) {
-    const weekStart = new Date(monday);
-    weekStart.setDate(monday.getDate() + (w * 7));
-    
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
-
-    html += `<div class="week-row">`;
-    html += `
-      <div class="week-label">
-        <span class="week-label-dates">${formatDateShort(weekStart)} – ${formatDateShort(weekEnd)}</span>
-        <span>Week ${w + 1}</span>
-      </div>
-    `;
-
-    // Tue, Wed, Thu (indices 1, 2, 3 from Monday)
-    for (let d = 1; d <= 3; d++) {
-      const date = new Date(weekStart);
-      date.setDate(weekStart.getDate() + d);
-      html += renderDayCell(date);
-    }
-
-    html += `</div>`;
+  // POST ROW - content publishing THIS week (due date = publish date)
+  html += `<div class="pipeline-row">`;
+  html += `<div class="pipeline-label pipeline-post"><span class="pipeline-dot" style="background:var(--pipeline-post);"></span>Post</div>`;
+  for (let d = 0; d < 5; d++) {
+    const dueDate = new Date(monday);
+    dueDate.setDate(monday.getDate() + d);
+    const publishDate = new Date(dueDate); // Same day
+    html += renderPipelineCell(dueDate, publishDate, 'post');
   }
+  html += `</div>`;
+
+  // DRAFT ROW - content publishing NEXT week (draft due this week)
+  html += `<div class="pipeline-row">`;
+  html += `<div class="pipeline-label pipeline-draft"><span class="pipeline-dot" style="background:var(--pipeline-draft);"></span>Draft</div>`;
+  for (let d = 0; d < 5; d++) {
+    const dueDate = new Date(monday);
+    dueDate.setDate(monday.getDate() + d);
+    const publishDate = new Date(dueDate);
+    publishDate.setDate(dueDate.getDate() + 7); // Publishes 1 week later
+    html += renderPipelineCell(dueDate, publishDate, 'draft');
+  }
+  html += `</div>`;
+
+  // IDEA ROW - content publishing WEEK AFTER next (idea due this week)
+  html += `<div class="pipeline-row">`;
+  html += `<div class="pipeline-label pipeline-idea"><span class="pipeline-dot" style="background:var(--pipeline-idea);"></span>Idea</div>`;
+  for (let d = 0; d < 5; d++) {
+    const dueDate = new Date(monday);
+    dueDate.setDate(monday.getDate() + d);
+    const publishDate = new Date(dueDate);
+    publishDate.setDate(dueDate.getDate() + 14); // Publishes 2 weeks later
+    html += renderPipelineCell(dueDate, publishDate, 'idea');
+  }
+  html += `</div>`;
 
   container.innerHTML = html;
+}
+
+function renderPipelineCell(dueDate, publishDate, track) {
+  const publishDateStr = formatDate(publishDate);
+  const entry = getEntryForDate(publishDateStr);
+  const todayClass = isToday(dueDate) ? 'today' : '';
+
+  let content = '';
+  if (entry) {
+    const statusClass = entry.status === 'published' ? 'done' : 'in-progress';
+    const linkIcon = entry.link ? `<a href="${entry.link}" target="_blank" class="pipeline-link" onclick="event.stopPropagation();" title="Open asset link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>` : '';
+    content = `
+      <div class="pipeline-card pipeline-card-${track}" onclick="openModal('${publishDateStr}')">
+        <div class="pipeline-card-header">
+          <div class="pipeline-card-series">${entry.series || '—'}</div>
+          <div class="pipeline-card-actions">
+            ${linkIcon}
+            <span class="pipeline-status ${statusClass}" onclick="event.stopPropagation(); cycleStatus('${publishDateStr}')" title="${STATUS_LABELS[entry.status] || 'Planning'}"></span>
+          </div>
+        </div>
+        <div class="pipeline-card-title">${entry.title || 'Untitled'}</div>
+      </div>
+    `;
+  } else {
+    content = `
+      <button class="pipeline-add-btn pipeline-add-${track}" onclick="openModal(null, '${publishDateStr}')">+</button>
+    `;
+  }
+
+  return `
+    <div class="pipeline-cell ${todayClass}">
+      <div class="pipeline-date">${formatDateShort(dueDate)}</div>
+      ${content}
+    </div>
+  `;
 }
 
 function renderMonthlyView(container) {
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth();
   
-  // Get first Monday of the month or before
+  // Get first day of month
   const firstDay = new Date(year, month, 1);
+  // Get the Monday of the week containing the first day
   let monday = getMonday(firstDay);
-  
-  // Get last day of month
-  const lastDay = new Date(year, month + 1, 0);
 
   let html = `
-    <div class="week-header">
-      <div class="week-header-cell">Week</div>
-      <div class="week-header-cell">Tuesday</div>
-      <div class="week-header-cell">Wednesday</div>
-      <div class="week-header-cell">Thursday</div>
+    <div class="month-grid-header">
+      <div class="month-grid-header-cell">Mon</div>
+      <div class="month-grid-header-cell">Tue</div>
+      <div class="month-grid-header-cell">Wed</div>
+      <div class="month-grid-header-cell">Thu</div>
+      <div class="month-grid-header-cell">Fri</div>
     </div>
   `;
 
-  let weekCount = 0;
-  while (monday <= lastDay || weekCount < 1) {
-    const weekEnd = new Date(monday);
-    weekEnd.setDate(monday.getDate() + 6);
+  // Render 4 weeks
+  for (let w = 0; w < 4; w++) {
+    html += `<div class="month-grid-row">`;
 
-    html += `<div class="week-row">`;
-    html += `
-      <div class="week-label">
-        <span class="week-label-dates">${formatDateShort(monday)} – ${formatDateShort(weekEnd)}</span>
-      </div>
-    `;
-
-    // Tue, Wed, Thu
-    for (let d = 1; d <= 3; d++) {
+    // Mon–Fri (indices 0–4 from Monday)
+    for (let d = 0; d < 5; d++) {
       const date = new Date(monday);
       date.setDate(monday.getDate() + d);
-      html += renderDayCell(date);
+      html += renderMonthCell(date);
     }
 
     html += `</div>`;
     
     monday.setDate(monday.getDate() + 7);
-    weekCount++;
-    
-    if (monday > lastDay && weekCount >= 4) break;
   }
 
   container.innerHTML = html;
+}
+
+function renderMonthCell(date) {
+  const dateStr = formatDate(date);
+  const entry = getEntryForDate(dateStr);
+  const todayClass = isToday(date) ? 'today' : '';
+  
+  let statusClass = 'empty';
+  let statusIcon = '';
+  
+  if (entry) {
+    if (entry.status === 'published') {
+      statusClass = 'done';
+      statusIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    } else {
+      statusClass = 'in-progress';
+      statusIcon = `<span class="month-cell-dot"></span>`;
+    }
+  }
+
+  const clickAction = entry 
+    ? `onclick="cycleStatus('${dateStr}')"`
+    : `onclick="openModal(null, '${dateStr}')"`;
+
+  return `
+    <div class="month-cell ${todayClass} ${statusClass}" ${clickAction}>
+      <div class="month-cell-date">${date.getDate()}</div>
+      <div class="month-cell-status">${statusIcon}</div>
+    </div>
+  `;
 }
 
 function renderDayCell(date) {
@@ -996,6 +1559,24 @@ function changeMonth(delta) {
   renderCalendar();
 }
 
+function changeWeek(delta) {
+  currentWeek.setDate(currentWeek.getDate() + (delta * 7));
+  renderCalendar();
+}
+
+function goToThisWeek() {
+  currentWeek = new Date();
+  renderCalendar();
+}
+
+function updateWeekLabel() {
+  const monday = getMonday(currentWeek);
+  const friday = new Date(monday);
+  friday.setDate(monday.getDate() + 4);
+  document.getElementById('weekLabel').textContent = 
+    `${formatDateShort(monday)} – ${formatDateShort(friday)}`;
+}
+
 async function cycleStatus(dateStr) {
   const entry = getEntryForDate(dateStr);
   if (!entry) return;
@@ -1025,12 +1606,20 @@ function openModal(dateStr = null, prefillDate = null) {
   document.getElementById('formFormat').value = '';
   document.getElementById('formStatus').value = 'planning';
   document.getElementById('formNotes').value = '';
+  document.getElementById('formLink').value = '';
+
+  // Reset format selector
+  document.querySelectorAll('.format-option').forEach(btn => btn.classList.remove('active'));
+
+  // Reset status slider to planning
+  document.querySelectorAll('.status-pill').forEach(btn => btn.classList.remove('active'));
+  document.querySelector('.status-pill.planning').classList.add('active');
 
   if (dateStr) {
     // Editing existing entry
     const entry = getEntryForDate(dateStr);
     if (entry) {
-      title.textContent = 'Edit Entry';
+      title.textContent = 'Edit Asset';
       deleteBtn.style.display = 'block';
       document.getElementById('entryId').value = entry.id;
       document.getElementById('formDate').value = entry.date;
@@ -1040,13 +1629,38 @@ function openModal(dateStr = null, prefillDate = null) {
       document.getElementById('formFormat').value = entry.format || '';
       document.getElementById('formStatus').value = entry.status || 'planning';
       document.getElementById('formNotes').value = entry.notes || '';
+      document.getElementById('formLink').value = entry.link || '';
+
+      // Set format selector
+      if (entry.format) {
+        selectFormat(entry.format);
+      }
+
+      // Set status slider
+      if (entry.status) {
+        selectStatus(entry.status);
+      }
     }
   } else {
-    title.textContent = 'Add Entry';
+    title.textContent = 'Add Asset';
     deleteBtn.style.display = 'none';
   }
 
   overlay.classList.add('active');
+}
+
+function selectFormat(value) {
+  document.querySelectorAll('.format-option').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.value === value);
+  });
+  document.getElementById('formFormat').value = value;
+}
+
+function selectStatus(value) {
+  document.querySelectorAll('.status-pill').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.value === value);
+  });
+  document.getElementById('formStatus').value = value;
 }
 
 function closeModal(event) {
@@ -1061,6 +1675,14 @@ async function saveEntry() {
     return;
   }
 
+  // Check for clash (only if creating new or changing date)
+  const entryId = document.getElementById('entryId').value;
+  const existingEntry = getEntryForDate(date);
+  if (existingEntry && (!entryId || existingEntry.id !== parseInt(entryId))) {
+    showToast('An asset already exists for this date', 'error');
+    return;
+  }
+
   const entry = {
     date: date,
     series: document.getElementById('formSeries').value || null,
@@ -1068,10 +1690,10 @@ async function saveEntry() {
     pillar: document.getElementById('formPillar').value || null,
     format: document.getElementById('formFormat').value || null,
     status: document.getElementById('formStatus').value || 'planning',
-    notes: document.getElementById('formNotes').value || null
+    notes: document.getElementById('formNotes').value || null,
+    link: document.getElementById('formLink').value || null
   };
 
-  const entryId = document.getElementById('entryId').value;
   if (entryId) {
     entry.id = parseInt(entryId);
   }
