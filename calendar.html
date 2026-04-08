@@ -52,14 +52,14 @@
 
   .site-nav-brand {
     display: flex;
-    align-items: baseline;
-    gap: 8px;
+    align-items: center;
+    gap: 12px;
     text-decoration: none;
   }
 
   .site-nav-brand-name {
     font-family: 'Druk Trial Cond', sans-serif;
-    font-size: 22px;
+    font-size: 28px;
     font-style: normal;
     color: var(--white);
     letter-spacing: 0.02em;
@@ -68,8 +68,10 @@
   .site-nav-brand-sub {
     font-family: var(--mono);
     font-size: 10px;
+    font-weight: 500;
     color: var(--white);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     opacity: 0.7;
   }
 
@@ -1048,13 +1050,13 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
 
 <!-- ── SHARED NAV ── -->
 <nav class="site-nav">
-  <a href="/prncpls/index.html" class="site-nav-brand">
+  <a href="/" class="site-nav-brand">
     <span class="site-nav-brand-name">PRNCPLS</span>
     <span class="site-nav-brand-sub">content</span>
   </a>
   <div class="site-nav-links">
-    <a href="/prncpls/index.html">Hub</a>
-    <a href="/prncpls/calendar.html" class="active">Calendar</a>
+    <a href="/">Hub</a>
+    <a href="/calendar.html" class="active">Calendar</a>
   </div>
 </nav>
 
