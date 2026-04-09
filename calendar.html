@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>PRNCPLS: Content Calendar</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -1267,10 +1268,35 @@ async function loadEntries() {
 }
 
 async function saveEntryToDb(entry) {
-  const { data, error } = await db
-    .from('calendar_entries')
-    .upsert(entry, { onConflict: 'date' })
-    .select();
+  let data, error;
+  
+  if (entry.id) {
+    // Update existing entry
+    const { data: updateData, error: updateError } = await db
+      .from('calendar_entries')
+      .update({
+        date: entry.date,
+        series: entry.series,
+        title: entry.title,
+        pillar: entry.pillar,
+        format: entry.format,
+        status: entry.status,
+        notes: entry.notes,
+        link: entry.link
+      })
+      .eq('id', entry.id)
+      .select();
+    data = updateData;
+    error = updateError;
+  } else {
+    // Insert new entry
+    const { data: insertData, error: insertError } = await db
+      .from('calendar_entries')
+      .insert(entry)
+      .select();
+    data = insertData;
+    error = insertError;
+  }
 
   if (error) {
     showToast('Failed to save entry', 'error');
@@ -1680,7 +1706,7 @@ async function saveEntry() {
   // Check for clash (only if creating new or changing date)
   const entryId = document.getElementById('entryId').value;
   const existingEntry = getEntryForDate(date);
-  if (existingEntry && (!entryId || existingEntry.id !== parseInt(entryId))) {
+  if (existingEntry && (!entryId || String(existingEntry.id) !== String(entryId))) {
     showToast('An asset already exists for this date', 'error');
     return;
   }
