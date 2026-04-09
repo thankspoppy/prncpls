@@ -1582,17 +1582,17 @@ async function saveEntryToDb(entry) {
     return entry;
   }
 
-  // Build payload without channel (add column to Supabase first if you want it)
+  // Build payload
   const payload = {
     date: entry.date,
     series: entry.series,
     title: entry.title,
     pillar: entry.pillar,
     format: entry.format,
+    channel: entry.channel,
     status: entry.status,
     notes: entry.notes,
-    link: entry.link,
-    publish_time: entry.publish_time
+    link: entry.link
   };
 
   let data, error;
