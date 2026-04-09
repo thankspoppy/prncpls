@@ -455,7 +455,7 @@
   .modal {
     background: var(--white);
     width: 100%;
-    max-width: 480px;
+    max-width: 540px;
     max-height: 90vh;
     overflow-y: auto;
     border-radius: 8px;
@@ -463,7 +463,7 @@
   }
 
   .modal-header {
-    padding: 20px 24px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--gray-light);
     display: flex;
     align-items: center;
@@ -471,14 +471,14 @@
   }
 
   .modal-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
     color: var(--black);
   }
 
   .modal-close {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -495,34 +495,45 @@
   }
 
   .modal-body {
-    padding: 24px;
+    padding: 16px 20px;
   }
 
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
   .form-label {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--gray-dark);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .form-label svg {
     opacity: 0.6;
+    width: 12px;
+    height: 12px;
   }
 
   .form-divider {
     height: 1px;
     background: var(--gray-light);
-    margin: 24px 0;
+    margin: 16px 0;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 12px;
+  }
+
+  .form-row .form-group {
+    flex: 1;
   }
 
   .form-input,
@@ -560,7 +571,7 @@
   /* Format Selector */
   .format-selector {
     display: flex;
-    gap: 8px;
+    gap: 4px;
   }
 
   .format-option {
@@ -568,11 +579,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
-    padding: 12px 8px;
+    gap: 3px;
+    padding: 6px 2px;
     background: var(--off-white);
-    border: 2px solid transparent;
-    border-radius: 6px;
+    border: 1px solid transparent;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.15s;
     color: var(--gray-dark);
@@ -591,9 +602,9 @@
 
   .format-option span {
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 7px;
     font-weight: 500;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
   }
 
@@ -700,32 +711,24 @@
     background: #D50000;
   }
 
-  /* ── MINI CALENDAR PICKER ── */
-  .date-picker-wrapper {
-    background: var(--off-white);
-    border-radius: 6px;
-    padding: 12px;
-  }
-
-  .date-week-shift {
+  /* ── COMPACT DATE PICKER ── */
+  .date-picker-compact {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--gray-light);
+    margin-bottom: 8px;
   }
 
   .week-shift-btn {
-    padding: 6px 12px;
+    padding: 4px 8px;
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 500;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     background: var(--white);
     border: 1px solid var(--gray-light);
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
     color: var(--gray-dark);
     transition: all 0.15s;
@@ -738,21 +741,27 @@
 
   .date-display {
     font-family: var(--sans);
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--black);
+  }
+
+  .mini-calendar {
+    background: var(--off-white);
+    border-radius: 4px;
+    padding: 8px;
   }
 
   .mini-calendar-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
 
   .mini-cal-nav {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -760,20 +769,21 @@
     border: none;
     cursor: pointer;
     color: var(--gray-dark);
-    border-radius: 4px;
+    font-size: 14px;
+    border-radius: 3px;
     transition: all 0.15s;
   }
 
   .mini-cal-nav:hover {
     background: var(--white);
-    color: var(--black);
+    color: var(--red);
   }
 
   .mini-cal-month {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 500;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--black);
   }
@@ -781,23 +791,23 @@
   .mini-calendar-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    margin-bottom: 4px;
+    gap: 1px;
+    margin-bottom: 2px;
   }
 
   .mini-calendar-days span {
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 7px;
     font-weight: 500;
     color: var(--gray-mid);
     text-align: center;
-    padding: 4px;
+    padding: 2px;
   }
 
   .mini-calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
+    gap: 1px;
   }
 
   .mini-cal-day {
@@ -806,13 +816,14 @@
     align-items: center;
     justify-content: center;
     font-family: var(--sans);
-    font-size: 12px;
+    font-size: 9px;
     background: var(--white);
     border: none;
-    border-radius: 4px;
+    border-radius: 2px;
     cursor: pointer;
     color: var(--black);
     transition: all 0.15s;
+    padding: 0;
   }
 
   .mini-cal-day:hover {
@@ -838,6 +849,38 @@
   .mini-cal-day.today {
     font-weight: 700;
     box-shadow: inset 0 0 0 1px var(--red);
+  }
+
+  /* Channel Buttons - distinct circular style */
+  .channel-btns {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .channel-btn {
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 1.5px solid var(--gray-mid);
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--gray-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .channel-btn:hover {
+    border-color: var(--black);
+    color: var(--black);
+  }
+
+  .channel-btn.active {
+    border-color: var(--red);
+    background: var(--red);
+    color: var(--white);
   }
 
   /* ── TOAST ── */
@@ -921,7 +964,7 @@
   .pipeline-cell {
     background: var(--off-white);
     padding: 10px;
-    min-height: 90px;
+    min-height: 180px;
     display: flex;
     flex-direction: column;
   }
@@ -944,10 +987,12 @@
 
   .pipeline-card {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     background: var(--white);
     cursor: pointer;
     transition: all 0.15s ease;
+    display: flex;
+    flex-direction: column;
   }
 
   .pipeline-card:hover {
@@ -962,8 +1007,8 @@
   .pipeline-card-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
+    align-items: flex-start;
+    margin-bottom: 6px;
   }
 
   .pipeline-card-actions {
@@ -986,10 +1031,43 @@
 
   .pipeline-card-series {
     font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.08em;
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    opacity: 0.7;
+  }
+
+  .pipeline-card-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--black);
+    line-height: 1.3;
+    flex: 1;
+  }
+
+  .pipeline-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--gray-light);
+  }
+
+  .pipeline-card-format {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--gray-dark);
+  }
+
+  .pipeline-card-format svg {
+    opacity: 0.6;
   }
 
   .pipeline-status {
@@ -1023,13 +1101,6 @@
     border-bottom: 2px solid white;
     transform: rotate(-45deg);
     margin-bottom: 2px;
-  }
-
-  .pipeline-card-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--black);
-    line-height: 1.3;
   }
 
   .pipeline-add-btn {
@@ -1230,109 +1301,114 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
     </div>
     <div class="modal-body">
       <input type="hidden" id="entryId">
-      <input type="hidden" id="entryDate">
+      <input type="hidden" id="formTime">
       
+      <!-- Publish Date at top -->
       <div class="form-group">
-        <label class="form-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Publish Date
-        </label>
-        <div class="date-picker-wrapper">
-          <div class="date-week-shift">
-            <button type="button" class="week-shift-btn" onclick="shiftDate(-7)">← 1 Week</button>
-            <span class="date-display" id="dateDisplay">Select date</span>
-            <button type="button" class="week-shift-btn" onclick="shiftDate(7)">1 Week →</button>
+        <label class="form-label">Publish Date</label>
+        <div class="date-picker-compact">
+          <button type="button" class="week-shift-btn" onclick="shiftDate(-7)">← Move Week</button>
+          <span class="date-display" id="dateDisplay">Select date</span>
+          <button type="button" class="week-shift-btn" onclick="shiftDate(7)">Move Week →</button>
+        </div>
+        <div class="mini-calendar">
+          <div class="mini-calendar-header">
+            <button type="button" class="mini-cal-nav" onclick="shiftPickerMonth(-1)">‹</button>
+            <span class="mini-cal-month" id="pickerMonth"></span>
+            <button type="button" class="mini-cal-nav" onclick="shiftPickerMonth(1)">›</button>
           </div>
-          <div class="mini-calendar">
-            <div class="mini-calendar-header">
-              <button type="button" class="mini-cal-nav" onclick="shiftPickerMonth(-1)">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-              </button>
-              <span class="mini-cal-month" id="pickerMonth"></span>
-              <button type="button" class="mini-cal-nav" onclick="shiftPickerMonth(1)">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-              </button>
-            </div>
-            <div class="mini-calendar-days">
-              <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
-            </div>
-            <div class="mini-calendar-grid" id="pickerGrid"></div>
+          <div class="mini-calendar-days">
+            <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
           </div>
+          <div class="mini-calendar-grid" id="pickerGrid"></div>
         </div>
         <input type="hidden" id="formDate">
       </div>
 
-      <div class="form-group">
-        <label class="form-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-          Series
-        </label>
-        <select class="form-select" id="formSeries">
-          <option value="">Select series...</option>
-          <option value="Featured Playlists">Featured Playlists</option>
-          <option value="Video Essays">Video Essays</option>
-          <option value="Artist Spotlights">Artist Spotlights</option>
-          <option value="Campaign Breakdowns">Campaign Breakdowns</option>
-          <option value="The Principles Series">The Principles Series</option>
-          <option value="Till My Tape Pop">Till My Tape Pop</option>
-          <option value="Vinyl is Plural">Vinyl is Plural</option>
-        </select>
-      </div>
+      <div class="form-divider"></div>
 
+      <!-- Title -->
       <div class="form-group">
-        <label class="form-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
-          Title
-        </label>
+        <label class="form-label">Title</label>
         <input type="text" class="form-input" id="formTitle" placeholder="Enter title...">
       </div>
 
-      <div class="form-divider"></div>
-
-      <div class="form-group">
-        <label class="form-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-          Primary Pillar
-        </label>
-        <select class="form-select" id="formPillar">
-          <option value="">Select pillar...</option>
-          <option value="The Culture">The Culture</option>
-          <option value="The Craft">The Craft</option>
-          <option value="The People">The People</option>
-          <option value="The Principles">The Principles</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
-          Format
-        </label>
-        <div class="format-selector" id="formatSelector">
-          <button type="button" class="format-option" data-value="Carousel" onclick="selectFormat('Carousel')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="14" height="12" rx="2"/><rect x="8" y="4" width="14" height="12" rx="2" opacity="0.5"/></svg>
-            <span>Carousel</span>
-          </button>
-          <button type="button" class="format-option" data-value="Reel" onclick="selectFormat('Reel')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="18" r="1"/></svg>
-            <span>Reel</span>
-          </button>
-          <button type="button" class="format-option" data-value="Static" onclick="selectFormat('Static')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <span>Static</span>
-          </button>
+      <!-- Series + Pillar side by side -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Series</label>
+          <select class="form-select" id="formSeries">
+            <option value="">Select...</option>
+            <option value="Featured Playlists">Featured Playlists</option>
+            <option value="Video Essays">Video Essays</option>
+            <option value="Artist Spotlights">Artist Spotlights</option>
+            <option value="Campaign Breakdowns">Campaign Breakdowns</option>
+            <option value="The Principles Series">The Principles Series</option>
+            <option value="Till My Tape Pop">Till My Tape Pop</option>
+            <option value="Vinyl is Plural">Vinyl is Plural</option>
+          </select>
         </div>
-        <input type="hidden" id="formFormat">
+        <div class="form-group">
+          <label class="form-label">Pillar</label>
+          <select class="form-select" id="formPillar">
+            <option value="">Select...</option>
+            <option value="The Culture">The Culture</option>
+            <option value="The Craft">The Craft</option>
+            <option value="The People">The People</option>
+            <option value="The Principles">The Principles</option>
+          </select>
+        </div>
       </div>
 
       <div class="form-divider"></div>
 
+      <!-- Format + Channel -->
+      <div class="form-row">
+        <div class="form-group" style="flex:2;">
+          <label class="form-label">Format</label>
+          <div class="format-selector">
+            <button type="button" class="format-option" data-value="Carousel" onclick="selectFormat('Carousel')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="14" height="12" rx="2"/><rect x="8" y="4" width="14" height="12" rx="2" opacity="0.5"/></svg>
+              <span>Carousel</span>
+            </button>
+            <button type="button" class="format-option" data-value="Reel" onclick="selectFormat('Reel')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="18" r="1"/></svg>
+              <span>Reel</span>
+            </button>
+            <button type="button" class="format-option" data-value="Static" onclick="selectFormat('Static')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span>Static</span>
+            </button>
+            <button type="button" class="format-option" data-value="Video" onclick="selectFormat('Video')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <span>Video</span>
+            </button>
+          </div>
+          <input type="hidden" id="formFormat">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">Channel</label>
+          <div class="channel-btns">
+            <button type="button" class="channel-btn" data-value="IG" onclick="selectChannel('IG')" title="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>
+            </button>
+            <button type="button" class="channel-btn" data-value="YT" onclick="selectChannel('YT')" title="YouTube">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor"/></svg>
+            </button>
+            <button type="button" class="channel-btn" data-value="LI" onclick="selectChannel('LI')" title="LinkedIn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </button>
+          </div>
+          <input type="hidden" id="formChannel">
+        </div>
+      </div>
+
+      <div class="form-divider"></div>
+
+      <!-- Status on its own -->
       <div class="form-group">
-        <label class="form-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          Status
-        </label>
-        <div class="status-slider" id="statusSlider">
+        <label class="form-label">Status</label>
+        <div class="status-slider">
           <button type="button" class="status-pill planning active" data-value="planning" onclick="selectStatus('planning')">
             <span class="status-pill-dot"></span>Planning
           </button>
@@ -1352,21 +1428,15 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
         <input type="hidden" id="formStatus" value="planning">
       </div>
 
-      <div class="form-divider"></div>
-
+      <!-- Link -->
       <div class="form-group">
-        <label class="form-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          Asset Link <span style="opacity:0.5;font-weight:400;">(optional)</span>
-        </label>
+        <label class="form-label">Link <span style="opacity:0.5;font-weight:400;">(optional)</span></label>
         <input type="url" class="form-input" id="formLink" placeholder="https://...">
       </div>
 
+      <!-- Notes -->
       <div class="form-group">
-        <label class="form-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          Notes <span style="opacity:0.5;font-weight:400;">(optional)</span>
-        </label>
+        <label class="form-label">Notes <span style="opacity:0.5;font-weight:400;">(optional)</span></label>
         <textarea class="form-textarea" id="formNotes" placeholder="Add any notes..."></textarea>
       </div>
     </div>
@@ -1442,9 +1512,11 @@ async function saveEntryToDb(entry) {
         title: entry.title,
         pillar: entry.pillar,
         format: entry.format,
+        channel: entry.channel,
         status: entry.status,
         notes: entry.notes,
-        link: entry.link
+        link: entry.link,
+        publish_time: entry.publish_time
       })
       .eq('id', entry.id)
       .select();
@@ -1514,7 +1586,10 @@ function getMonday(d) {
 }
 
 function formatDate(date) {
-  return date.toISOString().split('T')[0];
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function formatDateShort(date) {
@@ -1527,7 +1602,9 @@ function formatMonthYear(date) {
 
 function isToday(date) {
   const today = new Date();
-  return date.toDateString() === today.toDateString();
+  return date.getFullYear() === today.getFullYear() &&
+         date.getMonth() === today.getMonth() &&
+         date.getDate() === today.getDate();
 }
 
 function getEntryForDate(dateStr) {
@@ -1600,20 +1677,27 @@ function renderPipelineCell(dueDate, publishDate, track) {
   const entry = getEntryForDate(publishDateStr);
   const todayClass = isToday(dueDate) ? 'today' : '';
 
+  // Format icons
+  const formatIcons = {
+    'Carousel': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="14" height="12" rx="2"/><rect x="8" y="4" width="14" height="12" rx="2" opacity="0.5"/></svg>',
+    'Reel': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="18" r="1"/></svg>',
+    'Static': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'
+  };
+
   let content = '';
   if (entry) {
     const statusClass = entry.status === 'published' ? 'done' : 'in-progress';
-    const linkIcon = entry.link ? `<a href="${entry.link}" target="_blank" class="pipeline-link" onclick="event.stopPropagation();" title="Open asset link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>` : '';
+    const formatIcon = formatIcons[entry.format] || '';
     content = `
       <div class="pipeline-card pipeline-card-${track}" onclick="openModal('${publishDateStr}')">
         <div class="pipeline-card-header">
-          <div class="pipeline-card-series">${entry.series || '—'}</div>
+          <div class="pipeline-card-series">${entry.series || ''}</div>
           <div class="pipeline-card-actions">
-            ${linkIcon}
             <span class="pipeline-status ${statusClass}" onclick="event.stopPropagation(); cycleStatus('${publishDateStr}')" title="${STATUS_LABELS[entry.status] || 'Planning'}"></span>
           </div>
         </div>
         <div class="pipeline-card-title">${entry.title || 'Untitled'}</div>
+        ${entry.format ? `<div class="pipeline-card-footer"><div class="pipeline-card-format">${formatIcon}${entry.format}</div></div>` : ''}
       </div>
     `;
   } else {
@@ -1797,9 +1881,14 @@ function openModal(dateStr = null, prefillDate = null) {
   document.getElementById('formStatus').value = 'planning';
   document.getElementById('formNotes').value = '';
   document.getElementById('formLink').value = '';
+  document.getElementById('formTime').value = '';
+  document.getElementById('formChannel').value = '';
 
   // Reset format selector
   document.querySelectorAll('.format-option').forEach(btn => btn.classList.remove('active'));
+
+  // Reset channel buttons
+  document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
 
   // Reset status slider to planning
   document.querySelectorAll('.status-pill').forEach(btn => btn.classList.remove('active'));
@@ -1820,10 +1909,20 @@ function openModal(dateStr = null, prefillDate = null) {
       document.getElementById('formStatus').value = entry.status || 'planning';
       document.getElementById('formNotes').value = entry.notes || '';
       document.getElementById('formLink').value = entry.link || '';
+      document.getElementById('formTime').value = entry.publish_time || '';
+      document.getElementById('formChannel').value = entry.channel || '';
 
       // Set format selector
       if (entry.format) {
         selectFormat(entry.format);
+      }
+
+      // Set channel(s) - supports comma-separated
+      if (entry.channel) {
+        entry.channel.split(',').forEach(ch => {
+          const btn = document.querySelector(`.channel-btn[data-value="${ch}"]`);
+          if (btn) btn.classList.add('active');
+        });
       }
 
       // Set status slider
@@ -1839,7 +1938,9 @@ function openModal(dateStr = null, prefillDate = null) {
   // Initialize mini calendar picker
   const initialDate = document.getElementById('formDate').value;
   if (initialDate) {
-    pickerDate = new Date(initialDate + 'T00:00:00');
+    // Parse date parts to avoid timezone issues
+    const [year, month, day] = initialDate.split('-').map(Number);
+    pickerDate = new Date(year, month - 1, day);
   } else {
     pickerDate = new Date();
   }
@@ -1919,21 +2020,67 @@ function shiftPickerMonth(delta) {
 
 function selectDate(dateStr) {
   document.getElementById('formDate').value = dateStr;
-  pickerDate = new Date(dateStr + 'T00:00:00');
+  // Parse date parts to avoid timezone issues
+  const [year, month, day] = dateStr.split('-').map(Number);
+  pickerDate = new Date(year, month - 1, day);
   renderMiniCalendar();
   updateDateDisplay();
+}
+
+function spinTime(field, delta) {
+  const input = document.getElementById(field === 'hour' ? 'timeHour' : 'timeMinute');
+  let val = input.value;
+  
+  if (field === 'hour') {
+    if (val === '--') val = 12;
+    else val = parseInt(val);
+    val = (val + delta + 24) % 24;
+    input.value = String(val).padStart(2, '0');
+  } else {
+    const mins = [0, 15, 30, 45];
+    if (val === '--') val = 0;
+    else val = parseInt(val);
+    let idx = mins.indexOf(val);
+    if (idx === -1) idx = 0;
+    idx = (idx + delta + 4) % 4;
+    input.value = String(mins[idx]).padStart(2, '0');
+  }
+  updateTime();
+}
+
+function updateTime() {
+  const hour = document.getElementById('timeHour').value;
+  const minute = document.getElementById('timeMinute').value;
+  if (hour !== '--' && minute !== '--') {
+    document.getElementById('formTime').value = `${hour}:${minute}`;
+  } else {
+    document.getElementById('formTime').value = '';
+  }
+}
+
+function setTimeFromValue(timeStr) {
+  if (!timeStr) {
+    document.getElementById('timeHour').value = '--';
+    document.getElementById('timeMinute').value = '--';
+    return;
+  }
+  const [hour, minute] = timeStr.split(':');
+  document.getElementById('timeHour').value = hour;
+  document.getElementById('timeMinute').value = minute;
 }
 
 function shiftDate(days) {
   const currentDate = document.getElementById('formDate').value;
   if (!currentDate) return;
   
-  const date = new Date(currentDate + 'T00:00:00');
+  // Parse date parts to avoid timezone issues
+  const [year, month, day] = currentDate.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
   date.setDate(date.getDate() + days);
   const newDateStr = formatDate(date);
   
   document.getElementById('formDate').value = newDateStr;
-  pickerDate = date;
+  pickerDate = new Date(date);
   renderMiniCalendar();
   updateDateDisplay();
 }
@@ -1959,6 +2106,16 @@ function selectFormat(value) {
     btn.classList.toggle('active', btn.dataset.value === value);
   });
   document.getElementById('formFormat').value = value;
+}
+
+function selectChannel(value) {
+  const btn = document.querySelector(`.channel-btn[data-value="${value}"]`);
+  btn.classList.toggle('active');
+  
+  // Collect all active channels
+  const active = Array.from(document.querySelectorAll('.channel-btn.active'))
+    .map(b => b.dataset.value);
+  document.getElementById('formChannel').value = active.join(',');
 }
 
 function selectStatus(value) {
@@ -1994,9 +2151,11 @@ async function saveEntry() {
     title: document.getElementById('formTitle').value || null,
     pillar: document.getElementById('formPillar').value || null,
     format: document.getElementById('formFormat').value || null,
+    channel: document.getElementById('formChannel').value || null,
     status: document.getElementById('formStatus').value || 'planning',
     notes: document.getElementById('formNotes').value || null,
-    link: document.getElementById('formLink').value || null
+    link: document.getElementById('formLink').value || null,
+    publish_time: document.getElementById('formTime').value || null
   };
 
   if (entryId) {
@@ -2005,7 +2164,11 @@ async function saveEntry() {
 
   const saved = await saveEntryToDb(entry);
   if (saved) {
-    // Update local state
+    // Update local state - remove old entry by ID first (handles date changes)
+    if (entryId) {
+      entries = entries.filter(e => String(e.id) !== String(entryId));
+    }
+    // Add/update the saved entry
     const existingIndex = entries.findIndex(e => e.date === date);
     if (existingIndex >= 0) {
       entries[existingIndex] = saved;
