@@ -1582,41 +1582,49 @@ async function saveEntryToDb(entry) {
     return entry;
   }
 
+  // Build payload without channel (add column to Supabase first if you want it)
+  const payload = {
+    date: entry.date,
+    series: entry.series,
+    title: entry.title,
+    pillar: entry.pillar,
+    format: entry.format,
+    status: entry.status,
+    notes: entry.notes,
+    link: entry.link,
+    publish_time: entry.publish_time
+  };
+
   let data, error;
   
-  if (entry.id) {
-    // Update existing entry
-    const { data: updateData, error: updateError } = await db
-      .from('calendar_entries')
-      .update({
-        date: entry.date,
-        series: entry.series,
-        title: entry.title,
-        pillar: entry.pillar,
-        format: entry.format,
-        channel: entry.channel,
-        status: entry.status,
-        notes: entry.notes,
-        link: entry.link,
-        publish_time: entry.publish_time
-      })
-      .eq('id', entry.id)
-      .select();
-    data = updateData;
-    error = updateError;
-  } else {
-    // Insert new entry
-    const { data: insertData, error: insertError } = await db
-      .from('calendar_entries')
-      .insert(entry)
-      .select();
-    data = insertData;
-    error = insertError;
+  try {
+    if (entry.id) {
+      // Update existing entry
+      const { data: updateData, error: updateError } = await db
+        .from('calendar_entries')
+        .update(payload)
+        .eq('id', entry.id)
+        .select();
+      data = updateData;
+      error = updateError;
+    } else {
+      // Insert new entry
+      const { data: insertData, error: insertError } = await db
+        .from('calendar_entries')
+        .insert(payload)
+        .select();
+      data = insertData;
+      error = insertError;
+    }
+  } catch (e) {
+    showToast('Connection error: ' + e.message, 'error');
+    console.error('Save error:', e);
+    return null;
   }
 
   if (error) {
-    showToast('Failed to save entry', 'error');
-    console.error(error);
+    showToast('Save failed: ' + (error.message || error.code), 'error');
+    console.error('Supabase error:', JSON.stringify(error, null, 2));
     return null;
   }
 
