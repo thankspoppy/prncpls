@@ -608,6 +608,33 @@
     text-transform: uppercase;
   }
 
+  /* Pillar dropdown with floating tooltip */
+  .pillar-dropdown-wrap {
+    position: relative;
+  }
+
+  .pillar-tip {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    padding: 6px 10px;
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--mono);
+    font-size: 9px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s;
+    z-index: 10;
+  }
+
+  .pillar-tip.visible {
+    opacity: 1;
+  }
+
   /* Status Slider */
   .status-slider {
     display: flex;
@@ -1350,13 +1377,16 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
         </div>
         <div class="form-group">
           <label class="form-label">Pillar</label>
-          <select class="form-select" id="formPillar">
-            <option value="">Select...</option>
-            <option value="The Culture">The Culture</option>
-            <option value="The Craft">The Craft</option>
-            <option value="The People">The People</option>
-            <option value="The Principles">The Principles</option>
-          </select>
+          <div class="pillar-dropdown-wrap">
+            <select class="form-select" id="formPillar">
+              <option value="">Select...</option>
+              <option value="The Culture" data-tip="Music history, scenes & cultural context">The Culture</option>
+              <option value="The Craft" data-tip="Marketing strategy & industry how-tos">The Craft</option>
+              <option value="The People" data-tip="Artist spotlights & human stories">The People</option>
+              <option value="The Principles" data-tip="Core philosophy & guiding beliefs">The Principles</option>
+            </select>
+            <div class="pillar-tip" id="pillarTip"></div>
+          </div>
         </div>
       </div>
 
@@ -1459,7 +1489,32 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
 const SUPABASE_URL = 'https://gbadvfbnxefuvxbdkowd.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdiYWR2ZmJueGVmdXZ4YmRrb3dkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2MzY0MzcsImV4cCI6MjA5MTIxMjQzN30.sf0h0hEEzcsyKPOwrtZx2191iTFkAszuQ5rwwFsvr9k';
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Try Supabase, fall back to localStorage
+let db = null;
+let useLocalStorage = false;
+
+try {
+  if (window.supabase) {
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else {
+    useLocalStorage = true;
+  }
+} catch (e) {
+  useLocalStorage = true;
+}
+
+// localStorage fallback functions
+function getLocalEntries() {
+  try {
+    return JSON.parse(localStorage.getItem('prncpls_entries') || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveLocalEntries(entries) {
+  localStorage.setItem('prncpls_entries', JSON.stringify(entries));
+}
 
 // ══════════════════════════════════════════════════════════════
 // STATE
@@ -1484,22 +1539,49 @@ const STATUS_LABELS = {
 // ══════════════════════════════════════════════════════════════
 
 async function loadEntries() {
-  const { data, error } = await db
-    .from('calendar_entries')
-    .select('*')
-    .order('date', { ascending: true });
-
-  if (error) {
-    showToast('Failed to load entries', 'error');
-    console.error('Load error:', JSON.stringify(error, null, 2));
+  if (useLocalStorage) {
+    entries = getLocalEntries();
+    renderCalendar();
     return;
   }
 
-  entries = data || [];
+  try {
+    const { data, error } = await db
+      .from('calendar_entries')
+      .select('*')
+      .order('date', { ascending: true });
+
+    if (error) {
+      console.error('Supabase error, using localStorage:', error);
+      useLocalStorage = true;
+      entries = getLocalEntries();
+    } else {
+      entries = data || [];
+    }
+  } catch (e) {
+    console.error('Connection error, using localStorage:', e);
+    useLocalStorage = true;
+    entries = getLocalEntries();
+  }
   renderCalendar();
 }
 
 async function saveEntryToDb(entry) {
+  if (useLocalStorage) {
+    // Local storage mode
+    let localEntries = getLocalEntries();
+    if (entry.id) {
+      const idx = localEntries.findIndex(e => e.id === entry.id);
+      if (idx >= 0) localEntries[idx] = entry;
+    } else {
+      entry.id = Date.now();
+      localEntries.push(entry);
+    }
+    saveLocalEntries(localEntries);
+    showToast('Entry saved', 'success');
+    return entry;
+  }
+
   let data, error;
   
   if (entry.id) {
@@ -1543,6 +1625,14 @@ async function saveEntryToDb(entry) {
 }
 
 async function deleteEntryFromDb(date) {
+  if (useLocalStorage) {
+    let localEntries = getLocalEntries();
+    localEntries = localEntries.filter(e => e.date !== date);
+    saveLocalEntries(localEntries);
+    showToast('Entry deleted', 'success');
+    return true;
+  }
+
   const { error } = await db
     .from('calendar_entries')
     .delete()
@@ -1559,6 +1649,17 @@ async function deleteEntryFromDb(date) {
 }
 
 async function updateStatus(date, newStatus) {
+  if (useLocalStorage) {
+    let localEntries = getLocalEntries();
+    const idx = localEntries.findIndex(e => e.date === date);
+    if (idx >= 0) {
+      localEntries[idx].status = newStatus;
+      saveLocalEntries(localEntries);
+    }
+    showToast('Status updated', 'success');
+    return true;
+  }
+
   const { error } = await db
     .from('calendar_entries')
     .update({ status: newStatus })
@@ -2185,8 +2286,6 @@ async function deleteEntry() {
   const date = document.getElementById('formDate').value;
   if (!date) return;
 
-  if (!confirm('Are you sure you want to delete this entry?')) return;
-
   const success = await deleteEntryFromDb(date);
   if (success) {
     entries = entries.filter(e => e.date !== date);
@@ -2215,6 +2314,37 @@ function showToast(message, type = 'success') {
 
 document.addEventListener('DOMContentLoaded', () => {
   loadEntries();
+  
+  // Pillar tooltip on hover
+  const pillarSelect = document.getElementById('formPillar');
+  const pillarTip = document.getElementById('pillarTip');
+  const tips = {
+    'The Culture': 'Music history, scenes & cultural context',
+    'The Craft': 'Marketing strategy & industry how-tos',
+    'The People': 'Artist spotlights & human stories',
+    'The Principles': 'Core philosophy & guiding beliefs'
+  };
+  
+  pillarSelect.addEventListener('mouseover', () => {
+    const val = pillarSelect.value;
+    if (tips[val]) {
+      pillarTip.textContent = tips[val];
+      pillarTip.classList.add('visible');
+    }
+  });
+  
+  pillarSelect.addEventListener('mouseout', () => {
+    pillarTip.classList.remove('visible');
+  });
+  
+  pillarSelect.addEventListener('change', () => {
+    const val = pillarSelect.value;
+    if (tips[val]) {
+      pillarTip.textContent = tips[val];
+      pillarTip.classList.add('visible');
+      setTimeout(() => pillarTip.classList.remove('visible'), 1500);
+    }
+  });
 });
 
 // Keyboard shortcuts
