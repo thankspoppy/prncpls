@@ -171,6 +171,223 @@
     color: var(--white);
   }
 
+  .view-toggle-btn {
+    padding: 8px 16px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--white);
+    border: 1px solid var(--gray-light);
+    color: var(--gray-dark);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .view-toggle-btn:first-child {
+    border-radius: 4px 0 0 4px;
+    border-right: none;
+  }
+
+  .view-toggle-btn:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+
+  .view-toggle-btn:hover {
+    background: var(--off-white);
+  }
+
+  .view-toggle-btn.active {
+    background: var(--black);
+    color: var(--white);
+    border-color: var(--black);
+  }
+
+  /* ── AGENDA ── */
+  .agenda-container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .agenda-header {
+    margin-bottom: 24px;
+  }
+
+  .agenda-title {
+    font-family: var(--sans);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--black);
+    margin-bottom: 16px;
+  }
+
+  .agenda-add {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .agenda-input {
+    flex: 1;
+    padding: 12px 16px;
+    font-family: var(--sans);
+    font-size: 14px;
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    background: var(--white);
+  }
+
+  .agenda-input:focus {
+    outline: none;
+    border-color: var(--black);
+  }
+
+  .agenda-priority-select {
+    display: flex;
+    gap: 4px;
+  }
+
+  .priority-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    background: var(--white);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+
+  .priority-btn.urgent {
+    color: #D50000;
+  }
+
+  .priority-btn.neutral {
+    color: var(--gray-dark);
+  }
+
+  .priority-btn.chill {
+    color: #2196F3;
+  }
+
+  .priority-btn:hover {
+    background: var(--off-white);
+  }
+
+  .priority-btn.active {
+    border-color: var(--black);
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .agenda-add-btn {
+    padding: 12px 20px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--red);
+    border: none;
+    color: var(--white);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .agenda-add-btn:hover {
+    background: #D50000;
+  }
+
+  .agenda-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .agenda-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--white);
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    cursor: grab;
+    transition: all 0.15s;
+  }
+
+  .agenda-item:hover {
+    border-color: var(--gray-mid);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .agenda-item.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+  }
+
+  .agenda-item-drag {
+    color: var(--gray-mid);
+    cursor: grab;
+  }
+
+  .agenda-item-priority {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .agenda-item-priority.urgent {
+    background: #D50000;
+  }
+
+  .agenda-item-priority.neutral {
+    background: var(--gray-mid);
+  }
+
+  .agenda-item-priority.chill {
+    background: #2196F3;
+  }
+
+  .agenda-item-text {
+    flex: 1;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--black);
+  }
+
+  .agenda-item-delete {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--gray-mid);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+
+  .agenda-item-delete:hover {
+    background: #FFEBEE;
+    color: #D50000;
+  }
+
+  .agenda-empty {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--gray-mid);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+
   /* ── ADD BUTTON ── */
   .add-btn {
     padding: 8px 16px;
@@ -1441,6 +1658,10 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
 <!-- ── PAGE HEADER ── -->
 <header class="page-header">
   <h1 class="page-title"><strong>Content</strong> Calendar</h1>
+  <div class="view-toggle">
+    <button class="view-toggle-btn active" id="calendarViewBtn" onclick="switchView('calendar')">Calendar</button>
+    <button class="view-toggle-btn" id="agendaViewBtn" onclick="switchView('agenda')">Agenda</button>
+  </div>
 </header>
 
 <!-- ── WEEK NAVIGATION ── -->
@@ -1457,6 +1678,23 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
 
 <!-- ── CALENDAR ── -->
 <div class="calendar-container" id="calendarContainer"></div>
+
+<!-- ── AGENDA ── -->
+<div class="agenda-container" id="agendaContainer" style="display:none;">
+  <div class="agenda-header">
+    <h2 class="agenda-title">Priorities</h2>
+    <div class="agenda-add">
+      <input type="text" class="agenda-input" id="agendaInput" placeholder="Add a priority..." onkeypress="if(event.key==='Enter')addAgendaItem()">
+      <div class="agenda-priority-select">
+        <button type="button" class="priority-btn urgent" data-priority="urgent" onclick="selectPriority('urgent')" title="Urgent">!</button>
+        <button type="button" class="priority-btn neutral active" data-priority="neutral" onclick="selectPriority('neutral')" title="Neutral">•</button>
+        <button type="button" class="priority-btn chill" data-priority="chill" onclick="selectPriority('chill')" title="Chill">~</button>
+      </div>
+      <button class="agenda-add-btn" onclick="addAgendaItem()">Add</button>
+    </div>
+  </div>
+  <div class="agenda-list" id="agendaList"></div>
+</div>
 
 <!-- ── MODAL ── -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
@@ -2572,6 +2810,235 @@ document.addEventListener('keydown', (e) => {
     closeModal();
   }
 });
+
+// ══════════════════════════════════════════════════════════════
+// AGENDA FUNCTIONS
+// ══════════════════════════════════════════════════════════════
+
+let agendaItems = [];
+let selectedPriority = 'neutral';
+let draggedItem = null;
+
+async function loadAgendaItems() {
+  if (useLocalStorage) {
+    agendaItems = JSON.parse(localStorage.getItem('prncpls_agenda') || '[]');
+    renderAgenda();
+    return;
+  }
+
+  try {
+    const { data, error } = await db
+      .from('agenda_items')
+      .select('*')
+      .order('sort_order', { ascending: true });
+
+    if (error) {
+      console.error('Supabase error loading agenda:', error);
+      agendaItems = JSON.parse(localStorage.getItem('prncpls_agenda') || '[]');
+    } else {
+      agendaItems = data || [];
+    }
+  } catch (e) {
+    console.error('Connection error loading agenda:', e);
+    agendaItems = JSON.parse(localStorage.getItem('prncpls_agenda') || '[]');
+  }
+  renderAgenda();
+}
+
+async function saveAgendaItem(item) {
+  if (useLocalStorage) {
+    if (!item.id) {
+      item.id = Date.now();
+      item.sort_order = agendaItems.length;
+    }
+    agendaItems.push(item);
+    localStorage.setItem('prncpls_agenda', JSON.stringify(agendaItems));
+    return item;
+  }
+
+  const payload = {
+    text: item.text,
+    priority: item.priority,
+    sort_order: agendaItems.length
+  };
+
+  const { data, error } = await db
+    .from('agenda_items')
+    .insert([payload])
+    .select()
+    .single();
+
+  if (error) {
+    showToast('Failed to save item', 'error');
+    console.error(error);
+    return null;
+  }
+
+  return data;
+}
+
+async function deleteAgendaItem(id) {
+  if (useLocalStorage) {
+    agendaItems = agendaItems.filter(i => i.id !== id);
+    localStorage.setItem('prncpls_agenda', JSON.stringify(agendaItems));
+    renderAgenda();
+    showToast('Item removed', 'success');
+    return;
+  }
+
+  const { error } = await db
+    .from('agenda_items')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    showToast('Failed to delete item', 'error');
+    console.error(error);
+    return;
+  }
+
+  agendaItems = agendaItems.filter(i => i.id !== id);
+  renderAgenda();
+  showToast('Item removed', 'success');
+}
+
+async function updateAgendaOrder() {
+  if (useLocalStorage) {
+    agendaItems.forEach((item, idx) => item.sort_order = idx);
+    localStorage.setItem('prncpls_agenda', JSON.stringify(agendaItems));
+    return;
+  }
+
+  const updates = agendaItems.map((item, idx) => ({
+    id: item.id,
+    sort_order: idx
+  }));
+
+  for (const update of updates) {
+    await db
+      .from('agenda_items')
+      .update({ sort_order: update.sort_order })
+      .eq('id', update.id);
+  }
+}
+
+function selectPriority(priority) {
+  selectedPriority = priority;
+  document.querySelectorAll('.priority-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.priority === priority);
+  });
+}
+
+async function addAgendaItem() {
+  const input = document.getElementById('agendaInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const item = {
+    text: text,
+    priority: selectedPriority
+  };
+
+  const saved = await saveAgendaItem(item);
+  if (saved) {
+    agendaItems.push(saved);
+    input.value = '';
+    renderAgenda();
+    showToast('Priority added', 'success');
+  }
+}
+
+function renderAgenda() {
+  const list = document.getElementById('agendaList');
+  
+  if (agendaItems.length === 0) {
+    list.innerHTML = '<div class="agenda-empty">No priorities yet. Add one above.</div>';
+    return;
+  }
+
+  list.innerHTML = agendaItems.map((item, idx) => `
+    <div class="agenda-item" draggable="true" data-id="${item.id}" data-idx="${idx}">
+      <span class="agenda-item-drag">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+      </span>
+      <span class="agenda-item-priority ${item.priority}"></span>
+      <span class="agenda-item-text">${escapeHtml(item.text)}</span>
+      <button class="agenda-item-delete" onclick="deleteAgendaItem(${item.id})" title="Remove">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('');
+
+  // Add drag handlers
+  list.querySelectorAll('.agenda-item').forEach(item => {
+    item.addEventListener('dragstart', handleDragStart);
+    item.addEventListener('dragend', handleDragEnd);
+    item.addEventListener('dragover', handleDragOver);
+    item.addEventListener('drop', handleDrop);
+  });
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function handleDragStart(e) {
+  draggedItem = this;
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleDragEnd(e) {
+  this.classList.remove('dragging');
+  draggedItem = null;
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  if (draggedItem === this) return;
+
+  const fromIdx = parseInt(draggedItem.dataset.idx);
+  const toIdx = parseInt(this.dataset.idx);
+
+  const [moved] = agendaItems.splice(fromIdx, 1);
+  agendaItems.splice(toIdx, 0, moved);
+
+  updateAgendaOrder();
+  renderAgenda();
+}
+
+function switchView(view) {
+  const calendarBtn = document.getElementById('calendarViewBtn');
+  const agendaBtn = document.getElementById('agendaViewBtn');
+  const weekNav = document.getElementById('weekNav');
+  const calendarContainer = document.getElementById('calendarContainer');
+  const agendaContainer = document.getElementById('agendaContainer');
+
+  if (view === 'calendar') {
+    calendarBtn.classList.add('active');
+    agendaBtn.classList.remove('active');
+    weekNav.style.display = 'flex';
+    calendarContainer.style.display = 'block';
+    agendaContainer.style.display = 'none';
+  } else {
+    calendarBtn.classList.remove('active');
+    agendaBtn.classList.add('active');
+    weekNav.style.display = 'none';
+    calendarContainer.style.display = 'none';
+    agendaContainer.style.display = 'block';
+    loadAgendaItems();
+  }
+}
+
+// Load agenda on init (but don't show it)
+loadAgendaItems();
 </script>
 
 </body>
