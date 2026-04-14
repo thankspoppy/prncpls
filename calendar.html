@@ -265,7 +265,7 @@
   }
 
   .priority-btn.neutral {
-    color: var(--gray-dark);
+    color: #F5A623;
   }
 
   .priority-btn.chill {
@@ -312,16 +312,29 @@
     align-items: center;
     gap: 12px;
     padding: 14px 16px;
-    background: var(--white);
-    border: 1px solid var(--gray-light);
+    border: 1px solid transparent;
     border-radius: 4px;
     cursor: grab;
     transition: all 0.15s;
   }
 
+  .agenda-item-urgent {
+    background: #FFEBEE;
+    border-color: #FFCDD2;
+  }
+
+  .agenda-item-neutral {
+    background: #FFF8E1;
+    border-color: #FFECB3;
+  }
+
+  .agenda-item-chill {
+    background: #E3F2FD;
+    border-color: #BBDEFB;
+  }
+
   .agenda-item:hover {
-    border-color: var(--gray-mid);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   }
 
   .agenda-item.dragging {
@@ -334,23 +347,35 @@
     cursor: grab;
   }
 
-  .agenda-item-priority {
-    width: 8px;
-    height: 8px;
+  .agenda-item-priority-btn {
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    transition: all 0.15s;
     flex-shrink: 0;
   }
 
-  .agenda-item-priority.urgent {
+  .agenda-item-priority-btn.urgent {
     background: #D50000;
+    color: white;
   }
 
-  .agenda-item-priority.neutral {
-    background: var(--gray-mid);
+  .agenda-item-priority-btn.neutral {
+    background: #F5A623;
+    color: white;
   }
 
-  .agenda-item-priority.chill {
+  .agenda-item-priority-btn.chill {
     background: #2196F3;
+    color: white;
+  }
+
+  .agenda-item-priority-btn:hover {
+    transform: scale(1.1);
   }
 
   .agenda-item-text {
@@ -375,7 +400,7 @@
   }
 
   .agenda-item-delete:hover {
-    background: #FFEBEE;
+    background: rgba(0,0,0,0.1);
     color: #D50000;
   }
 
@@ -2957,11 +2982,13 @@ function renderAgenda() {
   }
 
   list.innerHTML = agendaItems.map((item, idx) => `
-    <div class="agenda-item" draggable="true" data-id="${item.id}" data-idx="${idx}">
+    <div class="agenda-item agenda-item-${item.priority}" draggable="true" data-id="${item.id}" data-idx="${idx}">
       <span class="agenda-item-drag">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
       </span>
-      <span class="agenda-item-priority ${item.priority}"></span>
+      <button class="agenda-item-priority-btn ${item.priority}" onclick="cyclePriority(${item.id})" title="Click to change priority">
+        ${item.priority === 'urgent' ? '!' : item.priority === 'neutral' ? '•' : '~'}
+      </button>
       <span class="agenda-item-text">${escapeHtml(item.text)}</span>
       <button class="agenda-item-delete" onclick="deleteAgendaItem(${item.id})" title="Remove">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -2982,6 +3009,27 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+async function cyclePriority(id) {
+  const item = agendaItems.find(i => i.id === id);
+  if (!item) return;
+
+  const priorities = ['urgent', 'neutral', 'chill'];
+  const currentIdx = priorities.indexOf(item.priority);
+  const nextIdx = (currentIdx + 1) % priorities.length;
+  item.priority = priorities[nextIdx];
+
+  if (useLocalStorage) {
+    localStorage.setItem('prncpls_agenda', JSON.stringify(agendaItems));
+  } else {
+    await db
+      .from('agenda_items')
+      .update({ priority: item.priority })
+      .eq('id', id);
+  }
+
+  renderAgenda();
 }
 
 function handleDragStart(e) {
