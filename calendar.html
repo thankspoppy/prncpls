@@ -261,15 +261,15 @@
   }
 
   .priority-btn.urgent {
-    color: #D50000;
+    color: #00C853;
   }
 
   .priority-btn.neutral {
-    color: #F5A623;
+    color: #2196F3;
   }
 
   .priority-btn.chill {
-    color: #2196F3;
+    color: #B388FF;
   }
 
   .priority-btn:hover {
@@ -319,18 +319,18 @@
   }
 
   .agenda-item-urgent {
-    background: #FFEBEE;
-    border-color: #FFCDD2;
+    background: #E8F5E9;
+    border-color: #C8E6C9;
   }
 
   .agenda-item-neutral {
-    background: #FFF8E1;
-    border-color: #FFECB3;
+    background: #E3F2FD;
+    border-color: #BBDEFB;
   }
 
   .agenda-item-chill {
-    background: #E3F2FD;
-    border-color: #BBDEFB;
+    background: #F3E5F5;
+    border-color: #E1BEE7;
   }
 
   .agenda-item:hover {
@@ -360,17 +360,17 @@
   }
 
   .agenda-item-priority-btn.urgent {
-    background: #D50000;
+    background: #00C853;
     color: white;
   }
 
   .agenda-item-priority-btn.neutral {
-    background: #F5A623;
+    background: #2196F3;
     color: white;
   }
 
   .agenda-item-priority-btn.chill {
-    background: #2196F3;
+    background: #B388FF;
     color: white;
   }
 
@@ -382,6 +382,25 @@
     flex: 1;
     font-family: var(--sans);
     font-size: 14px;
+    color: var(--black);
+  }
+
+  .agenda-item-edit {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--gray-mid);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+
+  .agenda-item-edit:hover {
+    background: rgba(0,0,0,0.05);
     color: var(--black);
   }
 
@@ -402,6 +421,21 @@
   .agenda-item-delete:hover {
     background: rgba(0,0,0,0.1);
     color: #D50000;
+  }
+
+  .agenda-edit-input {
+    width: 100%;
+    padding: 4px 8px;
+    font-family: var(--sans);
+    font-size: 14px;
+    border: 1px solid var(--gray-mid);
+    border-radius: 3px;
+    background: var(--white);
+  }
+
+  .agenda-edit-input:focus {
+    outline: none;
+    border-color: var(--black);
   }
 
   .agenda-empty {
@@ -2989,7 +3023,10 @@ function renderAgenda() {
       <button class="agenda-item-priority-btn ${item.priority}" onclick="cyclePriority(${item.id})" title="Click to change priority">
         ${item.priority === 'urgent' ? '!' : item.priority === 'neutral' ? '•' : '~'}
       </button>
-      <span class="agenda-item-text">${escapeHtml(item.text)}</span>
+      <span class="agenda-item-text" id="agenda-text-${item.id}">${escapeHtml(item.text)}</span>
+      <button class="agenda-item-edit" onclick="editAgendaItem(${item.id})" title="Edit">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
       <button class="agenda-item-delete" onclick="deleteAgendaItem(${item.id})" title="Remove">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
@@ -3026,6 +3063,47 @@ async function cyclePriority(id) {
     await db
       .from('agenda_items')
       .update({ priority: item.priority })
+      .eq('id', id);
+  }
+
+  renderAgenda();
+}
+
+function editAgendaItem(id) {
+  const item = agendaItems.find(i => i.id === id);
+  if (!item) return;
+
+  const textSpan = document.getElementById(`agenda-text-${id}`);
+  const currentText = item.text;
+
+  textSpan.innerHTML = `<input type="text" class="agenda-edit-input" id="agenda-edit-${id}" value="${escapeHtml(currentText)}" onkeypress="if(event.key==='Enter')saveAgendaEdit(${id})" onblur="saveAgendaEdit(${id})">`;
+  
+  const input = document.getElementById(`agenda-edit-${id}`);
+  input.focus();
+  input.select();
+}
+
+async function saveAgendaEdit(id) {
+  const input = document.getElementById(`agenda-edit-${id}`);
+  if (!input) return;
+
+  const newText = input.value.trim();
+  if (!newText) {
+    renderAgenda();
+    return;
+  }
+
+  const item = agendaItems.find(i => i.id === id);
+  if (!item) return;
+
+  item.text = newText;
+
+  if (useLocalStorage) {
+    localStorage.setItem('prncpls_agenda', JSON.stringify(agendaItems));
+  } else {
+    await db
+      .from('agenda_items')
+      .update({ text: newText })
       .eq('id', id);
   }
 
