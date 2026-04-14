@@ -31,8 +31,9 @@
     
     /* Pipeline colors */
     --pipeline-post: #FA0000;
+    --pipeline-vip: #F5A623;
     --pipeline-draft: #7C4DFF;
-    --pipeline-idea: #00C853;
+    --pipeline-concept: #00C853;
   }
 
   /* ── SHARED NAV ── */
@@ -635,6 +636,44 @@
     opacity: 1;
   }
 
+  /* Collab checkbox */
+  .collab-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--black);
+    cursor: pointer;
+  }
+
+  .collab-label input {
+    display: none;
+  }
+
+  .collab-check {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--gray-mid);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .collab-label input:checked + .collab-check {
+    background: var(--red);
+    border-color: var(--red);
+  }
+
+  .collab-label input:checked + .collab-check::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
   /* Status Slider */
   .status-slider {
     display: flex;
@@ -985,8 +1024,77 @@
   }
 
   .pipeline-label.pipeline-post { color: var(--pipeline-post); }
+  .pipeline-label.pipeline-vip { 
+    color: var(--pipeline-vip); 
+    cursor: pointer;
+    padding-left: 24px;
+    font-size: 9px;
+  }
   .pipeline-label.pipeline-draft { color: var(--pipeline-draft); }
-  .pipeline-label.pipeline-idea { color: var(--pipeline-idea); }
+  .pipeline-label.pipeline-concept { color: var(--pipeline-concept); }
+
+  .pipeline-section-post {
+    border-left: 3px solid var(--pipeline-post);
+    margin-bottom: 2px;
+  }
+
+  .pipeline-section-draft {
+    border-left: 3px solid var(--pipeline-draft);
+    margin-bottom: 2px;
+  }
+
+  .pipeline-section-concept {
+    border-left: 3px solid var(--pipeline-concept);
+    margin-bottom: 2px;
+  }
+
+  .vip-toggle {
+    font-size: 8px;
+    transition: transform 0.2s;
+    margin-left: 4px;
+  }
+
+  .pipeline-row-vip {
+    transition: all 0.2s;
+  }
+
+  .pipeline-row-vip .pipeline-cell {
+    min-height: 80px;
+    background: #FFFBF5;
+  }
+
+  .pipeline-row-vip.collapsed .pipeline-cell {
+    min-height: 40px;
+    padding: 6px;
+  }
+
+  .pipeline-row-vip.collapsed .vip-toggle {
+    transform: rotate(0deg);
+  }
+
+  .pipeline-row-vip:not(.collapsed) .vip-toggle {
+    transform: rotate(90deg);
+  }
+
+  .pipeline-row-vip.collapsed .pipeline-card {
+    padding: 6px 8px;
+  }
+
+  .pipeline-row-vip.collapsed .pipeline-card-title {
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pipeline-row-vip.collapsed .pipeline-card-series,
+  .pipeline-row-vip.collapsed .pipeline-card-footer {
+    display: none;
+  }
+
+  .pipeline-row-vip.collapsed .pipeline-date {
+    display: none;
+  }
 
   .pipeline-cell {
     background: var(--off-white);
@@ -1028,8 +1136,15 @@
   }
 
   .pipeline-card-post { border-left: 3px solid var(--pipeline-post); }
+  .pipeline-card-vip { border-left: 3px solid var(--pipeline-vip); }
   .pipeline-card-draft { border-left: 3px solid var(--pipeline-draft); }
-  .pipeline-card-idea { border-left: 3px solid var(--pipeline-idea); }
+  .pipeline-card-concept { border-left: 3px solid var(--pipeline-concept); }
+
+  /* Collab posts get a reddish tint */
+  .pipeline-card.collab {
+    background: #FFF5F5;
+    border-left-color: var(--red);
+  }
 
   .pipeline-card-header {
     display: flex;
@@ -1076,6 +1191,7 @@
   .pipeline-card-footer {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 6px;
     margin-top: 8px;
     padding-top: 8px;
@@ -1097,6 +1213,20 @@
     opacity: 0.6;
   }
 
+  .pipeline-card-link {
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #0066CC;
+    text-decoration: none;
+  }
+
+  .pipeline-card-link:hover {
+    text-decoration: underline;
+  }
+
   .pipeline-status {
     width: 14px;
     height: 14px;
@@ -1112,15 +1242,24 @@
     transform: scale(1.2);
   }
 
-  .pipeline-status.in-progress {
+  /* Status colors matching the status pills */
+  .pipeline-status.planning {
+    background: var(--gray-mid);
+  }
+
+  .pipeline-status.production {
     background: #F5A623;
   }
 
-  .pipeline-status.done {
+  .pipeline-status.ready {
+    background: #2196F3;
+  }
+
+  .pipeline-status.published {
     background: #00C853;
   }
 
-  .pipeline-status.done::after {
+  .pipeline-status.published::after {
     content: '';
     width: 6px;
     height: 3px;
@@ -1328,7 +1467,7 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
     </div>
     <div class="modal-body">
       <input type="hidden" id="entryId">
-      <input type="hidden" id="formTime">
+      <input type="hidden" id="formAccount" value="prncpls">
       
       <!-- Publish Date at top -->
       <div class="form-group">
@@ -1360,19 +1499,17 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
         <input type="text" class="form-input" id="formTitle" placeholder="Enter title..." autocomplete="off">
       </div>
 
-      <!-- Series + Pillar side by side -->
-      <div class="form-row">
+      <!-- Series + Pillar side by side (hidden for VIP) -->
+      <div class="form-row" id="seriesPillarRow">
         <div class="form-group">
           <label class="form-label">Series</label>
           <select class="form-select" id="formSeries">
             <option value="">Select...</option>
             <option value="Featured Playlists">Featured Playlists</option>
-            <option value="Video Essays">Video Essays</option>
+            <option value="Industry Pieces">Industry Pieces</option>
             <option value="Artist Spotlights">Artist Spotlights</option>
             <option value="Campaign Breakdowns">Campaign Breakdowns</option>
             <option value="The Principles Series">The Principles Series</option>
-            <option value="Till My Tape Pop">Till My Tape Pop</option>
-            <option value="Vinyl is Plural">Vinyl is Plural</option>
           </select>
         </div>
         <div class="form-group">
@@ -1388,6 +1525,15 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
             <div class="pillar-tip" id="pillarTip"></div>
           </div>
         </div>
+      </div>
+
+      <!-- Collab checkbox (VIP only) -->
+      <div class="form-group" id="collabGroup" style="display:none;">
+        <label class="collab-label">
+          <input type="checkbox" id="formCollab">
+          <span class="collab-check"></span>
+          Collab with PRNCPLS
+        </label>
       </div>
 
       <div class="form-divider"></div>
@@ -1425,7 +1571,7 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
             <button type="button" class="channel-btn" data-value="YT" onclick="selectChannel('YT')" title="YouTube">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor"/></svg>
             </button>
-            <button type="button" class="channel-btn" data-value="LI" onclick="selectChannel('LI')" title="LinkedIn">
+            <button type="button" class="channel-btn" id="channelLI" data-value="LI" onclick="selectChannel('LI')" title="LinkedIn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
             </button>
           </div>
@@ -1448,9 +1594,6 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
           <button type="button" class="status-pill ready" data-value="ready" onclick="selectStatus('ready')">
             <span class="status-pill-dot"></span>Ready
           </button>
-          <button type="button" class="status-pill scheduled" data-value="scheduled" onclick="selectStatus('scheduled')">
-            <span class="status-pill-dot"></span>Scheduled
-          </button>
           <button type="button" class="status-pill published" data-value="published" onclick="selectStatus('published')">
             <span class="status-pill-dot"></span>Published
           </button>
@@ -1466,7 +1609,7 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
 
       <!-- Notes -->
       <div class="form-group">
-        <label class="form-label">Notes <span style="opacity:0.5;font-weight:400;">(optional)</span></label>
+        <label class="form-label">Notes/Caption <span style="opacity:0.5;font-weight:400;">(optional)</span></label>
         <textarea class="form-textarea" id="formNotes" placeholder="Add any notes..." autocomplete="off"></textarea>
       </div>
     </div>
@@ -1525,12 +1668,11 @@ let currentView = 'weekly';
 let currentMonth = new Date();
 let currentWeek = new Date(); // Track which week we're viewing
 
-const STATUS_ORDER = ['planning', 'production', 'ready', 'scheduled', 'published'];
+const STATUS_ORDER = ['planning', 'production', 'ready', 'published'];
 const STATUS_LABELS = {
   planning: 'Planning',
   production: 'In Production',
   ready: 'Ready',
-  scheduled: 'Scheduled',
   published: 'Published'
 };
 
@@ -1585,6 +1727,7 @@ async function saveEntryToDb(entry) {
   // Build payload
   const payload = {
     date: entry.date,
+    account: entry.account,
     series: entry.series,
     title: entry.title,
     pillar: entry.pillar,
@@ -1592,7 +1735,8 @@ async function saveEntryToDb(entry) {
     channel: entry.channel,
     status: entry.status,
     notes: entry.notes,
-    link: entry.link
+    link: entry.link,
+    collab: entry.collab
   };
 
   let data, error;
@@ -1656,10 +1800,14 @@ async function deleteEntryFromDb(date) {
   return true;
 }
 
-async function updateStatus(date, newStatus) {
+async function updateStatus(date, newStatus, account = 'prncpls') {
   if (useLocalStorage) {
     let localEntries = getLocalEntries();
-    const idx = localEntries.findIndex(e => e.date === date);
+    const idx = localEntries.findIndex(e => {
+      if (e.date !== date) return false;
+      if (account === 'vip') return e.account === 'vip';
+      return e.account !== 'vip';
+    });
     if (idx >= 0) {
       localEntries[idx].status = newStatus;
       saveLocalEntries(localEntries);
@@ -1671,7 +1819,8 @@ async function updateStatus(date, newStatus) {
   const { error } = await db
     .from('calendar_entries')
     .update({ status: newStatus })
-    .eq('date', date);
+    .eq('date', date)
+    .eq('account', account);
 
   if (error) {
     showToast('Failed to update status', 'error');
@@ -1743,75 +1892,106 @@ function renderWeeklyView(container) {
     </div>
   `;
 
-  // POST ROW - content publishing THIS week (due date = publish date)
+  // POST SECTION - contains PRNCPLS post row + VIP sub-row
+  html += `<div class="pipeline-section pipeline-section-post">`;
+  
+  // PRNCPLS POST ROW
   html += `<div class="pipeline-row">`;
   html += `<div class="pipeline-label pipeline-post"><span class="pipeline-dot" style="background:var(--pipeline-post);"></span>Post</div>`;
   for (let d = 0; d < 5; d++) {
     const dueDate = new Date(monday);
     dueDate.setDate(monday.getDate() + d);
-    const publishDate = new Date(dueDate); // Same day
-    html += renderPipelineCell(dueDate, publishDate, 'post');
+    const publishDate = new Date(dueDate);
+    html += renderPipelineCell(dueDate, publishDate, 'post', 'prncpls');
   }
   html += `</div>`;
 
-  // DRAFT ROW - content publishing NEXT week (draft due this week)
+  // VIP SUB-ROW (collapsed by default)
+  html += `<div class="pipeline-row pipeline-row-vip collapsed" id="vipRow">`;
+  html += `<div class="pipeline-label pipeline-vip" onclick="toggleVipRow()"><span class="pipeline-dot" style="background:var(--pipeline-vip);"></span>VIP <span class="vip-toggle" id="vipToggle">▶</span></div>`;
+  for (let d = 0; d < 5; d++) {
+    const dueDate = new Date(monday);
+    dueDate.setDate(monday.getDate() + d);
+    const publishDate = new Date(dueDate);
+    html += renderPipelineCell(dueDate, publishDate, 'vip', 'vip');
+  }
+  html += `</div>`;
+  
+  html += `</div>`; // close pipeline-section-post
+
+  // DRAFT ROW - PRNCPLS content publishing NEXT week
+  html += `<div class="pipeline-section pipeline-section-draft">`;
   html += `<div class="pipeline-row">`;
   html += `<div class="pipeline-label pipeline-draft"><span class="pipeline-dot" style="background:var(--pipeline-draft);"></span>Draft</div>`;
   for (let d = 0; d < 5; d++) {
     const dueDate = new Date(monday);
     dueDate.setDate(monday.getDate() + d);
     const publishDate = new Date(dueDate);
-    publishDate.setDate(dueDate.getDate() + 7); // Publishes 1 week later
-    html += renderPipelineCell(dueDate, publishDate, 'draft');
+    publishDate.setDate(dueDate.getDate() + 7);
+    html += renderPipelineCell(dueDate, publishDate, 'draft', 'prncpls');
   }
   html += `</div>`;
+  html += `</div>`;
 
-  // IDEA ROW - content publishing WEEK AFTER next (idea due this week)
+  // CONCEPT ROW - PRNCPLS content publishing WEEK AFTER next (renamed from Idea)
+  html += `<div class="pipeline-section pipeline-section-concept">`;
   html += `<div class="pipeline-row">`;
-  html += `<div class="pipeline-label pipeline-idea"><span class="pipeline-dot" style="background:var(--pipeline-idea);"></span>Idea</div>`;
+  html += `<div class="pipeline-label pipeline-concept"><span class="pipeline-dot" style="background:var(--pipeline-concept);"></span>Concept</div>`;
   for (let d = 0; d < 5; d++) {
     const dueDate = new Date(monday);
     dueDate.setDate(monday.getDate() + d);
     const publishDate = new Date(dueDate);
-    publishDate.setDate(dueDate.getDate() + 14); // Publishes 2 weeks later
-    html += renderPipelineCell(dueDate, publishDate, 'idea');
+    publishDate.setDate(dueDate.getDate() + 14);
+    html += renderPipelineCell(dueDate, publishDate, 'concept', 'prncpls');
   }
+  html += `</div>`;
   html += `</div>`;
 
   container.innerHTML = html;
 }
 
-function renderPipelineCell(dueDate, publishDate, track) {
+function renderPipelineCell(dueDate, publishDate, track, account) {
   const publishDateStr = formatDate(publishDate);
-  const entry = getEntryForDate(publishDateStr);
+  // For VIP track, we need entries with account='vip', otherwise account='prncpls' or null
+  const entry = entries.find(e => {
+    if (e.date !== publishDateStr) return false;
+    if (account === 'vip') return e.account === 'vip';
+    return e.account !== 'vip';
+  });
   const todayClass = isToday(dueDate) ? 'today' : '';
 
   // Format icons
   const formatIcons = {
     'Carousel': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="14" height="12" rx="2"/><rect x="8" y="4" width="14" height="12" rx="2" opacity="0.5"/></svg>',
     'Reel': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="18" r="1"/></svg>',
-    'Static': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'
+    'Static': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+    'Video': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
   };
 
   let content = '';
   if (entry) {
-    const statusClass = entry.status === 'published' ? 'done' : 'in-progress';
+    const statusClass = entry.status || 'planning';
     const formatIcon = formatIcons[entry.format] || '';
+    const collabClass = entry.collab ? 'collab' : '';
+    const linkHtml = entry.link ? `<a href="${entry.link}" target="_blank" class="pipeline-card-link" onclick="event.stopPropagation();">ASSET LINK</a>` : '';
     content = `
-      <div class="pipeline-card pipeline-card-${track}" onclick="openModal('${publishDateStr}')">
+      <div class="pipeline-card pipeline-card-${track} ${collabClass}" onclick="openModal('${publishDateStr}', null, '${account}')">
         <div class="pipeline-card-header">
           <div class="pipeline-card-series">${entry.series || ''}</div>
           <div class="pipeline-card-actions">
-            <span class="pipeline-status ${statusClass}" onclick="event.stopPropagation(); cycleStatus('${publishDateStr}')" title="${STATUS_LABELS[entry.status] || 'Planning'}"></span>
+            <span class="pipeline-status ${statusClass}" onclick="event.stopPropagation(); cycleStatus('${publishDateStr}', '${account}')" title="${STATUS_LABELS[entry.status] || 'Planning'}"></span>
           </div>
         </div>
         <div class="pipeline-card-title">${entry.title || 'Untitled'}</div>
-        ${entry.format ? `<div class="pipeline-card-footer"><div class="pipeline-card-format">${formatIcon}${entry.format}</div></div>` : ''}
+        <div class="pipeline-card-footer">
+          ${entry.format ? `<div class="pipeline-card-format">${formatIcon}${entry.format}</div>` : ''}
+          ${linkHtml}
+        </div>
       </div>
     `;
   } else {
     content = `
-      <button class="pipeline-add-btn pipeline-add-${track}" onclick="openModal(null, '${publishDateStr}')">+</button>
+      <button class="pipeline-add-btn pipeline-add-${track}" onclick="openModal(null, '${publishDateStr}', '${account}')">+</button>
     `;
   }
 
@@ -1960,29 +2140,45 @@ function updateWeekLabel() {
     `${formatDateShort(monday)} – ${formatDateShort(friday)}`;
 }
 
-async function cycleStatus(dateStr) {
-  const entry = getEntryForDate(dateStr);
+async function cycleStatus(dateStr, account = 'prncpls') {
+  const entry = entries.find(e => {
+    if (e.date !== dateStr) return false;
+    if (account === 'vip') return e.account === 'vip';
+    return e.account !== 'vip';
+  });
   if (!entry) return;
 
   const currentIndex = STATUS_ORDER.indexOf(entry.status);
   const nextIndex = (currentIndex + 1) % STATUS_ORDER.length;
   const newStatus = STATUS_ORDER[nextIndex];
 
-  const success = await updateStatus(dateStr, newStatus);
+  const success = await updateStatus(dateStr, newStatus, account);
   if (success) {
     entry.status = newStatus;
     renderCalendar();
   }
 }
 
-function openModal(dateStr = null, prefillDate = null) {
+function toggleVipRow() {
+  const row = document.getElementById('vipRow');
+  row.classList.toggle('collapsed');
+}
+
+function openModal(dateStr = null, prefillDate = null, account = 'prncpls') {
   const overlay = document.getElementById('modalOverlay');
   const title = document.getElementById('modalTitle');
   const deleteBtn = document.getElementById('deleteBtn');
+  const isVip = account === 'vip';
+
+  // Show/hide VIP-specific elements
+  document.getElementById('seriesPillarRow').style.display = isVip ? 'none' : 'flex';
+  document.getElementById('collabGroup').style.display = isVip ? 'block' : 'none';
+  document.getElementById('channelLI').style.display = isVip ? 'none' : 'flex';
 
   // Reset form
   document.getElementById('entryId').value = '';
   document.getElementById('formDate').value = prefillDate || '';
+  document.getElementById('formAccount').value = account;
   document.getElementById('formSeries').value = '';
   document.getElementById('formTitle').value = '';
   document.getElementById('formPillar').value = '';
@@ -1990,8 +2186,8 @@ function openModal(dateStr = null, prefillDate = null) {
   document.getElementById('formStatus').value = 'planning';
   document.getElementById('formNotes').value = '';
   document.getElementById('formLink').value = '';
-  document.getElementById('formTime').value = '';
   document.getElementById('formChannel').value = '';
+  document.getElementById('formCollab').checked = false;
 
   // Reset format selector
   document.querySelectorAll('.format-option').forEach(btn => btn.classList.remove('active'));
@@ -2004,10 +2200,14 @@ function openModal(dateStr = null, prefillDate = null) {
   document.querySelector('.status-pill.planning').classList.add('active');
 
   if (dateStr) {
-    // Editing existing entry
-    const entry = getEntryForDate(dateStr);
+    // Editing existing entry - find by date AND account
+    const entry = entries.find(e => {
+      if (e.date !== dateStr) return false;
+      if (isVip) return e.account === 'vip';
+      return e.account !== 'vip';
+    });
     if (entry) {
-      title.textContent = 'Edit Asset';
+      title.textContent = isVip ? 'Edit VIP Asset' : 'Edit Asset';
       deleteBtn.style.display = 'block';
       document.getElementById('entryId').value = entry.id;
       document.getElementById('formDate').value = entry.date;
@@ -2018,8 +2218,8 @@ function openModal(dateStr = null, prefillDate = null) {
       document.getElementById('formStatus').value = entry.status || 'planning';
       document.getElementById('formNotes').value = entry.notes || '';
       document.getElementById('formLink').value = entry.link || '';
-      document.getElementById('formTime').value = entry.publish_time || '';
       document.getElementById('formChannel').value = entry.channel || '';
+      document.getElementById('formCollab').checked = entry.collab || false;
 
       // Set format selector
       if (entry.format) {
@@ -2040,7 +2240,7 @@ function openModal(dateStr = null, prefillDate = null) {
       }
     }
   } else {
-    title.textContent = 'Add Asset';
+    title.textContent = isVip ? 'Add VIP Asset' : 'Add Asset';
     deleteBtn.style.display = 'none';
   }
 
@@ -2246,9 +2446,15 @@ async function saveEntry() {
     return;
   }
 
-  // Check for clash (only if creating new or changing date)
+  const account = document.getElementById('formAccount').value;
   const entryId = document.getElementById('entryId').value;
-  const existingEntry = getEntryForDate(date);
+  
+  // Check for clash (only if creating new or changing date) - account-specific
+  const existingEntry = entries.find(e => {
+    if (e.date !== date) return false;
+    if (account === 'vip') return e.account === 'vip';
+    return e.account !== 'vip';
+  });
   if (existingEntry && (!entryId || String(existingEntry.id) !== String(entryId))) {
     showToast('An asset already exists for this date', 'error');
     return;
@@ -2256,6 +2462,7 @@ async function saveEntry() {
 
   const entry = {
     date: date,
+    account: account,
     series: document.getElementById('formSeries').value || null,
     title: document.getElementById('formTitle').value || null,
     pillar: document.getElementById('formPillar').value || null,
@@ -2264,7 +2471,7 @@ async function saveEntry() {
     status: document.getElementById('formStatus').value || 'planning',
     notes: document.getElementById('formNotes').value || null,
     link: document.getElementById('formLink').value || null,
-    publish_time: document.getElementById('formTime').value || null
+    collab: document.getElementById('formCollab').checked || false
   };
 
   if (entryId) {
@@ -2277,8 +2484,12 @@ async function saveEntry() {
     if (entryId) {
       entries = entries.filter(e => String(e.id) !== String(entryId));
     }
-    // Add/update the saved entry
-    const existingIndex = entries.findIndex(e => e.date === date);
+    // Add/update the saved entry - match by date AND account
+    const existingIndex = entries.findIndex(e => {
+      if (e.date !== date) return false;
+      if (account === 'vip') return e.account === 'vip';
+      return e.account !== 'vip';
+    });
     if (existingIndex >= 0) {
       entries[existingIndex] = saved;
     } else {
