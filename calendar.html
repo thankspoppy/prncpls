@@ -2488,6 +2488,10 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // EMAIL CONFIG
 // ══════════════════════════════════════════════════════════════
 
+const EMAILJS_SERVICE_ID = 'service_g4t0tmr';
+const EMAILJS_TEMPLATE_ID = 'template_yw5ifj6';
+const EMAILJS_PUBLIC_KEY = 'rO9cNf2mznzE9oGMD';
+
 const DEFAULT_TEAM_EMAILS = [
   'jacolyn@prncpls.us',
   'george@prncpls.us',
@@ -2497,6 +2501,9 @@ const DEFAULT_TEAM_EMAILS = [
 let teamEmails = JSON.parse(localStorage.getItem('prncpls_team_emails') || 'null') || [...DEFAULT_TEAM_EMAILS];
 let oneTimeEmails = [];
 let deployingEntry = null;
+
+// Initialize EmailJS
+emailjs.init(EMAILJS_PUBLIC_KEY);
 
 // Try Supabase, fall back to localStorage
 let db = null;
@@ -3837,55 +3844,21 @@ async function sendDeployEmail() {
   btnText.textContent = 'Sending...';
   
   try {
-    // Initialize EmailJS - you'll need to set up an account and get these IDs
-    // For now, we'll simulate sending and show what would be sent
+    // Send email to each recipient
+    const emailPromises = selectedEmails.map(email => {
+      return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email: email,
+        asset_title: deployingEntry.title || 'Untitled',
+        asset_series: deployingEntry.series || 'N/A',
+        asset_format: deployingEntry.format || 'N/A',
+        asset_date: deployingEntry.date,
+        asset_channel: deployingEntry.channel || 'N/A',
+        asset_link: deployingEntry.link || 'No link attached',
+        asset_notes: deployingEntry.notes ? `NOTES/CAPTION:\n${deployingEntry.notes}` : ''
+      });
+    });
     
-    const emailContent = {
-      to: selectedEmails.join(', '),
-      subject: `🚀 Asset Ready for Publishing: ${deployingEntry.title}`,
-      body: `
-An asset has been deployed and is ready for publishing.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-ASSET DETAILS
-
-Title: ${deployingEntry.title || 'Untitled'}
-Series: ${deployingEntry.series || 'N/A'}
-Format: ${deployingEntry.format || 'N/A'}
-Publish Date: ${deployingEntry.date}
-Channel: ${deployingEntry.channel || 'N/A'}
-
-${deployingEntry.link ? `
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🔗 ASSET LINK
-${deployingEntry.link}
-
-` : ''}
-${deployingEntry.notes ? `
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-NOTES/CAPTION
-${deployingEntry.notes}
-
-` : ''}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Sent from PRNCPLS Content Calendar
-      `.trim()
-    };
-    
-    // For now, log what would be sent and show success
-    // To actually send emails, you'd need to:
-    // 1. Create an EmailJS account at https://www.emailjs.com/
-    // 2. Set up an email service and template
-    // 3. Replace this with: await emailjs.send(serviceId, templateId, params)
-    
-    console.log('Would send email:', emailContent);
-    
-    // Simulate sending delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+    await Promise.all(emailPromises);
     
     // Update status to published
     deployingEntry.status = 'published';
