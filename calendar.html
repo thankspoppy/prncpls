@@ -318,23 +318,16 @@
     transition: all 0.15s;
   }
 
-  .agenda-item-urgent {
-    background: #E8F5E9;
-    border-color: #C8E6C9;
-  }
-
-  .agenda-item-neutral {
-    background: #E3F2FD;
-    border-color: #BBDEFB;
-  }
-
+  .agenda-item-urgent,
+  .agenda-item-neutral,
   .agenda-item-chill {
-    background: #F3E5F5;
-    border-color: #E1BEE7;
+    background: var(--white);
+    border-color: var(--gray-light);
   }
 
   .agenda-item:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-color: var(--gray-mid);
   }
 
   .agenda-item.dragging {
@@ -347,35 +340,35 @@
     cursor: grab;
   }
 
-  .agenda-item-priority-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: none;
+  .agenda-item-priority-tag {
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: 700;
     transition: all 0.15s;
-    flex-shrink: 0;
   }
 
-  .agenda-item-priority-btn.urgent {
-    background: #00C853;
-    color: white;
+  .agenda-item-priority-tag.urgent {
+    background: #E8F5E9;
+    color: #00C853;
   }
 
-  .agenda-item-priority-btn.neutral {
-    background: #2196F3;
-    color: white;
+  .agenda-item-priority-tag.neutral {
+    background: #E3F2FD;
+    color: #1976D2;
   }
 
-  .agenda-item-priority-btn.chill {
-    background: #B388FF;
-    color: white;
+  .agenda-item-priority-tag.chill {
+    background: #F3E5F5;
+    color: #7B1FA2;
   }
 
-  .agenda-item-priority-btn:hover {
-    transform: scale(1.1);
+  .agenda-item-priority-tag:hover {
+    opacity: 0.8;
   }
 
   .agenda-item-text {
@@ -445,6 +438,85 @@
     font-family: var(--mono);
     font-size: 12px;
     letter-spacing: 0.05em;
+  }
+
+  /* Done section */
+  .agenda-done-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--gray-light);
+  }
+
+  .agenda-done-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .agenda-done-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+  }
+
+  .agenda-done-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gray-mid);
+  }
+
+  .agenda-done-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .agenda-done-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--off-white);
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    opacity: 0.7;
+  }
+
+  .agenda-done-item-text {
+    flex: 1;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--gray-dark);
+    text-decoration: line-through;
+  }
+
+  .agenda-done-item-date {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--gray-mid);
+  }
+
+  .agenda-item-complete {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--gray-mid);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+
+  .agenda-item-complete:hover {
+    background: #E8F5E9;
+    color: #00C853;
   }
 
   /* ── ADD BUTTON ── */
@@ -2273,6 +2345,15 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
     </div>
   </div>
   <div class="agenda-list" id="agendaList"></div>
+  
+  <!-- Done section -->
+  <div class="agenda-done-section" id="agendaDoneSection" style="display:none;">
+    <div class="agenda-done-header">
+      <span class="agenda-done-title">Completed</span>
+      <span class="agenda-done-count" id="agendaDoneCount"></span>
+    </div>
+    <div class="agenda-done-list" id="agendaDoneList"></div>
+  </div>
 </div>
 
 <!-- ── MODAL ── -->
@@ -3460,6 +3541,7 @@ let draggedItem = null;
 async function loadAgendaItems() {
   if (useLocalStorage) {
     agendaItems = JSON.parse(localStorage.getItem('prncpls_agenda') || '[]');
+    cleanupOldItems();
     renderAgenda();
     return;
   }
@@ -3475,11 +3557,18 @@ async function loadAgendaItems() {
       agendaItems = JSON.parse(localStorage.getItem('prncpls_agenda') || '[]');
     } else {
       agendaItems = data || [];
+      // Convert ISO date strings to timestamps for comparison
+      agendaItems.forEach(item => {
+        if (item.completed_at && typeof item.completed_at === 'string') {
+          item.completed_at = new Date(item.completed_at).getTime();
+        }
+      });
     }
   } catch (e) {
     console.error('Connection error loading agenda:', e);
     agendaItems = JSON.parse(localStorage.getItem('prncpls_agenda') || '[]');
   }
+  cleanupOldItems();
   renderAgenda();
 }
 
@@ -3588,37 +3677,67 @@ async function addAgendaItem() {
 
 function renderAgenda() {
   const list = document.getElementById('agendaList');
+  const doneSection = document.getElementById('agendaDoneSection');
+  const doneList = document.getElementById('agendaDoneList');
+  const doneCount = document.getElementById('agendaDoneCount');
   
-  if (agendaItems.length === 0) {
+  // Filter active items (not completed)
+  const activeItems = agendaItems.filter(i => !i.completed_at);
+  // Filter done items (completed within last 3 days)
+  const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
+  const doneItems = agendaItems.filter(i => i.completed_at && i.completed_at > threeDaysAgo);
+  
+  // Render active items
+  if (activeItems.length === 0) {
     list.innerHTML = '<div class="agenda-empty">No priorities yet. Add one above.</div>';
-    return;
+  } else {
+    list.innerHTML = activeItems.map((item, idx) => `
+      <div class="agenda-item agenda-item-${item.priority}" draggable="true" data-id="${item.id}" data-idx="${idx}">
+        <span class="agenda-item-drag">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+        </span>
+        <span class="agenda-item-priority-tag ${item.priority}" onclick="cyclePriority(${item.id})" title="Click to change priority">
+          ${item.priority}
+        </span>
+        <span class="agenda-item-text" id="agenda-text-${item.id}">${escapeHtml(item.text)}</span>
+        <button class="agenda-item-complete" onclick="completeAgendaItem(${item.id})" title="Mark complete">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+        <button class="agenda-item-edit" onclick="editAgendaItem(${item.id})" title="Edit">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="agenda-item-delete" onclick="deleteAgendaItem(${item.id})" title="Remove">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    `).join('');
+
+    // Add drag handlers
+    list.querySelectorAll('.agenda-item').forEach(item => {
+      item.addEventListener('dragstart', handleDragStart);
+      item.addEventListener('dragend', handleDragEnd);
+      item.addEventListener('dragover', handleDragOver);
+      item.addEventListener('drop', handleDrop);
+    });
   }
-
-  list.innerHTML = agendaItems.map((item, idx) => `
-    <div class="agenda-item agenda-item-${item.priority}" draggable="true" data-id="${item.id}" data-idx="${idx}">
-      <span class="agenda-item-drag">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
-      </span>
-      <button class="agenda-item-priority-btn ${item.priority}" onclick="cyclePriority(${item.id})" title="Click to change priority">
-        ${item.priority === 'urgent' ? '!' : item.priority === 'neutral' ? '•' : '~'}
-      </button>
-      <span class="agenda-item-text" id="agenda-text-${item.id}">${escapeHtml(item.text)}</span>
-      <button class="agenda-item-edit" onclick="editAgendaItem(${item.id})" title="Edit">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      </button>
-      <button class="agenda-item-delete" onclick="deleteAgendaItem(${item.id})" title="Remove">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-  `).join('');
-
-  // Add drag handlers
-  list.querySelectorAll('.agenda-item').forEach(item => {
-    item.addEventListener('dragstart', handleDragStart);
-    item.addEventListener('dragend', handleDragEnd);
-    item.addEventListener('dragover', handleDragOver);
-    item.addEventListener('drop', handleDrop);
-  });
+  
+  // Render done items
+  if (doneItems.length > 0) {
+    doneSection.style.display = 'block';
+    doneCount.textContent = `${doneItems.length} item${doneItems.length > 1 ? 's' : ''}`;
+    doneList.innerHTML = doneItems.map(item => {
+      const completedDate = new Date(item.completed_at);
+      const dateStr = completedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+      return `
+        <div class="agenda-done-item">
+          <span class="agenda-done-item-text">${escapeHtml(item.text)}</span>
+          <span class="agenda-done-item-date">${dateStr}</span>
+        </div>
+      `;
+    }).join('');
+  } else {
+    doneSection.style.display = 'none';
+  }
 }
 
 function escapeHtml(text) {
@@ -3646,6 +3765,43 @@ async function cyclePriority(id) {
   }
 
   renderAgenda();
+}
+
+async function completeAgendaItem(id) {
+  const item = agendaItems.find(i => i.id === id);
+  if (!item) return;
+
+  item.completed_at = Date.now();
+
+  if (useLocalStorage) {
+    localStorage.setItem('prncpls_agenda', JSON.stringify(agendaItems));
+  } else {
+    await db
+      .from('agenda_items')
+      .update({ completed_at: new Date().toISOString() })
+      .eq('id', id);
+  }
+
+  renderAgenda();
+  showToast('Nice one! ✓', 'success');
+}
+
+// Clean up old completed items (older than 3 days)
+function cleanupOldItems() {
+  const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
+  const oldItems = agendaItems.filter(i => i.completed_at && i.completed_at < threeDaysAgo);
+  
+  if (oldItems.length > 0) {
+    oldItems.forEach(async (item) => {
+      if (useLocalStorage) {
+        agendaItems = agendaItems.filter(i => i.id !== item.id);
+        localStorage.setItem('prncpls_agenda', JSON.stringify(agendaItems));
+      } else {
+        await db.from('agenda_items').delete().eq('id', item.id);
+        agendaItems = agendaItems.filter(i => i.id !== item.id);
+      }
+    });
+  }
 }
 
 function editAgendaItem(id) {
