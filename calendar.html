@@ -304,25 +304,60 @@
   .agenda-list {
     display: flex;
     flex-direction: column;
+    gap: 20px;
+  }
+
+  .agenda-section {
+    display: flex;
+    flex-direction: column;
     gap: 6px;
+  }
+
+  .agenda-section-header {
+    margin-bottom: 4px;
+  }
+
+  .agenda-section-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .agenda-section-tag.urgent {
+    background: #E8F5E9;
+    color: #00C853;
+  }
+
+  .agenda-section-tag.neutral {
+    background: #E3F2FD;
+    color: #1976D2;
+  }
+
+  .agenda-section-tag.chill {
+    background: #F3E5F5;
+    color: #7B1FA2;
+  }
+
+  .agenda-section-items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
   .agenda-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    cursor: grab;
-    transition: all 0.15s;
-  }
-
-  .agenda-item-urgent,
-  .agenda-item-neutral,
-  .agenda-item-chill {
+    gap: 10px;
+    padding: 12px 14px;
     background: var(--white);
-    border-color: var(--gray-light);
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    transition: all 0.15s;
   }
 
   .agenda-item:hover {
@@ -330,14 +365,34 @@
     border-color: var(--gray-mid);
   }
 
-  .agenda-item.dragging {
-    opacity: 0.5;
-    cursor: grabbing;
+  .agenda-item-arrows {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
-  .agenda-item-drag {
-    color: var(--gray-mid);
-    cursor: grab;
+  .agenda-arrow {
+    width: 20px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--off-white);
+    border: none;
+    border-radius: 3px;
+    color: var(--gray-dark);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .agenda-arrow:hover:not(.disabled) {
+    background: var(--gray-light);
+    color: var(--black);
+  }
+
+  .agenda-arrow.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
   }
 
   .agenda-item-priority-tag {
@@ -3536,7 +3591,6 @@ document.addEventListener('keydown', (e) => {
 
 let agendaItems = [];
 let selectedPriority = 'neutral';
-let draggedItem = null;
 
 async function loadAgendaItems() {
   if (useLocalStorage) {
@@ -3681,45 +3735,53 @@ function renderAgenda() {
   const doneList = document.getElementById('agendaDoneList');
   const doneCount = document.getElementById('agendaDoneCount');
   
-  // Filter active items (not completed)
+  // Filter active items by priority
   const activeItems = agendaItems.filter(i => !i.completed_at);
+  const urgentItems = activeItems.filter(i => i.priority === 'urgent');
+  const neutralItems = activeItems.filter(i => i.priority === 'neutral');
+  const chillItems = activeItems.filter(i => i.priority === 'chill');
+  
   // Filter done items (completed within last 3 days)
   const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
   const doneItems = agendaItems.filter(i => i.completed_at && i.completed_at > threeDaysAgo);
   
-  // Render active items
-  if (activeItems.length === 0) {
-    list.innerHTML = '<div class="agenda-empty">No priorities yet. Add one above.</div>';
-  } else {
-    list.innerHTML = activeItems.map((item, idx) => `
-      <div class="agenda-item agenda-item-${item.priority}" draggable="true" data-id="${item.id}" data-idx="${idx}">
-        <span class="agenda-item-drag">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
-        </span>
-        <span class="agenda-item-priority-tag ${item.priority}" onclick="cyclePriority(${item.id})" title="Click to change priority">
-          ${item.priority}
-        </span>
-        <span class="agenda-item-text" id="agenda-text-${item.id}">${escapeHtml(item.text)}</span>
-        <button class="agenda-item-complete" onclick="completeAgendaItem(${item.id})" title="Mark complete">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        </button>
-        <button class="agenda-item-edit" onclick="editAgendaItem(${item.id})" title="Edit">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </button>
-        <button class="agenda-item-delete" onclick="deleteAgendaItem(${item.id})" title="Remove">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+  let html = '';
+  
+  // Urgent section
+  if (urgentItems.length > 0) {
+    html += `<div class="agenda-section">
+      <div class="agenda-section-header"><span class="agenda-section-tag urgent">urgent</span></div>
+      <div class="agenda-section-items">
+        ${urgentItems.map((item, idx) => renderAgendaItem(item, idx, urgentItems.length)).join('')}
       </div>
-    `).join('');
-
-    // Add drag handlers
-    list.querySelectorAll('.agenda-item').forEach(item => {
-      item.addEventListener('dragstart', handleDragStart);
-      item.addEventListener('dragend', handleDragEnd);
-      item.addEventListener('dragover', handleDragOver);
-      item.addEventListener('drop', handleDrop);
-    });
+    </div>`;
   }
+  
+  // Neutral section
+  if (neutralItems.length > 0) {
+    html += `<div class="agenda-section">
+      <div class="agenda-section-header"><span class="agenda-section-tag neutral">neutral</span></div>
+      <div class="agenda-section-items">
+        ${neutralItems.map((item, idx) => renderAgendaItem(item, idx, neutralItems.length)).join('')}
+      </div>
+    </div>`;
+  }
+  
+  // Chill section
+  if (chillItems.length > 0) {
+    html += `<div class="agenda-section">
+      <div class="agenda-section-header"><span class="agenda-section-tag chill">chill</span></div>
+      <div class="agenda-section-items">
+        ${chillItems.map((item, idx) => renderAgendaItem(item, idx, chillItems.length)).join('')}
+      </div>
+    </div>`;
+  }
+  
+  if (activeItems.length === 0) {
+    html = '<div class="agenda-empty">No priorities yet. Add one above.</div>';
+  }
+  
+  list.innerHTML = html;
   
   // Render done items
   if (doneItems.length > 0) {
@@ -3738,6 +3800,64 @@ function renderAgenda() {
   } else {
     doneSection.style.display = 'none';
   }
+}
+
+function renderAgendaItem(item, idx, total) {
+  return `
+    <div class="agenda-item" data-id="${item.id}">
+      <div class="agenda-item-arrows">
+        <button class="agenda-arrow ${idx === 0 ? 'disabled' : ''}" onclick="moveAgendaItem(${item.id}, -1)" ${idx === 0 ? 'disabled' : ''} title="Move up">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+        <button class="agenda-arrow ${idx === total - 1 ? 'disabled' : ''}" onclick="moveAgendaItem(${item.id}, 1)" ${idx === total - 1 ? 'disabled' : ''} title="Move down">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <span class="agenda-item-text" id="agenda-text-${item.id}">${escapeHtml(item.text)}</span>
+      <span class="agenda-item-priority-tag ${item.priority}" onclick="cyclePriority(${item.id})" title="Click to change priority">
+        ${item.priority}
+      </span>
+      <button class="agenda-item-complete" onclick="completeAgendaItem(${item.id})" title="Mark complete">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+      <button class="agenda-item-edit" onclick="editAgendaItem(${item.id})" title="Edit">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+      <button class="agenda-item-delete" onclick="deleteAgendaItem(${item.id})" title="Remove">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `;
+}
+
+async function moveAgendaItem(id, direction) {
+  const item = agendaItems.find(i => i.id === id);
+  if (!item) return;
+  
+  // Get items in same priority group
+  const sameGroup = agendaItems.filter(i => !i.completed_at && i.priority === item.priority);
+  const currentIdx = sameGroup.findIndex(i => i.id === id);
+  const newIdx = currentIdx + direction;
+  
+  if (newIdx < 0 || newIdx >= sameGroup.length) return;
+  
+  // Swap sort_order values
+  const otherItem = sameGroup[newIdx];
+  const tempOrder = item.sort_order;
+  item.sort_order = otherItem.sort_order;
+  otherItem.sort_order = tempOrder;
+  
+  // Re-sort the array
+  agendaItems.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+  
+  if (useLocalStorage) {
+    localStorage.setItem('prncpls_agenda', JSON.stringify(agendaItems));
+  } else {
+    await db.from('agenda_items').update({ sort_order: item.sort_order }).eq('id', item.id);
+    await db.from('agenda_items').update({ sort_order: otherItem.sort_order }).eq('id', otherItem.id);
+  }
+  
+  renderAgenda();
 }
 
 function escapeHtml(text) {
@@ -3842,36 +3962,6 @@ async function saveAgendaEdit(id) {
       .eq('id', id);
   }
 
-  renderAgenda();
-}
-
-function handleDragStart(e) {
-  draggedItem = this;
-  this.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
-}
-
-function handleDragEnd(e) {
-  this.classList.remove('dragging');
-  draggedItem = null;
-}
-
-function handleDragOver(e) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-}
-
-function handleDrop(e) {
-  e.preventDefault();
-  if (draggedItem === this) return;
-
-  const fromIdx = parseInt(draggedItem.dataset.idx);
-  const toIdx = parseInt(this.dataset.idx);
-
-  const [moved] = agendaItems.splice(fromIdx, 1);
-  agendaItems.splice(toIdx, 0, moved);
-
-  updateAgendaOrder();
   renderAgenda();
 }
 
