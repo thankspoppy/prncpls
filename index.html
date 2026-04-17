@@ -1020,20 +1020,27 @@
   }
 
   @media (max-width: 768px) {
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+
     body {
-      padding: 70px 16px 24px;
+      max-width: 100%;
+      padding: 80px 16px 24px;
+      margin: 0;
     }
 
     .site-nav {
-      padding: 0 12px;
-      height: 56px;
+      padding: 0 16px;
+      height: 64px;
       width: 100%;
       left: 0;
       right: 0;
     }
 
     .site-nav-brand-name {
-      font-size: 20px;
+      font-size: 26px;
     }
 
     .site-nav-brand-sub {
@@ -1041,13 +1048,13 @@
     }
 
     .site-nav-links {
-      gap: 8px;
+      gap: 12px;
       flex-shrink: 0;
     }
 
     .site-nav-links a {
-      font-size: 9px;
-      padding: 6px 10px;
+      font-size: 12px;
+      padding: 8px 12px;
       white-space: nowrap;
     }
 

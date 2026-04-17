@@ -1817,20 +1817,20 @@
 
   @media (max-width: 768px) {
     body {
-      padding: 70px 16px 24px;
+      padding: 80px 16px 24px;
     }
 
     /* Nav */
     .site-nav {
-      padding: 0 12px;
-      height: 56px;
+      padding: 0 16px;
+      height: 64px;
       width: 100%;
       left: 0;
       right: 0;
     }
 
     .site-nav-brand-name {
-      font-size: 20px;
+      font-size: 26px;
     }
 
     .site-nav-brand-sub {
@@ -1838,13 +1838,13 @@
     }
 
     .site-nav-links {
-      gap: 8px;
+      gap: 12px;
       flex-shrink: 0;
     }
 
     .site-nav-links a {
-      font-size: 9px;
-      padding: 6px 10px;
+      font-size: 12px;
+      padding: 8px 12px;
       white-space: nowrap;
     }
 
@@ -1887,15 +1887,16 @@
     }
 
     /* Pipeline - horizontal scroll */
-    .pipeline-section,
-    .pipeline-row {
-      min-width: 800px;
-    }
-
     .calendar-container {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       padding-bottom: 8px;
+    }
+
+    .pipeline-section,
+    .pipeline-row,
+    .week-header {
+      min-width: 800px;
     }
 
     .pipeline-label {
@@ -1937,6 +1938,7 @@
     .week-header-cell {
       font-size: 8px;
       padding: 8px 4px;
+      min-width: 140px;
     }
 
     /* Modal */
