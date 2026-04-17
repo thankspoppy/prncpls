@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#FA0000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PRNCPLS">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icon-192.svg">
+<link rel="manifest" href="/manifest.json">
 <title>PRNCPLS: The Content Playbook</title>
 <style>
 
@@ -2660,6 +2666,15 @@ function updateCarousel() {
   const count = document.getElementById('carousel-count');
   if (label) label.textContent = slideLabels[carouselIndex];
   if (count) count.textContent = slideCounts[carouselIndex];
+}
+
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('SW registered'))
+      .catch(err => console.log('SW registration failed:', err));
+  });
 }
 
 </script>
