@@ -3709,9 +3709,6 @@ function renderPipelineCell(dueDate, publishDate, track, account) {
         </div>
       `;
     }).join('');
-    
-    // Add button to add another entry
-    content += `<button class="pipeline-add-btn pipeline-add-${track}" style="margin-top:6px;min-height:32px;" onclick="openModal(null, '${publishDateStr}', '${account}')">+</button>`;
   } else {
     content = `
       <button class="pipeline-add-btn pipeline-add-${track}" onclick="openModal(null, '${publishDateStr}', '${account}')">+</button>
