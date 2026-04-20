@@ -210,6 +210,208 @@
     border-color: var(--black);
   }
 
+  /* ══════════════════════════════════════════════════════════════
+     PIPELINE VIEW (Kanban-style status columns)
+     ══════════════════════════════════════════════════════════════ */
+
+  .pipeline-view-container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .pipeline-columns {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+
+  .pipeline-column {
+    background: var(--off-white);
+    border-radius: 8px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pipeline-column-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 2px solid;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .pipeline-column-header.planning {
+    color: #666;
+    border-color: #AAAAAA;
+    background: #F5F5F5;
+  }
+
+  .pipeline-column-header.production {
+    color: #8B5A00;
+    border-color: #F5A623;
+    background: #FFF9EE;
+  }
+
+  .pipeline-column-header.pending {
+    color: #0D47A1;
+    border-color: #2196F3;
+    background: #E8F4FD;
+  }
+
+  .pipeline-column-header.revising {
+    color: #C62828;
+    border-color: #FF6B6B;
+    background: #FFEBEE;
+  }
+
+  .pipeline-column-header.deployed {
+    color: #1B5E20;
+    border-color: #00C853;
+    background: #E8F5E9;
+  }
+
+  .pipeline-column-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .pipeline-column-count {
+    margin-left: auto;
+    background: rgba(0,0,0,0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+  }
+
+  .pipeline-column-items {
+    flex: 1;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+  }
+
+  .pipeline-item {
+    background: var(--white);
+    border: 1px solid var(--gray-light);
+    border-radius: 6px;
+    padding: 12px;
+    cursor: grab;
+    transition: all 0.15s;
+  }
+
+  .pipeline-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-color: var(--gray-mid);
+  }
+
+  .pipeline-item.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+  }
+
+  .pipeline-column-items.drag-over {
+    background: rgba(0,0,0,0.05);
+    border-radius: 0 0 8px 8px;
+  }
+
+  .pipeline-item-content {
+    cursor: pointer;
+  }
+
+  .pipeline-item-date {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .pipeline-item-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--black);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .pipeline-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .pipeline-item-series {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--gray-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .pipeline-item-format {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--gray-mid);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .pipeline-item-status {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--gray-light);
+  }
+
+  .pipeline-status-select {
+    width: 100%;
+    padding: 8px 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    background: var(--white);
+    color: var(--gray-dark);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 28px;
+  }
+
+  .pipeline-status-select:hover {
+    border-color: var(--gray-mid);
+  }
+
+  .pipeline-status-select:focus {
+    outline: none;
+    border-color: var(--black);
+  }
+
+  .pipeline-empty {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--gray-mid);
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+
   /* ── AGENDA ── */
   .agenda-container {
     max-width: 700px;
@@ -353,6 +555,7 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-height: 40px;
   }
 
   .agenda-item {
@@ -364,6 +567,7 @@
     border: 1px solid var(--gray-light);
     border-radius: 4px;
     transition: all 0.15s;
+    cursor: grab;
   }
 
   .agenda-item:hover {
@@ -401,35 +605,64 @@
     cursor: not-allowed;
   }
 
-  .agenda-item-priority-tag {
-    padding: 3px 8px;
-    border-radius: 3px;
+  .agenda-priority-dropdown {
+    padding: 6px 28px 6px 10px;
+    border-radius: 4px;
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border: 1px solid transparent;
     cursor: pointer;
     transition: all 0.15s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
   }
 
-  .agenda-item-priority-tag.urgent {
-    background: #E8F5E9;
+  .agenda-priority-dropdown.urgent {
+    background-color: #E8F5E9;
     color: #00C853;
   }
 
-  .agenda-item-priority-tag.neutral {
-    background: #E3F2FD;
+  .agenda-priority-dropdown.neutral {
+    background-color: #E3F2FD;
     color: #1976D2;
   }
 
-  .agenda-item-priority-tag.chill {
-    background: #F3E5F5;
+  .agenda-priority-dropdown.chill {
+    background-color: #F3E5F5;
     color: #7B1FA2;
   }
 
-  .agenda-item-priority-tag:hover {
-    opacity: 0.8;
+  .agenda-priority-dropdown:hover {
+    border-color: currentColor;
+  }
+
+  .agenda-priority-dropdown:focus {
+    outline: none;
+    border-color: currentColor;
+  }
+
+  .agenda-item.dragging {
+    opacity: 0.5;
+  }
+
+  .agenda-section-items.drag-over {
+    background: rgba(0,0,0,0.05);
+    border-radius: 4px;
+    min-height: 60px;
+  }
+
+  .agenda-section-empty {
+    padding: 16px;
+    text-align: center;
+    color: var(--gray-mid);
+    font-family: var(--mono);
+    font-size: 11px;
+    border: 1px dashed var(--gray-light);
+    border-radius: 4px;
   }
 
   .agenda-item-text {
@@ -816,14 +1049,14 @@
   .status-badge.production { background: #FFF7E6; color: #8B5A00; }
   .status-badge.production .dot { background: #F5A623; }
 
-  .status-badge.ready { background: #E8F5FF; color: #0D47A1; }
-  .status-badge.ready .dot { background: #2196F3; }
+  .status-badge.pending { background: #E8F5FF; color: #0D47A1; }
+  .status-badge.pending .dot { background: #2196F3; }
 
-  .status-badge.scheduled { background: #EDE8FF; color: #4A148C; }
-  .status-badge.scheduled .dot { background: #7C4DFF; }
+  .status-badge.revising { background: #FFEBEE; color: #C62828; }
+  .status-badge.revising .dot { background: #FF6B6B; }
 
-  .status-badge.published { background: #E8F8EE; color: #1B5E20; }
-  .status-badge.published .dot { background: #00C853; }
+  .status-badge.deployed { background: #E8F8EE; color: #1B5E20; }
+  .status-badge.deployed .dot { background: #00C853; }
 
   /* ── ADD ENTRY BUTTON ── */
   .add-entry-btn {
@@ -906,6 +1139,141 @@
 
   .modal-body {
     padding: 16px 20px;
+  }
+
+  /* View Mode Styles */
+  .modal-view {
+    display: none;
+  }
+
+  .modal-view.active {
+    display: block;
+  }
+
+  .modal-edit {
+    display: none;
+  }
+
+  .modal-edit.active {
+    display: block;
+  }
+
+  .view-asset-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--black);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .view-asset-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .view-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gray-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .view-meta-item svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.6;
+  }
+
+  .view-section {
+    margin-bottom: 20px;
+  }
+
+  .view-section-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 6px;
+  }
+
+  .view-section-content {
+    font-size: 14px;
+    color: var(--black);
+    line-height: 1.6;
+  }
+
+  .view-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: var(--black);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: background 0.15s;
+  }
+
+  .view-link:hover {
+    background: #333;
+  }
+
+  .view-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .view-status-badge.planning { background: #F0F0EE; color: #666; }
+  .view-status-badge.production { background: #FFF7E6; color: #8B5A00; }
+  .view-status-badge.pending { background: #E8F5FF; color: #0D47A1; }
+  .view-status-badge.revising { background: #FFEBEE; color: #C62828; }
+  .view-status-badge.deployed { background: #E8F8EE; color: #1B5E20; }
+
+  .view-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-top: 1px solid var(--gray-light);
+  }
+
+  .btn-edit {
+    padding: 10px 20px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--black);
+    border: none;
+    color: var(--white);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-edit:hover {
+    background: #333;
   }
 
   .form-group {
@@ -1129,15 +1497,15 @@
 
   .status-pill.planning .status-pill-dot { background: #AAAAAA; }
   .status-pill.production .status-pill-dot { background: #F5A623; }
-  .status-pill.ready .status-pill-dot { background: #2196F3; }
-  .status-pill.scheduled .status-pill-dot { background: #7C4DFF; }
-  .status-pill.published .status-pill-dot { background: #00C853; }
+  .status-pill.pending .status-pill-dot { background: #2196F3; }
+  .status-pill.revising .status-pill-dot { background: #FF6B6B; }
+  .status-pill.deployed .status-pill-dot { background: #00C853; }
 
   .status-pill.planning.active { color: #888888; }
   .status-pill.production.active { color: #F5A623; }
-  .status-pill.ready.active { color: #2196F3; }
-  .status-pill.scheduled.active { color: #7C4DFF; }
-  .status-pill.published.active { color: #00C853; }
+  .status-pill.pending.active { color: #2196F3; }
+  .status-pill.revising.active { color: #FF6B6B; }
+  .status-pill.deployed.active { color: #00C853; }
 
   .modal-footer {
     padding: 16px 24px;
@@ -1660,15 +2028,19 @@
     background: #F5A623;
   }
 
-  .pipeline-status.ready {
+  .pipeline-status.pending {
     background: #2196F3;
   }
 
-  .pipeline-status.published {
+  .pipeline-status.revising {
+    background: #FF6B6B;
+  }
+
+  .pipeline-status.deployed {
     background: #00C853;
   }
 
-  .pipeline-status.published::after {
+  .pipeline-status.deployed::after {
     content: '';
     width: 6px;
     height: 3px;
@@ -1852,12 +2224,12 @@
     .page-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 14px;
+      margin-bottom: 24px;
     }
 
     .page-title {
-      font-size: 22px;
+      font-size: 26px;
     }
 
     .view-toggle {
@@ -1866,13 +2238,14 @@
 
     .view-toggle-btn {
       flex: 1;
-      padding: 10px 12px;
+      padding: 12px 14px;
+      font-size: 11px;
     }
 
     /* Week nav */
     .month-nav {
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       justify-content: center;
     }
 
@@ -1880,10 +2253,18 @@
       width: 100%;
       order: -1;
       margin-bottom: 4px;
+      font-size: 15px;
     }
 
     .today-btn {
       margin-left: 0;
+      font-size: 11px;
+      padding: 8px 14px;
+    }
+
+    .nav-btn {
+      padding: 8px 14px;
+      font-size: 11px;
     }
 
     /* Pipeline - horizontal scroll */
@@ -1896,49 +2277,80 @@
     .pipeline-section,
     .pipeline-row,
     .week-header {
-      min-width: 800px;
+      min-width: 900px;
     }
 
     .pipeline-label {
-      min-width: 80px;
-      padding: 10px;
-      font-size: 9px;
-    }
-
-    .pipeline-cell {
-      min-height: 160px;
-      min-width: 140px;
-      padding: 8px;
-    }
-
-    .pipeline-date {
-      font-size: 9px;
-    }
-
-    .pipeline-card {
-      padding: 8px;
-    }
-
-    .pipeline-card-series {
-      font-size: 7px;
-    }
-
-    .pipeline-card-title {
+      min-width: 90px;
+      padding: 12px;
       font-size: 11px;
     }
 
+    .pipeline-cell {
+      min-height: 180px;
+      min-width: 160px;
+      padding: 10px;
+    }
+
+    .pipeline-date {
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+
+    .pipeline-card {
+      padding: 10px;
+    }
+
+    .pipeline-card-series {
+      font-size: 9px;
+    }
+
+    .pipeline-card-title {
+      font-size: 13px;
+    }
+
     .pipeline-card-format {
-      font-size: 7px;
+      font-size: 9px;
     }
 
     .pipeline-card-link {
-      font-size: 7px;
+      font-size: 9px;
+    }
+
+    .pipeline-status {
+      width: 14px;
+      height: 14px;
     }
 
     .week-header-cell {
-      font-size: 8px;
-      padding: 8px 4px;
-      min-width: 140px;
+      font-size: 10px;
+      padding: 10px 6px;
+      min-width: 160px;
+    }
+
+    /* Pipeline View - horizontal scroll on mobile */
+    .pipeline-view-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+    }
+
+    .pipeline-columns {
+      min-width: 1200px;
+      gap: 12px;
+    }
+
+    .pipeline-column {
+      min-width: 220px;
+    }
+
+    .pipeline-column-header {
+      font-size: 10px;
+      padding: 12px 14px;
+    }
+
+    .pipeline-item-title {
+      font-size: 13px;
     }
 
     /* Modal */
@@ -2029,10 +2441,49 @@
     .agenda-item {
       padding: 12px;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .agenda-item-text {
-      font-size: 13px;
+      font-size: 14px;
+      flex: 1 1 100%;
+      order: 1;
+      margin-bottom: 8px;
+    }
+
+    .agenda-item-arrows {
+      order: 2;
+    }
+
+    .agenda-priority-dropdown {
+      order: 3;
+      font-size: 11px;
+      padding: 8px 30px 8px 12px;
+    }
+
+    .agenda-item-complete,
+    .agenda-item-edit,
+    .agenda-item-delete {
+      order: 4;
+    }
+
+    .agenda-section-empty {
+      padding: 20px;
+      font-size: 12px;
+    }
+
+    /* Pipeline view mobile */
+    .pipeline-item {
+      padding: 14px;
+    }
+
+    .pipeline-item-title {
+      font-size: 14px;
+    }
+
+    .pipeline-status-select {
+      font-size: 11px;
+      padding: 10px 30px 10px 12px;
     }
 
     /* Deploy modal */
@@ -2387,6 +2838,7 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
   <h1 class="page-title"><strong>Content</strong> Calendar</h1>
   <div class="view-toggle">
     <button class="view-toggle-btn active" id="calendarViewBtn" onclick="switchView('calendar')">Calendar</button>
+    <button class="view-toggle-btn" id="pipelineViewBtn" onclick="switchView('pipeline')">Pipeline</button>
     <button class="view-toggle-btn" id="agendaViewBtn" onclick="switchView('agenda')">Agenda</button>
   </div>
 </header>
@@ -2405,6 +2857,52 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
 
 <!-- ── CALENDAR ── -->
 <div class="calendar-container" id="calendarContainer"></div>
+
+<!-- ── PIPELINE VIEW ── -->
+<div class="pipeline-view-container" id="pipelineViewContainer" style="display:none;">
+  <div class="pipeline-columns">
+    <div class="pipeline-column" data-status="planning">
+      <div class="pipeline-column-header planning">
+        <span class="pipeline-column-dot"></span>
+        Planning
+        <span class="pipeline-column-count" id="countPlanning">0</span>
+      </div>
+      <div class="pipeline-column-items" id="columnPlanning"></div>
+    </div>
+    <div class="pipeline-column" data-status="production">
+      <div class="pipeline-column-header production">
+        <span class="pipeline-column-dot"></span>
+        Production
+        <span class="pipeline-column-count" id="countProduction">0</span>
+      </div>
+      <div class="pipeline-column-items" id="columnProduction"></div>
+    </div>
+    <div class="pipeline-column" data-status="pending">
+      <div class="pipeline-column-header pending">
+        <span class="pipeline-column-dot"></span>
+        Pending Approval
+        <span class="pipeline-column-count" id="countPending">0</span>
+      </div>
+      <div class="pipeline-column-items" id="columnPending"></div>
+    </div>
+    <div class="pipeline-column" data-status="revising">
+      <div class="pipeline-column-header revising">
+        <span class="pipeline-column-dot"></span>
+        Revising
+        <span class="pipeline-column-count" id="countRevising">0</span>
+      </div>
+      <div class="pipeline-column-items" id="columnRevising"></div>
+    </div>
+    <div class="pipeline-column" data-status="deployed">
+      <div class="pipeline-column-header deployed">
+        <span class="pipeline-column-dot"></span>
+        Deployed
+        <span class="pipeline-column-count" id="countDeployed">0</span>
+      </div>
+      <div class="pipeline-column-items" id="columnDeployed"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ── AGENDA ── -->
 <div class="agenda-container" id="agendaContainer" style="display:none;">
@@ -2439,9 +2937,59 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
       <h2 class="modal-title" id="modalTitle">Add Asset</h2>
       <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
-    <div class="modal-body">
-      <input type="hidden" id="entryId">
-      <input type="hidden" id="formAccount" value="prncpls">
+    
+    <!-- VIEW MODE -->
+    <div class="modal-view" id="modalView">
+      <div class="modal-body">
+        <div class="view-asset-title" id="viewTitle">Asset Title</div>
+        <div class="view-asset-meta">
+          <div class="view-meta-item" id="viewDate">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span>Date</span>
+          </div>
+          <div class="view-meta-item" id="viewSeries">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <span>Series</span>
+          </div>
+          <div class="view-meta-item" id="viewFormat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Format</span>
+          </div>
+          <div class="view-meta-item" id="viewChannel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span>Channel</span>
+          </div>
+        </div>
+        
+        <div class="view-section">
+          <div class="view-section-label">Status</div>
+          <div class="view-status-badge planning" id="viewStatus">Planning</div>
+        </div>
+        
+        <div class="view-section" id="viewLinkSection" style="display:none;">
+          <div class="view-section-label">Asset Link</div>
+          <a href="#" target="_blank" class="view-link" id="viewLink">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Open Link
+          </a>
+        </div>
+        
+        <div class="view-section" id="viewNotesSection" style="display:none;">
+          <div class="view-section-label">Notes/Caption</div>
+          <div class="view-section-content" id="viewNotes"></div>
+        </div>
+      </div>
+      <div class="view-footer">
+        <button class="btn-delete" id="viewDeleteBtn" onclick="deleteEntry()">Delete</button>
+        <button class="btn-edit" onclick="switchToEditMode()">Edit Asset</button>
+      </div>
+    </div>
+    
+    <!-- EDIT MODE -->
+    <div class="modal-edit" id="modalEdit">
+      <div class="modal-body">
+        <input type="hidden" id="entryId">
+        <input type="hidden" id="formAccount" value="prncpls">
       
       <!-- Publish Date at top -->
       <div class="form-group">
@@ -2565,11 +3113,14 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
           <button type="button" class="status-pill production" data-value="production" onclick="selectStatus('production')">
             <span class="status-pill-dot"></span>Production
           </button>
-          <button type="button" class="status-pill ready" data-value="ready" onclick="selectStatus('ready')">
-            <span class="status-pill-dot"></span>Ready
+          <button type="button" class="status-pill pending" data-value="pending" onclick="selectStatus('pending')">
+            <span class="status-pill-dot"></span>Pending
           </button>
-          <button type="button" class="status-pill published" data-value="published" onclick="selectStatus('published')">
-            <span class="status-pill-dot"></span>Published
+          <button type="button" class="status-pill revising" data-value="revising" onclick="selectStatus('revising')">
+            <span class="status-pill-dot"></span>Revising
+          </button>
+          <button type="button" class="status-pill deployed" data-value="deployed" onclick="selectStatus('deployed')">
+            <span class="status-pill-dot"></span>Deployed
           </button>
         </div>
         <input type="hidden" id="formStatus" value="planning">
@@ -2586,12 +3137,15 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
         <label class="form-label">Notes/Caption <span style="opacity:0.5;font-weight:400;">(optional)</span></label>
         <textarea class="form-textarea" id="formNotes" placeholder="Add any notes..." autocomplete="off"></textarea>
       </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-delete" id="deleteBtn" onclick="deleteEntry()" style="display:none;">Delete</button>
+        <div></div>
+        <button class="btn-save" onclick="saveEntry()">Save Asset</button>
+      </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-delete" id="deleteBtn" onclick="deleteEntry()" style="display:none;">Delete</button>
-      <div></div>
-      <button class="btn-save" onclick="saveEntry()">Save Asset</button>
-    </div>
+    <!-- END EDIT MODE -->
+    
   </div>
 </div>
 
@@ -2699,12 +3253,13 @@ let currentView = 'weekly';
 let currentMonth = new Date();
 let currentWeek = new Date(); // Track which week we're viewing
 
-const STATUS_ORDER = ['planning', 'production', 'ready', 'published'];
+const STATUS_ORDER = ['planning', 'production', 'pending', 'revising', 'deployed'];
 const STATUS_LABELS = {
   planning: 'Planning',
-  production: 'In Production',
-  ready: 'Ready',
-  published: 'Published'
+  production: 'Production',
+  pending: 'Pending Approval',
+  revising: 'Revising',
+  deployed: 'Deployed'
 };
 
 // ══════════════════════════════════════════════════════════════
@@ -3005,7 +3560,7 @@ function renderPipelineCell(dueDate, publishDate, track, account) {
     const formatIcon = formatIcons[entry.format] || '';
     const collabClass = entry.collab ? 'collab' : '';
     const linkHtml = entry.link ? `<a href="${entry.link}" target="_blank" class="pipeline-card-link" onclick="event.stopPropagation();">ASSET LINK</a>` : '';
-    const deployBtn = (entry.status === 'ready' && entry.link) ? `<button class="pipeline-card-deploy" onclick="event.stopPropagation(); openDeployModal('${publishDateStr}', '${account}')">Deploy</button>` : '';
+    const deployBtn = (entry.status === 'pending' && entry.link) ? `<button class="pipeline-card-deploy" onclick="event.stopPropagation(); openDeployModal('${publishDateStr}', '${account}')">Deploy</button>` : '';
     content = `
       <div class="pipeline-card pipeline-card-${track} ${collabClass}" onclick="openModal('${publishDateStr}', null, '${account}')">
         <div class="pipeline-card-header">
@@ -3083,7 +3638,7 @@ function renderMonthCell(date) {
   let statusIcon = '';
   
   if (entry) {
-    if (entry.status === 'published') {
+    if (entry.status === 'deployed') {
       statusClass = 'done';
       statusIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
     } else {
@@ -3201,6 +3756,8 @@ function openModal(dateStr = null, prefillDate = null, account = 'prncpls') {
   const overlay = document.getElementById('modalOverlay');
   const title = document.getElementById('modalTitle');
   const deleteBtn = document.getElementById('deleteBtn');
+  const modalView = document.getElementById('modalView');
+  const modalEdit = document.getElementById('modalEdit');
   const isVip = account === 'vip';
 
   // Show/hide VIP-specific elements
@@ -3240,7 +3797,7 @@ function openModal(dateStr = null, prefillDate = null, account = 'prncpls') {
       return e.account !== 'vip';
     });
     if (entry) {
-      title.textContent = isVip ? 'Edit VIP Asset' : 'Edit Asset';
+      title.textContent = isVip ? 'VIP Asset' : 'Asset Details';
       deleteBtn.style.display = 'block';
       document.getElementById('entryId').value = entry.id;
       document.getElementById('formDate').value = entry.date;
@@ -3271,10 +3828,21 @@ function openModal(dateStr = null, prefillDate = null, account = 'prncpls') {
       if (entry.status) {
         selectStatus(entry.status);
       }
+      
+      // Populate view mode
+      populateViewMode(entry);
+      
+      // Show view mode, hide edit mode
+      modalView.classList.add('active');
+      modalEdit.classList.remove('active');
     }
   } else {
     title.textContent = isVip ? 'Add VIP Asset' : 'Add Asset';
     deleteBtn.style.display = 'none';
+    
+    // Show edit mode directly for new entries
+    modalView.classList.remove('active');
+    modalEdit.classList.add('active');
   }
 
   // Initialize mini calendar picker
@@ -3290,6 +3858,77 @@ function openModal(dateStr = null, prefillDate = null, account = 'prncpls') {
   updateDateDisplay();
 
   overlay.classList.add('active');
+}
+
+function populateViewMode(entry) {
+  // Title
+  document.getElementById('viewTitle').textContent = entry.title || 'Untitled';
+  
+  // Date
+  const dateSpan = document.querySelector('#viewDate span');
+  if (entry.date) {
+    const [year, month, day] = entry.date.split('-').map(Number);
+    const d = new Date(year, month - 1, day);
+    dateSpan.textContent = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+  }
+  
+  // Series
+  const seriesItem = document.getElementById('viewSeries');
+  if (entry.series) {
+    document.querySelector('#viewSeries span').textContent = entry.series;
+    seriesItem.style.display = 'flex';
+  } else {
+    seriesItem.style.display = 'none';
+  }
+  
+  // Format
+  const formatItem = document.getElementById('viewFormat');
+  if (entry.format) {
+    document.querySelector('#viewFormat span').textContent = entry.format;
+    formatItem.style.display = 'flex';
+  } else {
+    formatItem.style.display = 'none';
+  }
+  
+  // Channel
+  const channelItem = document.getElementById('viewChannel');
+  if (entry.channel) {
+    document.querySelector('#viewChannel span').textContent = entry.channel;
+    channelItem.style.display = 'flex';
+  } else {
+    channelItem.style.display = 'none';
+  }
+  
+  // Status
+  const statusBadge = document.getElementById('viewStatus');
+  statusBadge.className = 'view-status-badge ' + (entry.status || 'planning');
+  statusBadge.textContent = STATUS_LABELS[entry.status] || 'Planning';
+  
+  // Link
+  const linkSection = document.getElementById('viewLinkSection');
+  const linkEl = document.getElementById('viewLink');
+  if (entry.link) {
+    linkEl.href = entry.link;
+    linkSection.style.display = 'block';
+  } else {
+    linkSection.style.display = 'none';
+  }
+  
+  // Notes
+  const notesSection = document.getElementById('viewNotesSection');
+  const notesContent = document.getElementById('viewNotes');
+  if (entry.notes) {
+    notesContent.textContent = entry.notes;
+    notesSection.style.display = 'block';
+  } else {
+    notesSection.style.display = 'none';
+  }
+}
+
+function switchToEditMode() {
+  document.getElementById('modalView').classList.remove('active');
+  document.getElementById('modalEdit').classList.add('active');
+  document.getElementById('modalTitle').textContent = 'Edit Asset';
 }
 
 // Mini calendar picker state
@@ -3769,34 +4408,43 @@ function renderAgenda() {
   let html = '';
   
   // Urgent section
-  if (urgentItems.length > 0) {
-    html += `<div class="agenda-section">
-      <div class="agenda-section-header"><span class="agenda-section-tag urgent">urgent</span></div>
-      <div class="agenda-section-items">
-        ${urgentItems.map((item, idx) => renderAgendaItem(item, idx, urgentItems.length)).join('')}
-      </div>
-    </div>`;
-  }
+  html += `<div class="agenda-section">
+    <div class="agenda-section-header"><span class="agenda-section-tag urgent">urgent</span></div>
+    <div class="agenda-section-items" 
+      ondragover="handleAgendaSectionDragOver(event)"
+      ondragleave="handleAgendaSectionDragLeave(event)"
+      ondrop="handleAgendaSectionDrop(event, 'urgent')">
+      ${urgentItems.length > 0 
+        ? urgentItems.map((item, idx) => renderAgendaItem(item, idx, urgentItems.length)).join('')
+        : '<div class="agenda-section-empty">Drop items here</div>'}
+    </div>
+  </div>`;
   
   // Neutral section
-  if (neutralItems.length > 0) {
-    html += `<div class="agenda-section">
-      <div class="agenda-section-header"><span class="agenda-section-tag neutral">neutral</span></div>
-      <div class="agenda-section-items">
-        ${neutralItems.map((item, idx) => renderAgendaItem(item, idx, neutralItems.length)).join('')}
-      </div>
-    </div>`;
-  }
+  html += `<div class="agenda-section">
+    <div class="agenda-section-header"><span class="agenda-section-tag neutral">neutral</span></div>
+    <div class="agenda-section-items"
+      ondragover="handleAgendaSectionDragOver(event)"
+      ondragleave="handleAgendaSectionDragLeave(event)"
+      ondrop="handleAgendaSectionDrop(event, 'neutral')">
+      ${neutralItems.length > 0 
+        ? neutralItems.map((item, idx) => renderAgendaItem(item, idx, neutralItems.length)).join('')
+        : '<div class="agenda-section-empty">Drop items here</div>'}
+    </div>
+  </div>`;
   
   // Chill section
-  if (chillItems.length > 0) {
-    html += `<div class="agenda-section">
-      <div class="agenda-section-header"><span class="agenda-section-tag chill">chill</span></div>
-      <div class="agenda-section-items">
-        ${chillItems.map((item, idx) => renderAgendaItem(item, idx, chillItems.length)).join('')}
-      </div>
-    </div>`;
-  }
+  html += `<div class="agenda-section">
+    <div class="agenda-section-header"><span class="agenda-section-tag chill">chill</span></div>
+    <div class="agenda-section-items"
+      ondragover="handleAgendaSectionDragOver(event)"
+      ondragleave="handleAgendaSectionDragLeave(event)"
+      ondrop="handleAgendaSectionDrop(event, 'chill')">
+      ${chillItems.length > 0 
+        ? chillItems.map((item, idx) => renderAgendaItem(item, idx, chillItems.length)).join('')
+        : '<div class="agenda-section-empty">Drop items here</div>'}
+    </div>
+  </div>`;
   
   if (activeItems.length === 0) {
     html = '<div class="agenda-empty">No priorities yet. Add one above.</div>';
@@ -3824,8 +4472,16 @@ function renderAgenda() {
 }
 
 function renderAgendaItem(item, idx, total) {
+  const priorityOptions = ['urgent', 'neutral', 'chill'].map(p => 
+    `<option value="${p}" ${p === item.priority ? 'selected' : ''}>${p.charAt(0).toUpperCase() + p.slice(1)}</option>`
+  ).join('');
+  
   return `
-    <div class="agenda-item" data-id="${item.id}">
+    <div class="agenda-item" 
+      data-id="${item.id}"
+      draggable="true"
+      ondragstart="handleAgendaDragStart(event, ${item.id})"
+      ondragend="handleAgendaDragEnd(event)">
       <div class="agenda-item-arrows">
         <button class="agenda-arrow ${idx === 0 ? 'disabled' : ''}" onclick="moveAgendaItem(${item.id}, -1)" ${idx === 0 ? 'disabled' : ''} title="Move up">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
@@ -3835,9 +4491,9 @@ function renderAgendaItem(item, idx, total) {
         </button>
       </div>
       <span class="agenda-item-text" id="agenda-text-${item.id}">${escapeHtml(item.text)}</span>
-      <span class="agenda-item-priority-tag ${item.priority}" onclick="cyclePriority(${item.id})" title="Click to change priority">
-        ${item.priority}
-      </span>
+      <select class="agenda-priority-dropdown ${item.priority}" onchange="changeAgendaPriority(${item.id}, this.value)">
+        ${priorityOptions}
+      </select>
       <button class="agenda-item-complete" onclick="completeAgendaItem(${item.id})" title="Mark complete">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
       </button>
@@ -3849,6 +4505,56 @@ function renderAgendaItem(item, idx, total) {
       </button>
     </div>
   `;
+}
+
+function handleAgendaDragStart(e, id) {
+  e.target.classList.add('dragging');
+  e.dataTransfer.setData('text/plain', id.toString());
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleAgendaDragEnd(e) {
+  e.target.classList.remove('dragging');
+  document.querySelectorAll('.agenda-section-items').forEach(el => el.classList.remove('drag-over'));
+}
+
+function handleAgendaSectionDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drag-over');
+}
+
+function handleAgendaSectionDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+async function handleAgendaSectionDrop(e, newPriority) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  
+  const id = parseInt(e.dataTransfer.getData('text/plain'));
+  if (id) {
+    await changeAgendaPriority(id, newPriority);
+  }
+}
+
+async function changeAgendaPriority(id, newPriority) {
+  const item = agendaItems.find(i => i.id === id);
+  if (!item || item.priority === newPriority) return;
+
+  item.priority = newPriority;
+
+  if (useLocalStorage) {
+    localStorage.setItem('prncpls_agenda', JSON.stringify(agendaItems));
+  } else {
+    await db
+      .from('agenda_items')
+      .update({ priority: newPriority })
+      .eq('id', id);
+  }
+
+  renderAgenda();
+  showToast(`Moved to ${newPriority}`, 'success');
 }
 
 async function moveAgendaItem(id, direction) {
@@ -3885,27 +4591,6 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
-}
-
-async function cyclePriority(id) {
-  const item = agendaItems.find(i => i.id === id);
-  if (!item) return;
-
-  const priorities = ['urgent', 'neutral', 'chill'];
-  const currentIdx = priorities.indexOf(item.priority);
-  const nextIdx = (currentIdx + 1) % priorities.length;
-  item.priority = priorities[nextIdx];
-
-  if (useLocalStorage) {
-    localStorage.setItem('prncpls_agenda', JSON.stringify(agendaItems));
-  } else {
-    await db
-      .from('agenda_items')
-      .update({ priority: item.priority })
-      .eq('id', id);
-  }
-
-  renderAgenda();
 }
 
 async function completeAgendaItem(id) {
@@ -3988,25 +4673,167 @@ async function saveAgendaEdit(id) {
 
 function switchView(view) {
   const calendarBtn = document.getElementById('calendarViewBtn');
+  const pipelineBtn = document.getElementById('pipelineViewBtn');
   const agendaBtn = document.getElementById('agendaViewBtn');
   const weekNav = document.getElementById('weekNav');
   const calendarContainer = document.getElementById('calendarContainer');
+  const pipelineViewContainer = document.getElementById('pipelineViewContainer');
   const agendaContainer = document.getElementById('agendaContainer');
+
+  // Reset all
+  calendarBtn.classList.remove('active');
+  pipelineBtn.classList.remove('active');
+  agendaBtn.classList.remove('active');
+  weekNav.style.display = 'none';
+  calendarContainer.style.display = 'none';
+  pipelineViewContainer.style.display = 'none';
+  agendaContainer.style.display = 'none';
 
   if (view === 'calendar') {
     calendarBtn.classList.add('active');
-    agendaBtn.classList.remove('active');
     weekNav.style.display = 'flex';
     calendarContainer.style.display = 'block';
-    agendaContainer.style.display = 'none';
-  } else {
-    calendarBtn.classList.remove('active');
+  } else if (view === 'pipeline') {
+    pipelineBtn.classList.add('active');
+    pipelineViewContainer.style.display = 'block';
+    renderPipelineView();
+  } else if (view === 'agenda') {
     agendaBtn.classList.add('active');
-    weekNav.style.display = 'none';
-    calendarContainer.style.display = 'none';
     agendaContainer.style.display = 'block';
     loadAgendaItems();
   }
+}
+
+// ══════════════════════════════════════════════════════════════
+// PIPELINE VIEW FUNCTIONS
+// ══════════════════════════════════════════════════════════════
+
+function renderPipelineView() {
+  const statuses = ['planning', 'production', 'pending', 'revising', 'deployed'];
+  
+  statuses.forEach(status => {
+    const column = document.getElementById(`column${status.charAt(0).toUpperCase() + status.slice(1)}`);
+    const count = document.getElementById(`count${status.charAt(0).toUpperCase() + status.slice(1)}`);
+    
+    // Filter entries by status and sort by date (soonest first)
+    const statusEntries = entries
+      .filter(e => (e.status || 'planning') === status)
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    count.textContent = statusEntries.length;
+    
+    if (statusEntries.length === 0) {
+      column.innerHTML = '<div class="pipeline-empty">No assets</div>';
+      return;
+    }
+    
+    column.innerHTML = statusEntries.map(entry => {
+      const statusIdx = statuses.indexOf(status);
+      const prevStatus = statusIdx > 0 ? statuses[statusIdx - 1] : null;
+      const nextStatus = statusIdx < statuses.length - 1 ? statuses[statusIdx + 1] : null;
+      
+      // Format date nicely
+      const [year, month, day] = entry.date.split('-').map(Number);
+      const d = new Date(year, month - 1, day);
+      const dateStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+      
+      // Build status dropdown options
+      const statusOptions = statuses.map(s => 
+        `<option value="${s}" ${s === status ? 'selected' : ''}>${STATUS_LABELS[s]}</option>`
+      ).join('');
+      
+      return `
+        <div class="pipeline-item" 
+          draggable="true" 
+          data-date="${entry.date}" 
+          data-account="${entry.account || 'prncpls'}"
+          ondragstart="handlePipelineDragStart(event)"
+          ondragend="handlePipelineDragEnd(event)">
+          <div class="pipeline-item-content" onclick="openModal('${entry.date}', null, '${entry.account || 'prncpls'}')">
+            <div class="pipeline-item-date">${dateStr}</div>
+            <div class="pipeline-item-title">${entry.title || 'Untitled'}</div>
+            <div class="pipeline-item-meta">
+              ${entry.series ? `<span class="pipeline-item-series">${entry.series}</span>` : ''}
+              ${entry.format ? `<span class="pipeline-item-format">${entry.format}</span>` : ''}
+            </div>
+          </div>
+          <div class="pipeline-item-status" onclick="event.stopPropagation()">
+            <select class="pipeline-status-select" onchange="changePipelineStatus('${entry.date}', '${entry.account || 'prncpls'}', this.value)">
+              ${statusOptions}
+            </select>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    // Add drop handlers to column
+    column.ondragover = handlePipelineDragOver;
+    column.ondrop = (e) => handlePipelineDrop(e, status);
+  });
+}
+
+function handlePipelineDragStart(e) {
+  e.target.classList.add('dragging');
+  e.dataTransfer.setData('text/plain', JSON.stringify({
+    date: e.target.dataset.date,
+    account: e.target.dataset.account
+  }));
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function handlePipelineDragEnd(e) {
+  e.target.classList.remove('dragging');
+}
+
+function handlePipelineDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drag-over');
+}
+
+function handlePipelineDrop(e, newStatus) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  
+  try {
+    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+    changePipelineStatus(data.date, data.account, newStatus);
+  } catch (err) {
+    console.error('Drop error:', err);
+  }
+}
+
+async function changePipelineStatus(dateStr, account, newStatus) {
+  if (!newStatus) return;
+  
+  const entry = entries.find(e => {
+    if (e.date !== dateStr) return false;
+    if (account === 'vip') return e.account === 'vip';
+    return e.account !== 'vip';
+  });
+  
+  if (!entry) return;
+  
+  entry.status = newStatus;
+  
+  if (useLocalStorage) {
+    let localEntries = getLocalEntries();
+    const idx = localEntries.findIndex(e => e.date === dateStr && (e.account || 'prncpls') === account);
+    if (idx >= 0) {
+      localEntries[idx].status = newStatus;
+      localStorage.setItem('prncpls_calendar', JSON.stringify(localEntries));
+    }
+  } else {
+    await db
+      .from('calendar_entries')
+      .update({ status: newStatus })
+      .eq('date', dateStr)
+      .eq('account', account);
+  }
+  
+  renderPipelineView();
+  renderCalendar(); // Keep calendar in sync
+  showToast(`Moved to ${STATUS_LABELS[newStatus]}`, 'success');
 }
 
 // Load agenda on init (but don't show it)
@@ -4129,8 +4956,8 @@ async function sendDeployEmail() {
     await Promise.all(emailPromises);
     
     // Update status to published
-    deployingEntry.status = 'published';
-    await updateStatus(deployingEntry.date, 'published', deployingEntry.account || 'prncpls');
+    deployingEntry.status = 'deployed';
+    await updateStatus(deployingEntry.date, 'deployed', deployingEntry.account || 'prncpls');
     
     showToast(`Deployed! ${selectedEmails.length} recipient(s) notified`, 'success');
     closeDeployModal();
@@ -4160,6 +4987,124 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js')
       .then(reg => console.log('SW registered'))
       .catch(err => console.log('SW registration failed:', err));
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// TOUCH DRAG SUPPORT FOR MOBILE
+// ══════════════════════════════════════════════════════════════
+
+let touchDragItem = null;
+let touchDragData = null;
+let touchDragClone = null;
+
+document.addEventListener('touchstart', function(e) {
+  const item = e.target.closest('.pipeline-item[draggable], .agenda-item[draggable]');
+  if (!item) return;
+  
+  touchDragItem = item;
+  
+  if (item.classList.contains('pipeline-item')) {
+    touchDragData = {
+      type: 'pipeline',
+      date: item.dataset.date,
+      account: item.dataset.account
+    };
+  } else if (item.classList.contains('agenda-item')) {
+    touchDragData = {
+      type: 'agenda',
+      id: parseInt(item.dataset.id)
+    };
+  }
+}, { passive: true });
+
+document.addEventListener('touchmove', function(e) {
+  if (!touchDragItem) return;
+  
+  const touch = e.touches[0];
+  
+  // Create visual clone on first move
+  if (!touchDragClone) {
+    touchDragClone = touchDragItem.cloneNode(true);
+    touchDragClone.style.cssText = `
+      position: fixed;
+      pointer-events: none;
+      z-index: 99999;
+      opacity: 0.8;
+      transform: scale(0.95);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      width: ${touchDragItem.offsetWidth}px;
+    `;
+    document.body.appendChild(touchDragClone);
+    touchDragItem.style.opacity = '0.3';
+  }
+  
+  touchDragClone.style.left = (touch.clientX - touchDragItem.offsetWidth / 2) + 'px';
+  touchDragClone.style.top = (touch.clientY - 30) + 'px';
+  
+  // Highlight drop targets
+  const elemBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+  
+  document.querySelectorAll('.pipeline-column-items, .agenda-section-items').forEach(el => {
+    el.classList.remove('drag-over');
+  });
+  
+  if (elemBelow) {
+    const dropTarget = elemBelow.closest('.pipeline-column-items, .agenda-section-items');
+    if (dropTarget) {
+      dropTarget.classList.add('drag-over');
+    }
+  }
+}, { passive: true });
+
+document.addEventListener('touchend', function(e) {
+  if (!touchDragItem || !touchDragData) {
+    cleanupTouchDrag();
+    return;
+  }
+  
+  const touch = e.changedTouches[0];
+  const elemBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+  
+  if (elemBelow) {
+    const dropTarget = elemBelow.closest('.pipeline-column-items, .agenda-section-items');
+    
+    if (dropTarget) {
+      if (touchDragData.type === 'pipeline') {
+        const column = dropTarget.closest('.pipeline-column');
+        if (column) {
+          const newStatus = column.dataset.status;
+          changePipelineStatus(touchDragData.date, touchDragData.account, newStatus);
+        }
+      } else if (touchDragData.type === 'agenda') {
+        const section = dropTarget.closest('.agenda-section');
+        if (section) {
+          const tag = section.querySelector('.agenda-section-tag');
+          if (tag) {
+            const newPriority = tag.classList.contains('urgent') ? 'urgent' 
+              : tag.classList.contains('chill') ? 'chill' : 'neutral';
+            changeAgendaPriority(touchDragData.id, newPriority);
+          }
+        }
+      }
+    }
+  }
+  
+  cleanupTouchDrag();
+});
+
+function cleanupTouchDrag() {
+  if (touchDragClone) {
+    touchDragClone.remove();
+    touchDragClone = null;
+  }
+  if (touchDragItem) {
+    touchDragItem.style.opacity = '';
+    touchDragItem = null;
+  }
+  touchDragData = null;
+  document.querySelectorAll('.pipeline-column-items, .agenda-section-items').forEach(el => {
+    el.classList.remove('drag-over');
   });
 }
 </script>
