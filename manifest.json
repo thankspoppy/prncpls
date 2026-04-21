@@ -2,7 +2,7 @@
   "name": "PRNCPLS Content",
   "short_name": "PRNCPLS",
   "description": "Content calendar and hub for PRNCPLS",
-  "start_url": "/calendar.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0A0A0A",
   "theme_color": "#FA0000",
