@@ -1,8 +1,8 @@
-const CACHE_NAME = 'prncpls-v1';
+// Bump this version number to force clients to update
+const CACHE_VERSION = 'v15';
+const CACHE_NAME = `prncpls-${CACHE_VERSION}`;
+
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/calendar.html',
   '/manifest.json',
   '/icon-192.svg',
   '/icon-512.svg',
@@ -10,45 +10,65 @@ const ASSETS_TO_CACHE = [
   '/DrukCond-Super-Trial.otf'
 ];
 
-// Install - cache core assets
+// Install - cache static assets only (NOT HTML files)
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
+  // Take over immediately, don't wait for old tabs to close
   self.skipWaiting();
 });
 
-// Activate - clean up old caches
+// Activate - nuke ALL old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    Promise.all([
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME) {
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      }),
+      self.clients.claim()
+    ])
   );
-  self.clients.claim();
 });
 
-// Fetch - network first, fall back to cache
+// Fetch strategy:
+// - HTML files: ALWAYS network, no cache at all
+// - Supabase API: always network
+// - Static assets (icons, fonts): cache-first but refreshed in background
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests and external URLs
   if (event.request.method !== 'GET') return;
   if (!event.request.url.startsWith(self.location.origin)) return;
-  
-  // Skip Supabase API calls - always go to network
   if (event.request.url.includes('supabase.co')) return;
-  
+
+  const url = new URL(event.request.url);
+  const isHTML = url.pathname === '/' ||
+                 url.pathname.endsWith('.html') ||
+                 event.request.destination === 'document' ||
+                 event.request.mode === 'navigate';
+
+  if (isHTML) {
+    // NETWORK ONLY for HTML - never serve stale HTML
+    event.respondWith(
+      fetch(event.request, { cache: 'no-store' })
+        .catch(() => {
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+
+  // Cache-first for everything else
   event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // Cache successful responses
+    caches.match(event.request).then((cached) => {
+      const networkFetch = fetch(event.request).then((response) => {
         if (response.status === 200) {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -56,10 +76,15 @@ self.addEventListener('fetch', (event) => {
           });
         }
         return response;
-      })
-      .catch(() => {
-        // Network failed, try cache
-        return caches.match(event.request);
-      })
+      }).catch(() => cached);
+
+      return cached || networkFetch;
+    })
   );
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

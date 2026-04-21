@@ -2994,58 +2994,92 @@
       padding-bottom: 8px;
     }
 
+    .calendar-group {
+      min-width: 760px;
+    }
+
     .pipeline-section,
     .pipeline-row,
     .week-header {
-      min-width: 900px;
+      min-width: 760px;
     }
 
     .pipeline-label {
-      min-width: 90px;
-      padding: 12px;
-      font-size: 11px;
+      min-width: 80px;
+      padding: 10px 8px;
+      font-size: 10px;
     }
 
     .pipeline-cell {
-      min-height: 180px;
-      min-width: 160px;
-      padding: 10px;
+      min-height: 160px;
+      min-width: 130px;
+      padding: 8px;
     }
 
     .pipeline-date {
-      font-size: 11px;
-      margin-bottom: 8px;
+      font-size: 10px;
+      margin-bottom: 6px;
     }
 
     .pipeline-card {
-      padding: 10px;
+      padding: 8px;
     }
 
     .pipeline-card-series {
-      font-size: 9px;
+      font-size: 8px;
     }
 
     .pipeline-card-title {
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .pipeline-card-format {
-      font-size: 9px;
+      font-size: 8px;
     }
 
     .pipeline-card-link {
-      font-size: 9px;
+      font-size: 8px;
     }
 
+    .pipeline-card-caption {
+      font-size: 8px;
+    }
+
+    /* Status pill on mobile - icon only, no text */
     .pipeline-status {
+      font-size: 0;
+      padding: 0;
       width: 14px;
       height: 14px;
+      min-width: 14px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pipeline-status::before {
+      width: 8px;
+      height: 8px;
+      margin: 0;
     }
 
     .week-header-cell {
       font-size: 10px;
       padding: 10px 6px;
-      min-width: 160px;
+      min-width: 130px;
+    }
+
+    /* Update the grid-template-columns inline style via CSS override */
+    .pipeline-row,
+    .week-header {
+      grid-template-columns: 80px repeat(5, 1fr) !important;
+    }
+
+    /* Idea cell stays within scrollable area */
+    .idea-cell {
+      min-width: 760px;
+      padding: 0;
     }
 
     /* Pipeline View - horizontal scroll on mobile */
@@ -3221,13 +3255,9 @@
       gap: 8px;
     }
 
-    /* Idea cell mobile */
+    /* Idea dropdown mobile */
     .pipeline-ideas-list {
       grid-template-columns: 1fr;
-    }
-
-    .idea-cell {
-      margin-top: 12px;
     }
 
     .idea-cell-add {
@@ -5888,8 +5918,37 @@ loadAgendaItems();
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('SW registered'))
+      .then(reg => {
+        console.log('SW registered');
+        
+        // Check for updates every time the page loads
+        reg.update();
+        
+        // Check for updates every 60 seconds while tab is open
+        setInterval(() => reg.update(), 60000);
+        
+        // If a new SW is waiting, activate it immediately
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New version available — tell it to skip waiting
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+              }
+            });
+          }
+        });
+      })
       .catch(err => console.log('SW registration failed:', err));
+    
+    // When the SW takes over, reload the page to use the new version
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
   });
 }
 
