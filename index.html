@@ -4161,7 +4161,11 @@ async function saveEntryToDb(entry) {
     status: entry.status,
     notes: entry.notes,
     link: entry.link,
-    collab: entry.collab
+    collab: entry.collab,
+    supplier: entry.supplier,
+    poster: entry.poster,
+    hero: entry.hero || false,
+    archived: entry.archived || false
   };
 
   let data, error;
