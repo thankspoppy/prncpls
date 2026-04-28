@@ -5268,6 +5268,9 @@ async function saveEntry() {
     supplier: getPersonValue('supplier'),
     poster: getPersonValue('poster')
   };
+  
+  // Debug toast - shows what's being saved
+  showToast(`Saving: supplier=${entry.supplier || 'none'}, poster=${entry.poster || 'none'}`, 'success');
 
   if (entryId) {
     entry.id = parseInt(entryId);
