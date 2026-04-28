@@ -2473,6 +2473,40 @@
     background: var(--gray-light);
   }
 
+  /* Past cells - faded to show they're completed/gone */
+  .pipeline-cell.past {
+    opacity: 0.5;
+  }
+
+  .pipeline-cell.past .pipeline-card {
+    position: relative;
+  }
+
+  .pipeline-cell.past .pipeline-card-title {
+    text-decoration: line-through;
+    color: var(--gray-dark);
+  }
+
+  .pipeline-cell.past::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 18px;
+    height: 18px;
+    background: var(--pipeline-concept);
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-size: 12px;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 3;
+  }
+
+  .pipeline-cell {
+    position: relative;
+  }
+
   .pipeline-date {
     font-family: var(--mono);
     font-size: 10px;
@@ -2587,6 +2621,64 @@
     text-transform: uppercase;
     color: #0066CC;
     text-decoration: none;
+  }
+
+  /* Person chips for Supplier/Poster */
+  .pipeline-card-people {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed var(--gray-light);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .person-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+  }
+
+  .person-chip.supplier {
+    background: #E3F2FD;
+    color: #0D47A1;
+  }
+
+  .person-chip.poster {
+    background: #FFF3E0;
+    color: #E65100;
+  }
+
+  .person-chip-letter {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: currentColor;
+    color: white;
+    font-size: 9px;
+    font-weight: 600;
+  }
+
+  .person-chip.supplier .person-chip-letter {
+    color: #E3F2FD;
+  }
+
+  .person-chip.poster .person-chip-letter {
+    color: #FFF3E0;
+  }
+
+  .person-chip-label {
+    font-size: 8px;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
   }
 
   .pipeline-card-link:hover {
@@ -3630,7 +3722,7 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
     <div class="agenda-add">
       <input type="text" class="agenda-input" id="agendaInputPrncpls" placeholder="Add a priority..." onkeypress="if(event.key==='Enter')addAgendaItem('prncpls')">
       <div class="agenda-priority-select">
-        <button type="button" class="priority-btn urgent" data-priority="urgent" data-scope="prncpls" onclick="selectPriority('urgent', 'prncpls')" title="Urgent">!</button>
+        <button type="button" class="priority-btn urgent" data-priority="urgent" data-scope="prncpls" onclick="selectPriority('urgent', 'prncpls')" title="Prioritised">!</button>
         <button type="button" class="priority-btn neutral active" data-priority="neutral" data-scope="prncpls" onclick="selectPriority('neutral', 'prncpls')" title="Neutral">•</button>
         <button type="button" class="priority-btn chill" data-priority="chill" data-scope="prncpls" onclick="selectPriority('chill', 'prncpls')" title="Chill">~</button>
       </div>
@@ -3652,7 +3744,7 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
     <div class="agenda-add">
       <input type="text" class="agenda-input" id="agendaInputVip" placeholder="Add a priority..." onkeypress="if(event.key==='Enter')addAgendaItem('vip')">
       <div class="agenda-priority-select">
-        <button type="button" class="priority-btn urgent" data-priority="urgent" data-scope="vip" onclick="selectPriority('urgent', 'vip')" title="Urgent">!</button>
+        <button type="button" class="priority-btn urgent" data-priority="urgent" data-scope="vip" onclick="selectPriority('urgent', 'vip')" title="Prioritised">!</button>
         <button type="button" class="priority-btn neutral active" data-priority="neutral" data-scope="vip" onclick="selectPriority('neutral', 'vip')" title="Neutral">•</button>
         <button type="button" class="priority-btn chill" data-priority="chill" data-scope="vip" onclick="selectPriority('chill', 'vip')" title="Chill">~</button>
       </div>
@@ -3698,6 +3790,14 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
           <div class="view-meta-item" id="viewChannel">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
             <span>Channel</span>
+          </div>
+          <div class="view-meta-item" id="viewSupplier">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 16l4-4-4-4"/><path d="M2 12h18"/><circle cx="6" cy="12" r="2"/></svg>
+            <span>Supplier</span>
+          </div>
+          <div class="view-meta-item" id="viewPoster">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+            <span>Poster</span>
           </div>
         </div>
         
@@ -3881,6 +3981,32 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
       <div class="form-group">
         <label class="form-label">Link <span style="opacity:0.5;font-weight:400;">(optional)</span></label>
         <input type="url" class="form-input" id="formLink" placeholder="https://..." autocomplete="off">
+      </div>
+
+      <!-- Supplier + Poster -->
+      <div class="form-row">
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">Supplier</label>
+          <select class="form-select" id="formSupplier" onchange="handlePersonSelect('supplier')">
+            <option value="">Select...</option>
+            <option value="Matthias">Matthias</option>
+            <option value="Jackie">Jackie</option>
+            <option value="George">George</option>
+            <option value="__other__">Other...</option>
+          </select>
+          <input type="text" class="form-input" id="formSupplierOther" placeholder="Enter name..." style="display:none;margin-top:6px;" autocomplete="off">
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">Poster</label>
+          <select class="form-select" id="formPoster" onchange="handlePersonSelect('poster')">
+            <option value="">Select...</option>
+            <option value="Matthias">Matthias</option>
+            <option value="Jackie">Jackie</option>
+            <option value="George">George</option>
+            <option value="__other__">Other...</option>
+          </select>
+          <input type="text" class="form-input" id="formPosterOther" placeholder="Enter name..." style="display:none;margin-top:6px;" autocomplete="off">
+        </div>
       </div>
 
       <!-- Notes -->
@@ -4173,6 +4299,14 @@ function isToday(date) {
          date.getDate() === today.getDate();
 }
 
+function isPast(date) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  return d < today;
+}
+
 function getEntryForDate(dateStr) {
   return entries.find(e => e.date === dateStr);
 }
@@ -4359,6 +4493,9 @@ function renderPipelineCell(dueDate, publishDate, track, account) {
     return !isVinyl && e.account !== 'vip';
   });
   const todayClass = isToday(dueDate) ? 'today' : '';
+  // Only Post track is "past" when publish date is past
+  // Draft/Concept are future-looking so don't fade them
+  const pastClass = (track === 'post' && isPast(publishDate)) ? 'past' : '';
 
   // Format icons
   const formatIcons = {
@@ -4385,6 +4522,23 @@ function renderPipelineCell(dueDate, publishDate, track, account) {
         linksRow = `<div class="pipeline-card-links">${linkHtml}${captionHtml}</div>`;
       }
       
+      // Build supplier/poster row
+      const personIcon = (name, type) => {
+        if (!name) return '';
+        const initial = name.charAt(0).toUpperCase();
+        const colorClass = type === 'supplier' ? 'supplier' : 'poster';
+        return `<div class="person-chip ${colorClass}" title="${type.charAt(0).toUpperCase() + type.slice(1)}: ${name}">
+          <span class="person-chip-letter">${initial}</span>
+          <span class="person-chip-label">${type === 'supplier' ? 'S' : 'P'}</span>
+        </div>`;
+      };
+      
+      const supplierIcon = personIcon(entry.supplier, 'supplier');
+      const posterIcon = personIcon(entry.poster, 'poster');
+      const peopleRow = (supplierIcon || posterIcon) 
+        ? `<div class="pipeline-card-people">${supplierIcon}${posterIcon}</div>` 
+        : '';
+      
       return `
         <div class="pipeline-card pipeline-card-${track} ${collabClass} ${heroClass}" onclick="openModal('${publishDateStr}', null, '${account}', ${entry.id})">
           <div class="pipeline-card-header">
@@ -4398,6 +4552,7 @@ function renderPipelineCell(dueDate, publishDate, track, account) {
               <svg viewBox="0 0 24 24" fill="${entry.hero ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             </button>
           </div>
+          ${peopleRow}
           ${linksRow}
         </div>
       `;
@@ -4409,7 +4564,7 @@ function renderPipelineCell(dueDate, publishDate, track, account) {
   }
 
   return `
-    <div class="pipeline-cell ${todayClass}">
+    <div class="pipeline-cell ${todayClass} ${pastClass}">
       <div class="pipeline-date">${formatDateShort(dueDate)}</div>
       <div class="pipeline-cell-entries">${content}</div>
     </div>
@@ -4616,6 +4771,43 @@ function toggleVipRow() {
   row.classList.toggle('collapsed');
 }
 
+function filterSeriesOptions(account) {
+  const select = document.getElementById('formSeries');
+  const isVinyl = account === 'vinyl';
+  
+  // Show/hide optgroups based on account
+  const optgroups = select.querySelectorAll('optgroup');
+  optgroups.forEach(group => {
+    const label = group.getAttribute('label');
+    if (isVinyl) {
+      group.style.display = label === 'Vinyl is Plural' ? '' : 'none';
+    } else {
+      group.style.display = label === 'PRNCPLS' ? '' : 'none';
+    }
+  });
+}
+
+function handlePersonSelect(field) {
+  const select = document.getElementById(`form${field.charAt(0).toUpperCase() + field.slice(1)}`);
+  const otherInput = document.getElementById(`form${field.charAt(0).toUpperCase() + field.slice(1)}Other`);
+  if (select.value === '__other__') {
+    otherInput.style.display = 'block';
+    otherInput.focus();
+  } else {
+    otherInput.style.display = 'none';
+    otherInput.value = '';
+  }
+}
+
+function getPersonValue(field) {
+  const select = document.getElementById(`form${field.charAt(0).toUpperCase() + field.slice(1)}`);
+  const otherInput = document.getElementById(`form${field.charAt(0).toUpperCase() + field.slice(1)}Other`);
+  if (select.value === '__other__') {
+    return otherInput.value.trim() || null;
+  }
+  return select.value || null;
+}
+
 function openModal(dateStr = null, prefillDate = null, account = 'prncpls', entryId = null) {
   const overlay = document.getElementById('modalOverlay');
   const title = document.getElementById('modalTitle');
@@ -4623,17 +4815,21 @@ function openModal(dateStr = null, prefillDate = null, account = 'prncpls', entr
   const modalView = document.getElementById('modalView');
   const modalEdit = document.getElementById('modalEdit');
   const isVip = account === 'vip';
+  const isVinyl = account === 'vinyl';
 
   // Show/hide VIP-specific elements
   document.getElementById('seriesPillarRow').style.display = isVip ? 'none' : 'flex';
   document.getElementById('collabGroup').style.display = isVip ? 'block' : 'none';
   document.getElementById('channelLI').style.display = isVip ? 'none' : 'flex';
+  
+  // Filter series options based on account
+  filterSeriesOptions(account);
 
   // Reset form
   document.getElementById('entryId').value = '';
   document.getElementById('formDate').value = prefillDate || '';
   document.getElementById('formAccount').value = account;
-  document.getElementById('formSeries').value = '';
+  document.getElementById('formSeries').value = isVinyl ? 'Vinyl is Plural' : '';
   document.getElementById('formTitle').value = '';
   document.getElementById('formPillar').value = '';
   document.getElementById('formFormat').value = '';
@@ -4642,6 +4838,12 @@ function openModal(dateStr = null, prefillDate = null, account = 'prncpls', entr
   document.getElementById('formLink').value = '';
   document.getElementById('formChannel').value = '';
   document.getElementById('formCollab').checked = false;
+  document.getElementById('formSupplier').value = '';
+  document.getElementById('formPoster').value = '';
+  document.getElementById('formSupplierOther').value = '';
+  document.getElementById('formPosterOther').value = '';
+  document.getElementById('formSupplierOther').style.display = 'none';
+  document.getElementById('formPosterOther').style.display = 'none';
 
   // Reset format selector
   document.querySelectorAll('.format-option').forEach(btn => btn.classList.remove('active'));
@@ -4679,6 +4881,27 @@ function openModal(dateStr = null, prefillDate = null, account = 'prncpls', entr
       document.getElementById('formLink').value = entry.link || '';
       document.getElementById('formChannel').value = entry.channel || '';
       document.getElementById('formCollab').checked = entry.collab || false;
+      
+      // Load supplier
+      const supplier = entry.supplier || '';
+      const knownPeople = ['Matthias', 'Jackie', 'George'];
+      if (supplier && !knownPeople.includes(supplier)) {
+        document.getElementById('formSupplier').value = '__other__';
+        document.getElementById('formSupplierOther').value = supplier;
+        document.getElementById('formSupplierOther').style.display = 'block';
+      } else {
+        document.getElementById('formSupplier').value = supplier;
+      }
+      
+      // Load poster
+      const poster = entry.poster || '';
+      if (poster && !knownPeople.includes(poster)) {
+        document.getElementById('formPoster').value = '__other__';
+        document.getElementById('formPosterOther').value = poster;
+        document.getElementById('formPosterOther').style.display = 'block';
+      } else {
+        document.getElementById('formPoster').value = poster;
+      }
 
       // Set format selector
       if (entry.format) {
@@ -4771,6 +4994,24 @@ function populateViewMode(entry) {
     channelItem.style.display = 'flex';
   } else {
     channelItem.style.display = 'none';
+  }
+  
+  // Supplier
+  const supplierItem = document.getElementById('viewSupplier');
+  if (entry.supplier) {
+    document.querySelector('#viewSupplier span').textContent = `Supplied by ${entry.supplier}`;
+    supplierItem.style.display = 'flex';
+  } else {
+    supplierItem.style.display = 'none';
+  }
+  
+  // Poster
+  const posterItem = document.getElementById('viewPoster');
+  if (entry.poster) {
+    document.querySelector('#viewPoster span').textContent = `Posted by ${entry.poster}`;
+    posterItem.style.display = 'flex';
+  } else {
+    posterItem.style.display = 'none';
   }
   
   // Status
@@ -5019,7 +5260,9 @@ async function saveEntry() {
     status: document.getElementById('formStatus').value || 'planning',
     notes: document.getElementById('formNotes').value || null,
     link: document.getElementById('formLink').value || null,
-    collab: document.getElementById('formCollab').checked || false
+    collab: document.getElementById('formCollab').checked || false,
+    supplier: getPersonValue('supplier'),
+    poster: getPersonValue('poster')
   };
 
   if (entryId) {
@@ -5290,7 +5533,7 @@ function renderAgendaScope(scope) {
   
   // Urgent section
   html += `<div class="agenda-section">
-    <div class="agenda-section-header"><span class="agenda-section-tag urgent">urgent</span></div>
+    <div class="agenda-section-header"><span class="agenda-section-tag urgent">prioritised</span></div>
     <div class="agenda-section-items" 
       ondragover="handleAgendaSectionDragOver(event)"
       ondragleave="handleAgendaSectionDragLeave(event)"
@@ -5349,8 +5592,9 @@ function renderAgendaScope(scope) {
 }
 
 function renderAgendaItem(item, idx, total) {
+  const priorityLabels = { urgent: 'Prioritised', neutral: 'Neutral', chill: 'Chill' };
   const priorityOptions = ['urgent', 'neutral', 'chill'].map(p => 
-    `<option value="${p}" ${p === item.priority ? 'selected' : ''}>${p.charAt(0).toUpperCase() + p.slice(1)}</option>`
+    `<option value="${p}" ${p === item.priority ? 'selected' : ''}>${priorityLabels[p]}</option>`
   ).join('');
   
   return `
@@ -5436,7 +5680,8 @@ async function changeAgendaPriority(id, newPriority) {
   }
 
   renderAgenda();
-  showToast(`Moved to ${newPriority}`, 'success');
+  const priorityLabels = { urgent: 'Prioritised', neutral: 'Neutral', chill: 'Chill' };
+  showToast(`Moved to ${priorityLabels[newPriority] || newPriority}`, 'success');
 }
 
 async function moveAgendaItem(id, direction) {
