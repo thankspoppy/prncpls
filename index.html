@@ -148,6 +148,38 @@
     justify-self: end;
   }
 
+  .page-header .header-right-controls {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .content-drive-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--gray-light);
+    border-radius: 4px;
+    background: var(--white);
+    color: var(--gray-dark);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .content-drive-link:hover {
+    border-color: var(--black);
+    color: var(--black);
+    background: var(--off-white);
+  }
+
   .header-controls {
     display: flex;
     align-items: center;
@@ -185,7 +217,6 @@
   body:not(.edit-mode) .pipeline-add-btn,
   body:not(.edit-mode) .idea-cell,
   body:not(.edit-mode) .pipeline-ideas-add,
-  body:not(.edit-mode) .pipeline-item-archive,
   body:not(.edit-mode) .hero-star,
   body:not(.edit-mode) .agenda-add,
   body:not(.edit-mode) .agenda-item-arrows,
@@ -2629,19 +2660,23 @@
     padding-top: 6px;
     border-top: 1px dashed var(--gray-light);
     display: flex;
-    align-items: center;
-    gap: 6px;
+    flex-direction: column;
+    gap: 4px;
   }
 
   .person-chip {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
-    padding: 2px 6px;
-    border-radius: 10px;
+    gap: 4px;
+    padding: 3px 7px;
+    border-radius: 3px;
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    align-self: flex-start;
   }
 
   .person-chip.supplier {
@@ -2654,31 +2689,15 @@
     color: #E65100;
   }
 
-  .person-chip-letter {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: currentColor;
-    color: white;
-    font-size: 9px;
+  .person-chip-label {
+    opacity: 0.65;
     font-weight: 600;
   }
 
-  .person-chip.supplier .person-chip-letter {
-    color: #E3F2FD;
-  }
-
-  .person-chip.poster .person-chip-letter {
-    color: #FFF3E0;
-  }
-
-  .person-chip-label {
-    font-size: 8px;
-    letter-spacing: 0.05em;
-    opacity: 0.7;
+  .person-chip-name {
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.02em;
   }
 
   .pipeline-card-link:hover {
@@ -3021,7 +3040,7 @@
       display: grid;
       grid-template-columns: 1fr auto;
       grid-template-areas:
-        "title edit"
+        "title controls"
         "tabs tabs";
       align-items: center;
       gap: 14px;
@@ -3033,8 +3052,8 @@
       justify-self: start;
     }
 
-    .page-header .edit-mode-toggle {
-      grid-area: edit;
+    .page-header .header-right-controls {
+      grid-area: controls;
       justify-self: end;
     }
 
@@ -3042,6 +3061,17 @@
       grid-area: tabs;
       width: 100%;
       justify-self: stretch;
+    }
+    
+    .content-drive-link span {
+      display: none;
+    }
+    
+    .content-drive-link {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      justify-content: center;
     }
 
     .page-title {
@@ -3558,6 +3588,7 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
   <div class="site-nav-links">
     <a href="/" class="active">Calendar</a>
     <a href="/hub.html">Hub</a>
+    <a href="https://drive.google.com/drive/u/0/folders/1Nl3159Km-B0zDr5aP18WRHZ7YuKrrH9b" target="_blank">Drive</a>
   </div>
 </nav>
 
@@ -3569,12 +3600,21 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
     <button class="view-toggle-btn" id="pipelineViewBtn" onclick="switchView('pipeline')">Pipeline</button>
     <button class="view-toggle-btn" id="agendaViewBtn" onclick="switchView('agenda')">Agenda</button>
   </div>
-  <button class="edit-mode-toggle" id="editModeToggle" onclick="toggleEditMode()" title="Toggle edit mode">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-    </svg>
-  </button>
+  <div class="header-right-controls">
+    <a href="https://drive.google.com/drive/u/0/folders/1Nl3159Km-B0zDr5aP18WRHZ7YuKrrH9b" target="_blank" class="content-drive-link" title="Open Content Drive">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      <span>Content Drive</span>
+    </a>
+    <button class="edit-mode-toggle" id="editModeToggle" onclick="toggleEditMode()" title="Toggle edit mode">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>
+    </button>
+  </div>
 </header>
 
 <!-- ── WEEK NAVIGATION ── -->
@@ -4487,8 +4527,8 @@ function getWeekKey(dateStr) {
 function renderPipelineCell(dueDate, publishDate, track, account) {
   const publishDateStr = formatDate(publishDate);
   // Filter based on account - also detects Vinyl is Plural via series for legacy data
+  // Note: archived entries STAY on calendar (it's the archive record). Only filtered from pipeline.
   const cellEntries = entries.filter(e => {
-    if (e.archived) return false;
     if (e.date !== publishDateStr) return false;
     const isVinyl = e.account === 'vinyl' || e.series === 'Vinyl is Plural';
     if (account === 'vip') return e.account === 'vip';
@@ -4529,11 +4569,11 @@ function renderPipelineCell(dueDate, publishDate, track, account) {
       // Build supplier/poster row
       const personIcon = (name, type) => {
         if (!name) return '';
-        const initial = name.charAt(0).toUpperCase();
         const colorClass = type === 'supplier' ? 'supplier' : 'poster';
-        return `<div class="person-chip ${colorClass}" title="${type.charAt(0).toUpperCase() + type.slice(1)}: ${name}">
-          <span class="person-chip-letter">${initial}</span>
-          <span class="person-chip-label">${type === 'supplier' ? 'S' : 'P'}</span>
+        const label = type === 'supplier' ? 'Supplier' : 'Publisher';
+        return `<div class="person-chip ${colorClass}" title="${label}: ${name}">
+          <span class="person-chip-label">${label}:</span>
+          <span class="person-chip-name">${name}</span>
         </div>`;
       };
       
@@ -5268,9 +5308,6 @@ async function saveEntry() {
     supplier: getPersonValue('supplier'),
     poster: getPersonValue('poster')
   };
-  
-  // Debug toast - shows what's being saved
-  showToast(`Saving: supplier=${entry.supplier || 'none'}, poster=${entry.poster || 'none'}`, 'success');
 
   if (entryId) {
     entry.id = parseInt(entryId);
@@ -5928,9 +5965,7 @@ function renderPipelineView() {
       ? 'vinyl' 
       : entry.account === 'vip' ? 'vip' : 'prncpls';
     
-    const archiveBtn = isDeployed 
-      ? `<button class="pipeline-item-archive" onclick="event.stopPropagation(); archiveEntry(${entry.id})" title="Archive (removes from pipeline, keeps in calendar)">×</button>` 
-      : '';
+    const archiveBtn = `<button class="pipeline-item-archive" onclick="event.stopPropagation(); archiveEntry(${entry.id})" title="Remove from pipeline (keeps in calendar)">×</button>`;
     
     return `
       <div class="pipeline-item ${isDeployed ? 'deployed' : ''} ${isVip ? 'vip' : ''} ${isIdea ? 'idea' : ''}" 
