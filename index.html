@@ -4904,7 +4904,6 @@ function downloadWeekBrief() {
     .filter(e => !e.archived && e.date)
     .filter(e => e.date >= weekStart && e.date <= weekEnd)
     .sort((a, b) => {
-      // Sort by date, then by time
       if (a.date !== b.date) return a.date.localeCompare(b.date);
       return (a.scheduled_time || '').localeCompare(b.scheduled_time || '');
     });
@@ -4921,17 +4920,37 @@ function downloadWeekBrief() {
     return `${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
   };
   
-  // Build brief text
-  let brief = `CONTENT BRIEF\n`;
-  brief += `Week of ${formatBriefDate(monday)} – ${formatBriefDate(friday)}\n`;
-  brief += `${'='.repeat(50)}\n\n`;
-  
   // Group by date
   const byDate = {};
   weekEntries.forEach(entry => {
     if (!byDate[entry.date]) byDate[entry.date] = [];
     byDate[entry.date].push(entry);
   });
+  
+  // Count totals by account
+  let prncplsCount = 0, vipCount = 0, vinylCount = 0;
+  weekEntries.forEach(e => {
+    if (e.account === 'vip') vipCount++;
+    else if (e.account === 'vinyl' || e.series === 'Vinyl is Plural') vinylCount++;
+    else prncplsCount++;
+  });
+  
+  // Build brief
+  let brief = `📋 PRNCPLS · CONTENT BRIEF\n\n`;
+  brief += `Week of ${formatBriefDate(monday)}\n`;
+  brief += `Through ${formatBriefDate(friday)}\n\n`;
+  brief += `─────────────────────────────────────\n`;
+  brief += `   AT A GLANCE\n`;
+  brief += `─────────────────────────────────────\n\n`;
+  brief += `Total assets this week: ${weekEntries.length}\n`;
+  if (prncplsCount > 0) brief += `   • PRNCPLS: ${prncplsCount}\n`;
+  if (vipCount > 0) brief += `   • VIP: ${vipCount}\n`;
+  if (vinylCount > 0) brief += `   • Vinyl is Plural: ${vinylCount}\n`;
+  brief += `\n\n`;
+  
+  brief += `─────────────────────────────────────\n`;
+  brief += `   DAILY SCHEDULE\n`;
+  brief += `─────────────────────────────────────\n\n`;
   
   // Iterate through days Mon-Fri
   for (let d = 0; d < 5; d++) {
@@ -4940,44 +4959,40 @@ function downloadWeekBrief() {
     const dateStr = formatDate(date);
     const dayEntries = byDate[dateStr] || [];
     
-    brief += `${dayNames[date.getDay()].toUpperCase()} — ${formatBriefDate(date)}\n`;
-    brief += `${'-'.repeat(50)}\n`;
+    brief += `▸ ${dayNames[date.getDay()].toUpperCase()}\n`;
+    brief += `  ${formatBriefDate(date)}\n\n`;
     
     if (dayEntries.length === 0) {
-      brief += `  No posts scheduled\n\n`;
+      brief += `  · No posts scheduled ·\n\n\n`;
       continue;
     }
     
-    dayEntries.forEach(entry => {
+    dayEntries.forEach((entry, idx) => {
       const account = entry.account === 'vip' ? 'VIP' 
         : (entry.account === 'vinyl' || entry.series === 'Vinyl is Plural') ? 'VINYL IS PLURAL'
         : 'PRNCPLS';
       
-      brief += `\n  [${account}] ${entry.title || 'Untitled'}\n`;
+      const time = entry.scheduled_time ? formatTime(entry.scheduled_time) + ' NYC' : 'Time TBD';
       
-      if (entry.scheduled_time) {
-        brief += `    Time: ${formatTime(entry.scheduled_time)} NYC\n`;
-      } else {
-        brief += `    Time: TBD\n`;
-      }
-      
+      brief += `  ${idx + 1}. ${entry.title || 'Untitled'}\n`;
+      brief += `     Account     ${account}\n`;
+      brief += `     Posting     ${time}\n`;
       if (entry.format) {
-        brief += `    Format: ${entry.format}\n`;
+        brief += `     Format      ${entry.format}\n`;
       }
-      
       if (entry.series) {
-        brief += `    Series: ${entry.series}\n`;
+        brief += `     Series      ${entry.series}\n`;
       }
-      
-      brief += `    Supplier: ${entry.supplier || 'Not assigned'}\n`;
-      brief += `    Publisher: ${entry.poster || 'Not assigned'}\n`;
+      brief += `     Supplier    ${entry.supplier || '— Not assigned —'}\n`;
+      brief += `     Publisher   ${entry.poster || '— Not assigned —'}\n`;
+      brief += `\n`;
     });
     
     brief += `\n`;
   }
   
-  brief += `${'='.repeat(50)}\n`;
-  brief += `Total assets this week: ${weekEntries.length}\n`;
+  brief += `─────────────────────────────────────\n`;
+  brief += `Generated ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}\n`;
   
   // Download as .txt file
   const blob = new Blob([brief], { type: 'text/plain' });
