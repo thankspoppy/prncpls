@@ -1368,6 +1368,30 @@
     background: var(--red);
   }
 
+  .brief-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1px solid var(--black);
+    border-radius: 4px;
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-left: 8px;
+  }
+
+  .brief-btn:hover {
+    background: #333;
+    border-color: #333;
+  }
+
   /* ── WEEK HEADER ── */
   .week-header {
     display: grid;
@@ -1698,6 +1722,14 @@
 
   .view-link:hover {
     background: #333;
+  }
+
+  .view-link.view-link-cover {
+    background: #6B4FBB;
+  }
+
+  .view-link.view-link-cover:hover {
+    background: #5840A0;
   }
 
   .view-actions-row {
@@ -2504,13 +2536,9 @@
     background: var(--gray-light);
   }
 
-  /* Past cells - faded to show they're completed/gone */
-  .pipeline-cell.past {
-    opacity: 0.5;
-  }
-
+  /* Past cells - faded to show they're past */
   .pipeline-cell.past .pipeline-card {
-    position: relative;
+    opacity: 0.6;
   }
 
   .pipeline-cell.past .pipeline-card-title {
@@ -2518,23 +2546,65 @@
     color: var(--gray-dark);
   }
 
-  .pipeline-cell.past::after {
-    content: '';
+  /* Confirmed/published cells - fully checked off */
+  .pipeline-cell .pipeline-card.confirmed {
+    opacity: 0.5;
+  }
+
+  .pipeline-cell .pipeline-card.confirmed .pipeline-card-title {
+    text-decoration: line-through;
+    color: var(--gray-dark);
+  }
+
+  /* Confirm button - empty circle to tick when post goes live */
+  .confirm-btn {
     position: absolute;
     top: 8px;
     right: 8px;
-    width: 18px;
-    height: 18px;
-    background: var(--pipeline-concept);
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
-    background-size: 12px;
-    background-position: center;
-    background-repeat: no-repeat;
+    border: 2px solid var(--gray-mid);
+    background: var(--white);
+    cursor: pointer;
     z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.15s;
+  }
+
+  .confirm-btn:hover {
+    border-color: var(--pipeline-concept);
+    background: rgba(0, 200, 83, 0.05);
+  }
+
+  .confirm-btn.confirmed {
+    background: var(--pipeline-concept);
+    border-color: var(--pipeline-concept);
+  }
+
+  .confirm-btn.confirmed::after {
+    content: '';
+    width: 8px;
+    height: 4px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: rotate(-45deg);
+    margin-bottom: 2px;
+  }
+
+  /* Hide confirm button if not in past or status is deployed */
+  .pipeline-cell:not(.past) .confirm-btn:not(.confirmed) {
+    display: none;
   }
 
   .pipeline-cell {
+    position: relative;
+  }
+
+  .pipeline-card {
     position: relative;
   }
 
@@ -2642,6 +2712,25 @@
 
   .pipeline-card-format svg {
     opacity: 0.6;
+  }
+
+  .pipeline-card-link.cover {
+    color: #6B4FBB;
+  }
+
+  .pipeline-card-time {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    background: var(--off-white);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+    align-self: flex-start;
   }
 
   .pipeline-card-link {
@@ -3102,6 +3191,16 @@
       margin-left: 0;
       font-size: 11px;
       padding: 8px 14px;
+    }
+    
+    .brief-btn {
+      margin-left: 0;
+      font-size: 10px;
+      padding: 8px 12px;
+    }
+    
+    .brief-btn span {
+      display: none;
     }
 
     .nav-btn {
@@ -3587,7 +3686,6 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
   </a>
   <div class="site-nav-links">
     <a href="/" class="active">Calendar</a>
-    <a href="/hub.html">Hub</a>
     <a href="https://drive.google.com/drive/u/0/folders/1Nl3159Km-B0zDr5aP18WRHZ7YuKrrH9b" target="_blank">Drive</a>
   </div>
 </nav>
@@ -3627,6 +3725,10 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
   </button>
   <button class="today-btn" onclick="goToThisWeek()">Today</button>
+  <button class="brief-btn" onclick="downloadWeekBrief()" title="Download weekly brief">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    <span>Brief</span>
+  </button>
 </div>
 
 <!-- ── CALENDAR ── -->
@@ -3851,7 +3953,15 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
             <div class="view-section-label">Asset Link</div>
             <a href="#" target="_blank" class="view-link" id="viewLink">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              Open Link
+              Open Asset
+            </a>
+          </div>
+          
+          <div class="view-action-item" id="viewCoverSection" style="display:none;">
+            <div class="view-section-label">Cover</div>
+            <a href="#" target="_blank" class="view-link view-link-cover" id="viewCoverLink">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Open Cover
             </a>
           </div>
           
@@ -4017,10 +4127,22 @@ if (localStorage.getItem(AUTH_KEY) === 'true') {
         <input type="hidden" id="formStatus" value="planning">
       </div>
 
-      <!-- Link -->
+      <!-- Scheduled Time -->
       <div class="form-group">
-        <label class="form-label">Link <span style="opacity:0.5;font-weight:400;">(optional)</span></label>
+        <label class="form-label">Posting Time <span style="opacity:0.5;font-weight:400;">(NYC time, optional)</span></label>
+        <input type="time" class="form-input" id="formScheduledTime" autocomplete="off">
+      </div>
+
+      <!-- Asset Link -->
+      <div class="form-group">
+        <label class="form-label">Asset Link <span style="opacity:0.5;font-weight:400;">(optional)</span></label>
         <input type="url" class="form-input" id="formLink" placeholder="https://..." autocomplete="off">
+      </div>
+
+      <!-- Cover Link -->
+      <div class="form-group">
+        <label class="form-label">Cover Link <span style="opacity:0.5;font-weight:400;">(optional)</span></label>
+        <input type="url" class="form-input" id="formCoverLink" placeholder="https://..." autocomplete="off">
       </div>
 
       <!-- Supplier + Poster -->
@@ -4201,6 +4323,8 @@ async function saveEntryToDb(entry) {
     status: entry.status,
     notes: entry.notes,
     link: entry.link,
+    cover_link: entry.cover_link,
+    scheduled_time: entry.scheduled_time,
     collab: entry.collab,
     supplier: entry.supplier,
     poster: entry.poster,
@@ -4558,13 +4682,6 @@ function renderPipelineCell(dueDate, publishDate, track, account) {
       const collabClass = entry.collab ? 'collab' : '';
       const heroClass = entry.hero ? 'hero' : '';
       const heroActive = entry.hero ? 'active' : '';
-      const linkHtml = entry.link ? `<a href="${entry.link}" target="_blank" class="pipeline-card-link" onclick="event.stopPropagation();">ASSET LINK</a>` : '';
-      const captionHtml = entry.notes ? `<button class="pipeline-card-caption" onclick="event.stopPropagation(); openCaptionModal(${JSON.stringify(entry.notes).replace(/"/g, '&quot;')}, ${JSON.stringify(entry.title || 'Caption').replace(/"/g, '&quot;')})">CAPTION</button>` : '';
-      
-      let linksRow = '';
-      if (linkHtml || captionHtml) {
-        linksRow = `<div class="pipeline-card-links">${linkHtml}${captionHtml}</div>`;
-      }
       
       // Build supplier/poster row
       const personIcon = (name, type) => {
@@ -4583,13 +4700,35 @@ function renderPipelineCell(dueDate, publishDate, track, account) {
         ? `<div class="pipeline-card-people">${supplierIcon}${posterIcon}</div>` 
         : '';
       
+      const timeStr = entry.scheduled_time ? formatTime(entry.scheduled_time) : '';
+      const timeBadge = timeStr ? `<span class="pipeline-card-time">${timeStr} NYC</span>` : '';
+      
+      // Build links row including cover
+      let linksHtml = '';
+      if (entry.link) {
+        linksHtml += `<a href="${entry.link}" target="_blank" class="pipeline-card-link" onclick="event.stopPropagation();">ASSET</a>`;
+      }
+      if (entry.cover_link) {
+        linksHtml += `<a href="${entry.cover_link}" target="_blank" class="pipeline-card-link cover" onclick="event.stopPropagation();">COVER</a>`;
+      }
+      if (entry.notes) {
+        linksHtml += `<button class="pipeline-card-caption" onclick="event.stopPropagation(); openCaptionModal(${JSON.stringify(entry.notes).replace(/"/g, '&quot;')}, ${JSON.stringify(entry.title || 'Caption').replace(/"/g, '&quot;')})">CAPTION</button>`;
+      }
+      const linksRowFinal = linksHtml ? `<div class="pipeline-card-links">${linksHtml}</div>` : '';
+      
+      const isConfirmed = entry.status === 'deployed';
+      const confirmedClass = isConfirmed ? 'confirmed' : '';
+      const confirmBtn = `<button class="confirm-btn ${confirmedClass}" onclick="event.stopPropagation(); toggleConfirm(${entry.id})" title="${isConfirmed ? 'Posted (click to undo)' : 'Mark as posted'}"></button>`;
+      
       return `
-        <div class="pipeline-card pipeline-card-${track} ${collabClass} ${heroClass}" onclick="openModal('${publishDateStr}', null, '${account}', ${entry.id})">
+        <div class="pipeline-card pipeline-card-${track} ${collabClass} ${heroClass} ${confirmedClass}" onclick="openModal('${publishDateStr}', null, '${account}', ${entry.id})">
+          ${confirmBtn}
           <div class="pipeline-card-header">
             <div class="pipeline-card-series">${entry.series || ''}</div>
             <span class="pipeline-status ${statusClass}" onclick="event.stopPropagation(); cycleStatus('${publishDateStr}', '${account}', ${entry.id})" title="Click to cycle status">${STATUS_LABELS[entry.status] || 'Planning'}</span>
           </div>
           <div class="pipeline-card-title">${entry.title || 'Untitled'}</div>
+          ${timeBadge}
           <div class="pipeline-card-footer">
             ${entry.format ? `<div class="pipeline-card-format">${formatIcon}${entry.format}</div>` : '<div></div>'}
             <button class="hero-star ${heroActive}" onclick="event.stopPropagation(); toggleHero(${entry.id}, '${publishDateStr}')" title="Mark as hero piece">
@@ -4597,7 +4736,7 @@ function renderPipelineCell(dueDate, publishDate, track, account) {
             </button>
           </div>
           ${peopleRow}
-          ${linksRow}
+          ${linksRowFinal}
         </div>
       `;
     }).join('');
@@ -4752,6 +4891,108 @@ function updateWeekLabel() {
     `${formatDateShort(monday)} – ${formatDateShort(friday)}`;
 }
 
+function downloadWeekBrief() {
+  const monday = getMonday(currentWeek);
+  const friday = new Date(monday);
+  friday.setDate(monday.getDate() + 4);
+  
+  const weekStart = formatDate(monday);
+  const weekEnd = formatDate(friday);
+  
+  // Get all entries for this week (Mon-Fri), excluding archived and ideas
+  const weekEntries = entries
+    .filter(e => !e.archived && e.date)
+    .filter(e => e.date >= weekStart && e.date <= weekEnd)
+    .sort((a, b) => {
+      // Sort by date, then by time
+      if (a.date !== b.date) return a.date.localeCompare(b.date);
+      return (a.scheduled_time || '').localeCompare(b.scheduled_time || '');
+    });
+  
+  if (weekEntries.length === 0) {
+    showToast('No assets scheduled this week', 'error');
+    return;
+  }
+  
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  
+  const formatBriefDate = (d) => {
+    return `${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  };
+  
+  // Build brief text
+  let brief = `CONTENT BRIEF\n`;
+  brief += `Week of ${formatBriefDate(monday)} – ${formatBriefDate(friday)}\n`;
+  brief += `${'='.repeat(50)}\n\n`;
+  
+  // Group by date
+  const byDate = {};
+  weekEntries.forEach(entry => {
+    if (!byDate[entry.date]) byDate[entry.date] = [];
+    byDate[entry.date].push(entry);
+  });
+  
+  // Iterate through days Mon-Fri
+  for (let d = 0; d < 5; d++) {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + d);
+    const dateStr = formatDate(date);
+    const dayEntries = byDate[dateStr] || [];
+    
+    brief += `${dayNames[date.getDay()].toUpperCase()} — ${formatBriefDate(date)}\n`;
+    brief += `${'-'.repeat(50)}\n`;
+    
+    if (dayEntries.length === 0) {
+      brief += `  No posts scheduled\n\n`;
+      continue;
+    }
+    
+    dayEntries.forEach(entry => {
+      const account = entry.account === 'vip' ? 'VIP' 
+        : (entry.account === 'vinyl' || entry.series === 'Vinyl is Plural') ? 'VINYL IS PLURAL'
+        : 'PRNCPLS';
+      
+      brief += `\n  [${account}] ${entry.title || 'Untitled'}\n`;
+      
+      if (entry.scheduled_time) {
+        brief += `    Time: ${formatTime(entry.scheduled_time)} NYC\n`;
+      } else {
+        brief += `    Time: TBD\n`;
+      }
+      
+      if (entry.format) {
+        brief += `    Format: ${entry.format}\n`;
+      }
+      
+      if (entry.series) {
+        brief += `    Series: ${entry.series}\n`;
+      }
+      
+      brief += `    Supplier: ${entry.supplier || 'Not assigned'}\n`;
+      brief += `    Publisher: ${entry.poster || 'Not assigned'}\n`;
+    });
+    
+    brief += `\n`;
+  }
+  
+  brief += `${'='.repeat(50)}\n`;
+  brief += `Total assets this week: ${weekEntries.length}\n`;
+  
+  // Download as .txt file
+  const blob = new Blob([brief], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `PRNCPLS_brief_${weekStart}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  showToast('Brief downloaded', 'success');
+}
+
 async function cycleStatus(dateStr, account = 'prncpls', entryId = null) {
   let entry;
   if (entryId) {
@@ -4774,6 +5015,29 @@ async function cycleStatus(dateStr, account = 'prncpls', entryId = null) {
     entry.status = newStatus;
     renderCalendar();
   }
+}
+
+async function toggleConfirm(entryId) {
+  const entry = entries.find(e => e.id === entryId);
+  if (!entry) return;
+  
+  const newStatus = entry.status === 'deployed' ? 'pending' : 'deployed';
+  entry.status = newStatus;
+  
+  if (useLocalStorage) {
+    let localEntries = getLocalEntries();
+    const idx = localEntries.findIndex(e => e.id === entryId);
+    if (idx >= 0) {
+      localEntries[idx].status = newStatus;
+      saveLocalEntries(localEntries);
+    }
+  } else {
+    await db.from('calendar_entries').update({ status: newStatus }).eq('id', entryId);
+  }
+  
+  renderCalendar();
+  if (typeof renderPipelineView === 'function') renderPipelineView();
+  showToast(newStatus === 'deployed' ? 'Marked as posted' : 'Unmarked', 'success');
 }
 
 async function toggleHero(entryId, dateStr) {
@@ -4880,6 +5144,8 @@ function openModal(dateStr = null, prefillDate = null, account = 'prncpls', entr
   document.getElementById('formStatus').value = 'planning';
   document.getElementById('formNotes').value = '';
   document.getElementById('formLink').value = '';
+  document.getElementById('formCoverLink').value = '';
+  document.getElementById('formScheduledTime').value = '';
   document.getElementById('formChannel').value = '';
   document.getElementById('formCollab').checked = false;
   document.getElementById('formSupplier').value = '';
@@ -4923,6 +5189,8 @@ function openModal(dateStr = null, prefillDate = null, account = 'prncpls', entr
       document.getElementById('formStatus').value = entry.status || 'planning';
       document.getElementById('formNotes').value = entry.notes || '';
       document.getElementById('formLink').value = entry.link || '';
+      document.getElementById('formCoverLink').value = entry.cover_link || '';
+      document.getElementById('formScheduledTime').value = entry.scheduled_time || '';
       document.getElementById('formChannel').value = entry.channel || '';
       document.getElementById('formCollab').checked = entry.collab || false;
       
@@ -5073,16 +5341,45 @@ function populateViewMode(entry) {
     linkSection.style.display = 'none';
   }
   
+  // Cover Link
+  const coverSection = document.getElementById('viewCoverSection');
+  const coverEl = document.getElementById('viewCoverLink');
+  if (entry.cover_link) {
+    coverEl.href = entry.cover_link;
+    coverSection.style.display = 'block';
+  } else {
+    coverSection.style.display = 'none';
+  }
+  
   // Caption (stored in notes field)
   const captionSection = document.getElementById('viewCaptionSection');
   if (entry.notes) {
     captionSection.style.display = 'block';
-    // Store current entry caption for the button
     captionSection.dataset.caption = entry.notes;
     captionSection.dataset.title = entry.title || 'Caption';
   } else {
     captionSection.style.display = 'none';
   }
+  
+  // Update date display to include time if scheduled
+  if (entry.date && entry.scheduled_time) {
+    const [year, month, day] = entry.date.split('-').map(Number);
+    const d = new Date(year, month - 1, day);
+    const dateStr = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    const dateSpan = document.querySelector('#viewDate span');
+    if (dateSpan) {
+      dateSpan.textContent = `${dateStr} · ${formatTime(entry.scheduled_time)} NYC`;
+    }
+  }
+}
+
+function formatTime(timeStr) {
+  // Convert "14:30" to "2:30 PM"
+  if (!timeStr) return '';
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+  return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
 }
 
 function openCaptionFromView() {
@@ -5304,6 +5601,8 @@ async function saveEntry() {
     status: document.getElementById('formStatus').value || 'planning',
     notes: document.getElementById('formNotes').value || null,
     link: document.getElementById('formLink').value || null,
+    cover_link: document.getElementById('formCoverLink').value || null,
+    scheduled_time: document.getElementById('formScheduledTime').value || null,
     collab: document.getElementById('formCollab').checked || false,
     supplier: getPersonValue('supplier'),
     poster: getPersonValue('poster')
