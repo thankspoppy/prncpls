@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#FA0000">
+<title>DJ Spinna / Vinyl Is Plural — Rough Cut Notes</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --red: #FA0000;
+  --black: #0A0A0A;
+  --white: #FFFFFF;
+  --off-white: #F7F7F5;
+  --gray-light: #EFEFED;
+  --gray-mid: #CCCCCA;
+  --gray-dark: #555553;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--off-white);
+  color: var(--black);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.doc-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+/* ── HEADER ── */
+.doc-header {
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--gray-light);
+  margin-bottom: 40px;
+}
+
+.doc-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin: 0 0 12px;
+}
+
+.doc-title {
+  font-family: var(--sans);
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--black);
+  margin: 0 0 8px;
+  line-height: 1.15;
+}
+
+.doc-title strong { font-weight: 500; }
+
+.doc-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gray-dark);
+  margin: 0;
+}
+
+/* ── TABS ── */
+.vip-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--gray-light);
+  margin-bottom: 32px;
+}
+
+.vip-tab {
+  background: transparent;
+  border: none;
+  padding: 14px 20px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-dark);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s;
+}
+
+.vip-tab:hover {
+  color: var(--black);
+}
+
+.vip-tab.active {
+  color: var(--black);
+  border-bottom-color: var(--red);
+}
+
+.vip-panel { display: none; }
+.vip-panel.active { display: block; }
+
+/* ── NOTES LIST ── */
+.vip-note-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.vip-note-list li {
+  padding: 18px 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--black);
+  border-bottom: 1px solid var(--gray-light);
+  display: flex;
+  gap: 16px;
+}
+
+.vip-note-list li::before {
+  content: '';
+  flex-shrink: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--red);
+  margin-top: 12px;
+}
+
+.vip-note-list li:last-child {
+  border-bottom: none;
+}
+
+/* ── TIMELINE ── */
+.vip-tl-wrap { padding: 0; }
+
+.vip-tl-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-dark);
+  margin-bottom: 12px;
+}
+
+.vip-tl-bar {
+  position: relative;
+  height: 60px;
+  background: var(--gray-light);
+  border-radius: 4px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.vip-tl-seg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  cursor: pointer;
+  transition: filter 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--white);
+}
+
+.vip-tl-seg:hover {
+  filter: brightness(0.92);
+}
+
+.vip-tl-seg:last-child {
+  border-right: none;
+}
+
+.vip-tl-seg-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.vip-tl-ticks {
+  position: relative;
+  height: 20px;
+  margin-bottom: 32px;
+}
+
+.vip-tl-tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--gray-mid);
+}
+
+.vip-tl-tick::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 1px;
+  height: 4px;
+  background: var(--gray-mid);
+}
+
+.vip-tl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 24px;
+  border-top: 1px solid var(--gray-light);
+}
+
+.vip-tl-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 4px;
+  cursor: pointer;
+  transition: padding 0.12s;
+  font-size: 14px;
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.vip-tl-row:hover {
+  padding-left: 12px;
+}
+
+.vip-tl-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.vip-tl-num {
+  width: 28px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray-mid);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.vip-tl-row-title {
+  flex: 1;
+  color: var(--black);
+  font-size: 14px;
+}
+
+.vip-tl-row-ts {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray-dark);
+  letter-spacing: 0.04em;
+}
+
+.vip-tl-row-dur {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--gray-mid);
+  min-width: 50px;
+  text-align: right;
+  letter-spacing: 0.04em;
+}
+
+/* ── LEGEND ── */
+.vip-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: var(--white);
+  border: 1px solid var(--gray-light);
+  border-radius: 6px;
+}
+
+.vip-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gray-dark);
+}
+
+.vip-legend-sw {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+/* ── DEPTH SECTIONS ── */
+.vip-depth-item {
+  padding: 24px 28px;
+  background: var(--white);
+  border: 1px solid var(--gray-light);
+  border-left-width: 3px;
+  border-radius: 6px;
+  margin-bottom: 14px;
+}
+
+.vip-depth-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.vip-depth-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.vip-depth-title {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--black);
+  margin: 0;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.vip-depth-ts {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray-dark);
+  letter-spacing: 0.04em;
+}
+
+.vip-depth-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--black);
+}
+
+.vip-depth-list li {
+  padding-left: 18px;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.vip-depth-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 6px;
+  height: 1px;
+  background: var(--gray-mid);
+}
+
+.vip-depth-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* ── RESTRUCTURE ── */
+.vip-restructure {
+  margin-top: 32px;
+  padding: 28px 32px;
+  background: var(--white);
+  border: 1px solid var(--gray-light);
+  border-radius: 6px;
+}
+
+.vip-restructure-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin: 0 0 6px;
+}
+
+.vip-restructure-title {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0 0 18px;
+  color: var(--black);
+  letter-spacing: -0.01em;
+}
+
+.vip-restructure-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: step;
+}
+
+.vip-restructure-list li {
+  padding: 14px 0 14px 44px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--black);
+  border-bottom: 1px solid var(--gray-light);
+  position: relative;
+  counter-increment: step;
+}
+
+.vip-restructure-list li:last-child {
+  border-bottom: none;
+}
+
+.vip-restructure-list li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--red);
+  letter-spacing: 0.04em;
+}
+
+.vip-quote {
+  font-style: italic;
+  color: var(--gray-dark);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .doc-container {
+    padding: 32px 20px 60px;
+  }
+
+  .doc-title {
+    font-size: 28px;
+  }
+
+  .vip-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .vip-tab {
+    padding: 12px 14px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .vip-tl-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .vip-tl-row-title {
+    flex: 1 1 100%;
+    order: 3;
+  }
+
+  .vip-tl-row-ts,
+  .vip-tl-row-dur {
+    order: 4;
+  }
+
+  .vip-depth-item,
+  .vip-restructure {
+    padding: 20px;
+  }
+
+  .vip-depth-head {
+    flex-wrap: wrap;
+  }
+
+  .vip-depth-title {
+    flex: 1 1 100%;
+    order: 2;
+  }
+
+  .vip-legend {
+    padding: 16px;
+  }
+}
+</style>
+</head>
+<body>
+
+<h2 class="sr-only">Rough cut notes document for DJ Spinna / Vinyl Is Plural, with three tabs: notes and disclaimers, a visual timeline showing section placement, and a colour-coded in-depth breakdown.</h2>
+
+<div class="doc-container">
+
+  <header class="doc-header">
+    <p class="doc-eyebrow">Vinyl Is Plural · Episode 01</p>
+    <h1 class="doc-title"><strong>DJ Spinna</strong> — Rough cut notes</h1>
+    <p class="doc-meta">For team review · ~35 min runtime</p>
+  </header>
+
+  <div class="vip-tabs" role="tablist">
+    <button class="vip-tab active" data-tab="notes" role="tab">Notes & Disclaimers</button>
+    <button class="vip-tab" data-tab="overview" role="tab">Timeline Overview</button>
+    <button class="vip-tab" data-tab="depth" role="tab">In-Depth Breakdown</button>
+  </div>
+
+  <div class="vip-panel active" data-panel="notes">
+    <ul class="vip-note-list">
+      <li>Final cut to be condensed to ~20 mins</li>
+      <li>Will use only original B-roll, including to smooth out unsmooth cuts or shoddy camera work</li>
+      <li>IP in long-form to be kept very tight, as YouTube is really strict</li>
+      <li>Potentially break up sections with minimal cards or similar</li>
+      <li>Colour grade, stabilisation, audio polishing, and visual polishing all to be done after final cut is locked</li>
+      <li>Will create a clean intro and outro using footage of the guests introducing themselves</li>
+      <li>Will likely rework the intro using secondary footage of individuals talking, not the panel, as Sean's mic is much better there</li>
+    </ul>
+  </div>
+
+  <div class="vip-panel" data-panel="overview">
+    <div class="vip-tl-wrap">
+      <div class="vip-tl-meta">
+        <span>00:00</span>
+        <span>~35 min runtime</span>
+        <span>35:00</span>
+      </div>
+      <div class="vip-tl-bar" id="vip-tl-bar"></div>
+      <div class="vip-tl-ticks" id="vip-tl-ticks"></div>
+      <div class="vip-tl-list" id="vip-tl-list"></div>
+      <div class="vip-legend" id="vip-tl-legend"></div>
+    </div>
+  </div>
+
+  <div class="vip-panel" data-panel="depth">
+    <div id="vip-depth-items"></div>
+    <div class="vip-restructure">
+      <p class="vip-restructure-eyebrow">Episode Structure</p>
+      <h2 class="vip-restructure-title">Suggested restructure</h2>
+      <ol class="vip-restructure-list">
+        <li>Intro (clips of guests saying "vinyl is plural" + motion graphic typing sequence)</li>
+        <li>Spinna intro + early experiences</li>
+        <li>Sean's early experiences</li>
+        <li>Quinette's early experiences as a child + becoming a DJ</li>
+        <li>Biz Markie discussions</li>
+        <li>Desert Island Records</li>
+        <li>Why vinyl is special discussions</li>
+        <li>How record labels used to have sounds</li>
+        <li>George says he has one last question — Quinette says she has to leave — this is the natural ending / segue</li>
+        <li>Potential lean "Next time" sequence showing George sitting down</li>
+        <li>"Vinyl is plural" motion graphic typing sequence outro</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  function toSec(ts){ var p = ts.split(':'); return parseInt(p[0],10)*60 + parseInt(p[1],10); }
+  function fmt(sec){ var m = Math.floor(sec/60); var s = sec%60; return (m<10?'0':'')+m+':'+(s<10?'0':'')+s; }
+
+  var sections = [
+    { n: 1, t: "Sean's intro (salvaged)", ts: "00:00", color: "#CECBF6", textColor: "#3C3489", category: "Sean", notes: [
+      "Sean recorded several takes of the intro, so they needed combining regardless",
+      "His mic was significantly compromised for the first five minutes of the shoot",
+      "Stitched together the cleanest portions across his takes to build a usable intro",
+      "Audio has been enhanced on my end, so the rough cut reflects the best salvaged version",
+      "Flagging that this section is lower quality than the rest of the piece, Sean's mic is corrected shortly after",
+      "Will send the original compromised audio separately as a demo so you can hear the issue"
+    ]},
+    { n: 2, t: "Spinna introduces himself", ts: "00:35", color: "#9FE1CB", textColor: "#085041", category: "Spinna", notes: [
+      "Spinna's own introduction follows Sean's intro",
+      "Flagging for later: may want to consolidate this with section 4 (his early vinyl experiences) so his intro and origin story flow as one continuous block, rather than being split by Quinette's section"
+    ]},
+    { n: 3, t: "Quinette's experiences & connection to vinyl", ts: "01:17", color: "#F5C4B3", textColor: "#712B13", category: "Quinette", notes: [
+      "Quinette shares her personal experiences and connection to vinyl",
+      "Could be condensed slightly in a future pass",
+      "Flagging for later: may want to consolidate this with section 6 (her first records and how she got into DJing) so her story flows as one continuous block"
+    ]},
+    { n: 4, t: "How Spinna got into records & his early vinyl experiences", ts: "02:50", color: "#9FE1CB", textColor: "#085041", category: "Spinna", notes: [
+      "Spinna talks about how he first got into records and his early vinyl experiences",
+      "Could be condensed slightly",
+      "See note in section 2 about potentially consolidating with Spinna's intro"
+    ]},
+    { n: 5, t: "Sean's first experiences with vinyl", ts: "05:03", color: "#CECBF6", textColor: "#3C3489", category: "Sean", notes: [
+      "Sean shares his first experiences with vinyl",
+      "Could definitely be condensed a little",
+      "Really nice section though, so wouldn't want to cut too much"
+    ]},
+    { n: 6, t: "Quinette's first records & how she got into DJing", ts: "07:25", color: "#F5C4B3", textColor: "#712B13", category: "Quinette", notes: [
+      "Quinette talks about her first records and how she got into DJing",
+      "Should consolidate with section 3 (her experiences and connection to vinyl)",
+      "Condense overall"
+    ]},
+    { n: 7, t: "Biz Markie discussion & Mardi Gras myth", ts: "10:27", color: "#F4C0D1", textColor: "#72243E", category: "Biz Markie tangent", notes: [
+      "Quinette shares her Biz Markie experience",
+      "Conversation moves into the Mardi Gras myth connected to Biz Markie",
+      "Can condense if requested"
+    ]},
+    { n: 8, t: "Desert Island Records", ts: "14:46", color: "#FAC775", textColor: "#633806", category: "Desert Island Records", notes: [
+      "Overall section runs a bit long and can be condensed reasonably",
+      "Spinna goes first, not too long, fine as is",
+      "Quinette goes next, not crazy long, fine as is",
+      "Spinna's honourable mention, probably cut this",
+      "Sean's records, including personal experience with Cabin in the Sky, very compelling, don't want to cut much or any of this",
+      "Spinna's similar experience remixing an artist he was a fan of, also very compelling, should not cut",
+      "Sean's third record, keep this too, probably"
+    ]},
+    { n: 9, t: "Quinette on Sault, new music distribution & why people want vinyl", ts: "20:09", color: "#F5C4B3", textColor: "#712B13", category: "Quinette", notes: [
+      "Quinette talks about Sault on vinyl, really great, should be kept",
+      "She then discusses new music distribution and getting new releases on vinyl, also should be kept",
+      "Sean asks her why she thinks people want vinyl, and she talks about the tactile experience, very cool section",
+      "Already cut pretty heavily on my end as she took a while to get to the point"
+    ]},
+    { n: 10, t: "David Mancuso, energy, physicality & spirituality of vinyl", ts: "22:40", color: "#D3D1C7", textColor: "#444441", category: "Group discussion", notes: [
+      "Spinna on the David Mancuso lesson, really great but goes on a little long, can trim a lot of the context",
+      "Quinette follows up, good, keep",
+      "Group discussion on energy, like this part a lot, has great depth",
+      "Sean on the physicality of DJing and vinyl, amazing, should not be cut much",
+      "Spinna speaking passionately about feeling the record, should be kept",
+      "Quinette on spirituality within vinyl, profound section, like it a lot, could be cut if required",
+      "Group on being diggers, Sean speaking passionately about physicality in vinyl, should be kept, very compelling"
+    ]},
+    { n: 11, t: "Digging, learning through vinyl & record label sounds", ts: "30:37", color: "#D3D1C7", textColor: "#444441", category: "Group discussion", notes: [
+      "Group continues talking about digging and how their love for music expanded through vinyl, including learning about all musicians credited on tracks",
+      "Sean talks about looking at the record covers",
+      "Spinna talks about how record labels had particular sounds, should be kept, can be condensed",
+      "Conversation returns to musicians being credited on records"
+    ]},
+    { n: 12, t: "Sean's childhood record experiences & record label sounds", ts: "32:12", color: "#CECBF6", textColor: "#3C3489", category: "Sean", notes: [
+      "Sean returns to childhood experiences with records",
+      "Wouldn't make sense to consolidate this with his earlier sections on first experiences, as it sits naturally here in context",
+      "He builds on the earlier point about record labels having distinct sounds",
+      "Can definitely be condensed, but not too much, it's very compelling"
+    ]},
+    { n: 13, t: "Quinette on DJs having their own sound", ts: "33:27", color: "#F5C4B3", textColor: "#712B13", category: "Quinette", notes: [
+      "Quinette reflects that, as a DJ, you have your own sound, mirroring the earlier point about record labels having distinct sounds",
+      "Short section, should be kept"
+    ]},
+    { n: 14, t: "George's \"one last question\" beat & Quinette's exit", ts: "33:53", color: "#B5D4F4", textColor: "#0C447C", category: "Producer beat", notes: [
+      "George (producer) steps in to say he has one last question",
+      "Quinette responds that she has to leave — this becomes the natural segue to the ending",
+      "Suggest keeping this in to show how engrossed everyone was in the conversation",
+      "Picturing a subtitle here: <span class=\"vip-quote\">\"Producer: I have one last question for you...\"</span>",
+      "Works as the natural ending for this episode, with the lean into next time setup via George sitting down"
+    ]}
+  ];
+
+  var totalSec = 35 * 60;
+
+  sections.forEach(function(s, i){
+    var start = toSec(s.ts);
+    var end = i < sections.length - 1 ? toSec(sections[i+1].ts) : totalSec;
+    s.startSec = start;
+    s.endSec = end;
+    s.durSec = end - start;
+  });
+
+  // Build the bar
+  var bar = document.getElementById('vip-tl-bar');
+  sections.forEach(function(s){
+    var seg = document.createElement('div');
+    seg.className = 'vip-tl-seg';
+    seg.style.left = (s.startSec / totalSec * 100) + '%';
+    seg.style.width = (s.durSec / totalSec * 100) + '%';
+    seg.style.background = s.color;
+    seg.style.color = s.textColor;
+    seg.title = s.n + '. ' + s.t + ' (' + s.ts + ' – ' + fmt(s.endSec) + ')';
+    if (s.durSec / totalSec > 0.04) {
+      seg.innerHTML = '<span class="vip-tl-seg-num">' + s.n + '</span>';
+    }
+    seg.addEventListener('click', function(){
+      switchTab('depth');
+      setTimeout(function(){
+        var target = document.getElementById('vip-depth-' + s.n);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    });
+    bar.appendChild(seg);
+  });
+
+  // Ticks every 5 minutes
+  var ticks = document.getElementById('vip-tl-ticks');
+  for (var m = 0; m <= 35; m += 5) {
+    var tick = document.createElement('span');
+    tick.className = 'vip-tl-tick';
+    tick.style.left = (m * 60 / totalSec * 100) + '%';
+    tick.textContent = (m<10?'0':'') + m + ':00';
+    ticks.appendChild(tick);
+  }
+
+  // Build the list
+  var list = document.getElementById('vip-tl-list');
+  sections.forEach(function(s){
+    var row = document.createElement('div');
+    row.className = 'vip-tl-row';
+    var durStr = fmt(s.durSec);
+    row.innerHTML = '<div class="vip-tl-swatch" style="background:' + s.color + '"></div><div class="vip-tl-num">' + s.n + '</div><div class="vip-tl-row-title">' + s.t + '</div><div class="vip-tl-row-ts">' + s.ts + '</div><div class="vip-tl-row-dur">' + durStr + '</div>';
+    row.addEventListener('click', function(){
+      switchTab('depth');
+      setTimeout(function(){
+        var target = document.getElementById('vip-depth-' + s.n);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    });
+    list.appendChild(row);
+  });
+
+  // Build legend (deduplicated categories)
+  var legendHost = document.getElementById('vip-tl-legend');
+  var seenCats = {};
+  var legendItems = [];
+  sections.forEach(function(s){
+    if (!seenCats[s.category]) {
+      seenCats[s.category] = true;
+      legendItems.push({ label: s.category, color: s.color });
+    }
+  });
+  legendItems.forEach(function(item){
+    var el = document.createElement('div');
+    el.className = 'vip-legend-item';
+    el.innerHTML = '<div class="vip-legend-sw" style="background:' + item.color + '"></div><span>' + item.label + '</span>';
+    legendHost.appendChild(el);
+  });
+
+  // Build depth items
+  var depthHost = document.getElementById('vip-depth-items');
+  sections.forEach(function(s){
+    var item = document.createElement('div');
+    item.className = 'vip-depth-item';
+    item.id = 'vip-depth-' + s.n;
+    item.style.borderLeftColor = s.color;
+    var notesHtml = s.notes.map(function(n){ return '<li>' + n + '</li>'; }).join('');
+    item.innerHTML = '<div class="vip-depth-head"><div class="vip-depth-swatch" style="background:' + s.color + '"></div><p class="vip-depth-title">' + s.n + '. ' + s.t + '</p><span class="vip-depth-ts">' + s.ts + '</span></div><ul class="vip-depth-list">' + notesHtml + '</ul>';
+    depthHost.appendChild(item);
+  });
+
+  function switchTab(name){
+    document.querySelectorAll('.vip-tab').forEach(function(t){
+      t.classList.toggle('active', t.dataset.tab === name);
+    });
+    document.querySelectorAll('.vip-panel').forEach(function(p){
+      p.classList.toggle('active', p.dataset.panel === name);
+    });
+  }
+  document.querySelectorAll('.vip-tab').forEach(function(t){
+    t.addEventListener('click', function(){ switchTab(t.dataset.tab); });
+  });
+})();
+</script>
+
+</body>
+</html>
